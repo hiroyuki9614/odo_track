@@ -10,7 +10,7 @@ class User < ApplicationRecord
   has_many :daily_logs
 
   validates :user_name, presence: true, length: { maximum: 50 }
-  validates :email, presence: true, length: { maximum: 100 }
+  validates :email, presence: true, length: { maximum: 100 }, email_format: true
   validates :telephone, presence: true, length: { maximum: 11 }, numericality: { only_integer: true }
   validates :password, presence: true, length: { minimum: 6 }
   validates :password_confirmation, presence: true, length: { minimum: 6 }

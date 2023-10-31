@@ -20,13 +20,15 @@ class DailyLog < ApplicationRecord
   validate :arrival_distance_after_departure_distance
 
   def arrival_time_after_departure_time
+    return unless departure_datetime.presence && arrival_datetime.presence
     return unless arrival_datetime <= departure_datetime
 
     errors.add(:departure_datetime, 'が到着時間を超えています。')
   end
 
   def arrival_distance_after_departure_distance
-    return unless arrival_distance.present? && departure_distance.present? && arrival_distance <= departure_distance
+    return unless departure_distance.present? && arrival_distance.present?
+    return unless arrival_distance <= departure_distance
 
     errors.add(:departure_distance, 'が到着時の走行距離を超えています。')
   end
