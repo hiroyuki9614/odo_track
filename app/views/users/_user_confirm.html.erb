@@ -1,0 +1,18 @@
+<div>
+  <%= t('activerecord.attributes.user.user_name') %>:<%= @user.user_name %>
+</div>
+<div>
+  <%= t('activerecord.attributes.user.email') %>:<%= @user.email %>
+</div>
+<div>
+  <%= t('activerecord.attributes.user.telephone') %>:<%= @user.telephone %>
+</div>
+<div>
+  <%= t('activerecord.attributes.user.password') %>:<%= @user.password %>
+</div>
+<%= f.hidden_field :user_name %>
+<%= f.hidden_field :email %>
+<%= f.hidden_field :telephone %>
+<%= f.hidden_field :password %>
+<%= f.hidden_field :is_active %>
+<%= f.hidden_field :is_admin %>

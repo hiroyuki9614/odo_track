@@ -1,0 +1,40 @@
+<div>
+  <%= f.label :departure_datetime, '出発日時' %><br>
+  <%= f.datetime_field :departure_datetime, size: 10 %>
+  <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :departure_datetime } %>
+</div>
+<div>
+  <%= f.label :arrival_datetime, '到着日時' %><br>
+  <%= f.datetime_field :arrival_datetime, size: 10 %>
+  <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :arrival_datetime } %>
+</div>
+<div>
+  <%= f.label :departure_distance, '出発時の距離' %><br>
+  <%= f.number_field :departure_distance, size: 10 %>
+  <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :departure_distance } %>
+</div>
+<div>
+  <%= f.label :arrival_distance, '到着時の距離' %><br>
+  <%= f.number_field :arrival_distance, size: 10 %>
+  <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :arrival_distance } %>
+</div>
+<div>
+  <%= f.label :departure_location, '出発場所' %><br>
+  <%= f.text_field :departure_location, size: 30, placeholder: '出発場所を記入してください。' %>
+  <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :departure_location } %>
+</div>
+<div>
+  <%= f.label :arrival_location, '到着場所' %><br>
+  <%= f.text_field :arrival_location, size: 30, placeholder: '到着場所を記入してください。' %>
+  <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :arrival_location } %>
+</div>
+<div>
+  <%= f.label :note, 'メモ（件名,客先等)' %><br>
+  <%= f.text_area :note, size: 400, placeholder: '自由記入欄' %>
+  <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :note } %>
+</div>
+<div>
+  <%= f.label :is_studless_tire, 'スタッドレスタイヤの装着' %><br>
+  <%= f.check_box :is_studless_tire %>
+  <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :note } %>
+</div>

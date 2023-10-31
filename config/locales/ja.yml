@@ -1,0 +1,30 @@
+ja:
+  activerecord:
+    attributes:
+      daily_log:
+        created_at: 登録日
+        departure_datetime: 出発日時
+        arrival_datetime: 到着日時
+        departure_distance: 出発時の走行距離
+        departure_location: 出発場所
+        arrival_distance: 到着時の走行距離
+        arrival_location: 到着場所
+        note: 備考(件名・客先名等)
+        is_alcohol_check: アルコール検査
+        is_studless_tire: スタッドレスタイヤの装着
+        approval_status: 承認状態
+      user:
+        user_name: お名前
+        email: メールアドレス
+        telephone: お電話番号
+        password_hash: パスワード
+        is_active: 在籍状況
+        is_admin: 権限
+        password: パスワード
+        password_confirmation: 確認用パスワード
+  enum:
+    daily_log:
+      approval_status:
+        incomplete: 未処理
+        approved: 承認済
+        unapproved: 差戻し

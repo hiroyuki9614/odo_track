@@ -1,0 +1,25 @@
+<div>
+  <table border="1" >
+    <tr>
+      <th><%= t('activerecord.attributes.daily_log.created_at') %></th>
+      <th><%= t('activerecord.attributes.daily_log.departure_datetime') %></th>
+      <th><%= t('activerecord.attributes.daily_log.arrival_datetime') %></th>
+      <th><%= t('activerecord.attributes.daily_log.departure_distance') %></th>
+      <th><%= t('activerecord.attributes.daily_log.arrival_distance') %></th>
+      <th><%= t('activerecord.attributes.daily_log.departure_location') %></th>
+      <th><%= t('activerecord.attributes.daily_log.arrival_location') %></th>
+      <th><%= t('activerecord.attributes.daily_log.note') %></th>
+    </tr>
+    <tr>
+      <td><%= daily_log.created_at.strftime("%Y年%m月%d日") %><%= daily_log.week_format %></td>
+      <td><%= daily_log.departure_datetime.strftime("%Y年%m月%d日 %H:%M") %></td>
+      <td><%= daily_log.arrival_datetime.strftime("%Y年%m月%d日 %H:%M") %></td>
+      <td><%= "#{number_with_delimiter(daily_log.departure_distance)} km" %></td>
+      <td><%= "#{number_with_delimiter(daily_log.arrival_distance)} km" %></td>
+      <td><%= daily_log.departure_location %></td>
+      <td><%= daily_log.arrival_location %></td>
+      <td><%= daily_log.note %></td>
+    </tr>
+  </tr>
+</table>
+</div>

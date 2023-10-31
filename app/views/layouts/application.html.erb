@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>OdoTrack</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <% if controller_name == 'daily_logs_controller' && action_name == 'confirm' %>
+      <meta name="turbo-visit-control" content="reload">
+    <% end %>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_importmap_tags %>
+  </head>
+  <body <%= yield :body_attributes %>>
+    <%= render 'layouts/header' %>
+    <% flash.each do |message_type, message| %>
+      <%= message %>
+    <% end %>
+    <%= yield %>
+  </body>
+  </html>

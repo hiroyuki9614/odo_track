@@ -1,0 +1,13 @@
+<h2>運転日報</h2>
+<% if @daily_logs&.empty? %>
+  <p>運転日報はありません。</p>
+<% else %>
+  <%= paginate @daily_logs %>
+  <% @daily_logs.each do |daily_log| %>
+    <%= render partial: 'index_table', locals: {daily_log: daily_log} %>
+    <td><%= link_to 'show', daily_logs_show_path(daily_log) %></td>
+    <td><%= link_to 'edit', edit_daily_log_path(daily_log) %></td>
+    <td><%= link_to 'destroy', daily_logs_destroy_path(daily_log),
+          data: { turbo_method: 'delete', turbo_confirm: 'Are you sure?' }%></td>
+  <% end %>
+<% end %>

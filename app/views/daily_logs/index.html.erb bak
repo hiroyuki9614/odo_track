@@ -1,0 +1,37 @@
+<h2>運転日報</h2>
+<% if @daily_logs&.empty? %>
+  <p>運転日報はありません。</p>
+<% else %>
+  <%= paginate @daily_logs %>
+  <% @daily_logs.each do |daily_log| %>
+    <div>
+      <table border="1" >
+        <tr>
+          <th><%= t('activerecord.attributes.daily_log.created_at') %></th>
+          <th><%= t('activerecord.attributes.daily_log.departure_datetime') %></th>
+          <th><%= t('activerecord.attributes.daily_log.arrival_datetime') %></th>
+          <th><%= t('activerecord.attributes.daily_log.departure_distance') %></th>
+          <th><%= t('activerecord.attributes.daily_log.arrival_distance') %></th>
+          <th><%= t('activerecord.attributes.daily_log.departure_location') %></th>
+          <th><%= t('activerecord.attributes.daily_log.arrival_location') %></th>
+          <th><%= t('activerecord.attributes.daily_log.note') %>
+          </tr>
+          <tr>
+            <td><%= daily_log.created_at.strftime("%Y年%m月%d日") %><%= daily_log.week_format %></td>
+            <td><%= daily_log.departure_datetime.strftime("%Y年%m月%d日 %H:%M") %></td>
+            <td><%= daily_log.arrival_datetime.strftime("%Y年%m月%d日 %H:%M") %></td>
+            <td><%= "#{number_with_delimiter(daily_log.departure_distance)} km" %></td>
+            <td><%= "#{number_with_delimiter(daily_log.arrival_distance)} km" %></td>
+            <td><%= daily_log.departure_location %></td>
+            <td><%= daily_log.arrival_location %></td>
+            <td><%= daily_log.note %></td>
+            <td><%= link_to 'show', daily_logs_show_path(daily_log) %></td>
+            <td><%= link_to 'edit', edit_daily_log_path(daily_log) %></td>
+            <td><%= link_to 'destroy', daily_logs_destroy_path(daily_log),
+          data: { turbo_method: 'delete', turbo_confirm: 'Are you sure?' }%></td>
+          </tr>
+        </tr>
+      </table>
+    </div>
+  <% end %>
+<% end %>

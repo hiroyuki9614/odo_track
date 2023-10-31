@@ -1,0 +1,15 @@
+<h2>運転日報を作成する</h2>
+<%= form_for @daily_log, url: confirm_daily_logs_path(@daily_log), data: { turbo: false } do |f| %>
+  <%= f.label :user_id, class: 'form-label border-start border-primary border-4 ps-1' %>
+  <%= f.select :user_id, User.selectable_users, { include_blank: true }, class: 'form-select' %>
+  <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :user_id } %>
+  <%= render partial: 'form', locals: {f: f} %>
+  <div>
+    <%= f.label :is_alcohol_check, 'アルコール検査は実施しましたか？' %><br>
+    <%= f.check_box :is_alcohol_check %>
+    <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :is_alcohol_check } %>
+  </div>
+  <div>
+    <%= f.submit '確認画面へ' %>
+  </div>
+<% end %>

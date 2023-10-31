@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  date: 2023-10-16
+  time: 2023-10-16 17:07:32
+  departure_distance: 1
+  arrival_distance: 1
+  departure_location: MyString
+  arrival_location: MyString
+  note: MyText
+
+two:
+  date: 2023-10-16
+  time: 2023-10-16 17:07:32
+  departure_distance: 1
+  arrival_distance: 1
+  departure_location: MyString
+  arrival_location: MyString
+  note: MyText

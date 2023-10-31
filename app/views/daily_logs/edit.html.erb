@@ -1,0 +1,7 @@
+<h2>運転日報を編集する</h2>
+<%= form_for @daily_log, url: edit_confirm_daily_log_path(@daily_log), data: { turbo: false } do |f| %>
+  <%= render partial: 'form', locals: {f:  f, edit_flag: true} %>
+  <div>
+    <%= f.submit '確認画面へ' %>
+  </div>
+<% end %>

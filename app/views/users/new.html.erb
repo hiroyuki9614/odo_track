@@ -1,0 +1,6 @@
+<h2>ユーザー情報を登録する</h2>
+<%= form_for @user, url: confirm_users_path(@user), data: { turbo: false } do |f| %>
+  <%= render partial: 'user_form', locals: {f: f} %>
+  <%= f.submit '確認画面へ' %>
+</div>
+<% end %>

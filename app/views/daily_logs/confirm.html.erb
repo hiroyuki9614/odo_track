@@ -1,0 +1,12 @@
+<% content_for :body_attributes, 'data-turbolinks="false"'.html_safe %>
+<h2>下記の内容で日報を登録してもよろしいですか？</h2>
+<%= form_for @daily_log, url: daily_logs_path, data: { turbo: false } do |f| %>
+  <div>
+    <%= t('activerecord.attributes.daily_log.user_id') %>:<%= @daily_log.user.user_name %>
+  </div>
+  <%= render partial: 'daily_log_confirm', locals: {f: f} %>
+  <%= f.hidden_field :is_alcohol_check %>
+  <%= f.hidden_field :user_id %>
+  <%= f.button 'BACK', value: 'back' %><%= f.button 'OK' %>
+<% end %>
+<div>
