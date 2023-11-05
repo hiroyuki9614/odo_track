@@ -14,5 +14,6 @@
 <%= f.hidden_field :email %>
 <%= f.hidden_field :telephone %>
 <%= f.hidden_field :password %>
-<%= f.hidden_field :is_active %>
-<%= f.hidden_field :is_admin %>
+<%= f.hidden_field :password_confirmation %>
+<%= f.hidden_field :is_active, value: 'true' %>
+<%= f.hidden_field :is_admin, value: 'false' %>

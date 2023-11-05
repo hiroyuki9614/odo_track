@@ -15,7 +15,7 @@ class User < ApplicationRecord
   validates :password, presence: true, length: { minimum: 6 }
   validates :password_confirmation, presence: true, length: { minimum: 6 }
   validates :is_active, inclusion: { in: [true, false] }
-  validates :is_admin, inclusion: { in: [true, false] }
+  validates :is_admin, inclusion: { in: [false, true] }
   # バリデーション 大文字を含む passwordのバリデーションに追加する
   # ^(?=.*[A-Z])(?=.*[.?/-])[a-zA-Z0-9.?/-]{8,24}$ 大文字と記号のバリデーションを分ける
   # 不正な文字列バリデーションと大文字を含まないバリデーション

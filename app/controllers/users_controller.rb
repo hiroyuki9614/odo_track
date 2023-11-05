@@ -31,6 +31,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     return render :new if params[:button] == 'back'
 
+    Rails.logger.info user_params.inspect
     if @user.save
       reset_session
       log_in @user

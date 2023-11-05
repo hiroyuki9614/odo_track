@@ -13,6 +13,7 @@ ja:
         is_alcohol_check: アルコール検査
         is_studless_tire: スタッドレスタイヤの装着
         approval_status: 承認状態
+        user_id: ユーザー名
       user:
         user_name: お名前
         email: メールアドレス

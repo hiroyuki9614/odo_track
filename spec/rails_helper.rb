@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
@@ -70,4 +72,9 @@ RSpec.configure do |config|
   config.before(:each, type: :system) do
     driven_by :rack_test
   end
+
+  Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+
+  config.include DailyLogHelpers, type: :system
+  config.include UserHelpers, type: :system
 end
