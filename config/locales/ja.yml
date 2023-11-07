@@ -18,11 +18,14 @@ ja:
         user_name: お名前
         email: メールアドレス
         telephone: お電話番号
-        password_hash: パスワード
+        password_digest: パスワード
         is_active: 在籍状況
         is_admin: 権限
         password: パスワード
         password_confirmation: 確認用パスワード
+      session:
+        email: メールアドレス
+        password: パスワード
   enum:
     daily_log:
       approval_status:

@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
       log_in user
       redirect_to daily_logs_path
     else
-      flash.now[:danger] = 'Invalid email/password combination'
+      flash.now[:danger] = 'ログインに失敗しました。 メールアドレスまたは、パスワードをご確認ください。'
       render :new, status: :unprocessable_entity
     end
   end

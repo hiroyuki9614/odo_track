@@ -35,6 +35,7 @@ class UsersController < ApplicationController
     if @user.save
       reset_session
       log_in @user
+      flash[:notice] = 'ユーザー登録が完了しました！'
       redirect_to users_path
     else
       render :confirm

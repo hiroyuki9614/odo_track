@@ -30,8 +30,4 @@ module UserHelpers
     expect(page).to have_field 'パスワード', with: password
     expect(page).to have_field 'パスワード(確認)', with: password_confirmation
   end
-
-  def logged_in?
-    !session[:user_id].nil?
-  end
 end

@@ -3,17 +3,18 @@
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
     <%= form_with(url: login_path, scope: :session) do |f| %>
-      <%= f.label :email %>
+      <%= f.label :email, 'メールアドレス' %>
       <%= f.email_field :email, class: 'form-control' %>
-      <%= f.label :password %>
+      <%= f.label :password, 'パスワード' %>
       <%= f.password_field :password, class: 'form-control' %>
       <%= f.label :remember_me, class: "checkbox inline" do %>
-        <%= f.check_box :remember_me %>
-        <span>Remember me on this computer</span>
+        <%= f.check_box :remember_me, id: 'remember_me' %>
+        <span>この端末でログインを保持しますか？</span>
       <% end %>
-      <%= f.submit "Log in", class: "btn btn-primary" %>
+      <%= f.submit "ログイン", class: "btn btn-primary" %>
     <% end %>
-    <p>New user? <%= link_to "Sign up now!", signup_path %></p>
-    <p>mmm@example.com, aaaaa</p>
-  </div>
+    <p>ユーザー登録はお済みではないですか？</p>
+    <%= link_to "サインアップ", signup_path %></p>
+  <p>mmm@example.com</p>
+</div>
 </div>

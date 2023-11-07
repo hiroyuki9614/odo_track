@@ -66,18 +66,7 @@ RSpec.describe '注文フォーム', type: :system do
       # 確認ページを再読込してもデータが保持されている。
       visit confirm_daily_logs_path
       click_on 'BACK'
-      expect(current_path).to eq daily_logs_path
-      expect(page).to have_select 'ユーザー名', selected: 'テストくん1'
-      expect(page).to have_field '出発日時', with: departure_datetime.strftime('%Y-%m-%dT%H:%M:%S')
-      expect(page).to have_field '到着日時', with: arrival_datetime.strftime('%Y-%m-%dT%H:%M:%S')
-      expect(page).to have_field '出発時の距離', with: departure_distance
-      expect(page).to have_field '到着時の距離', with: arrival_distance
-      expect(page).to have_field '出発場所', with: departure_location
-      expect(page).to have_field '到着場所', with: arrival_location
-      expect(page).to have_field 'メモ（件名,客先等)', with: note
-      expect(page).to have_unchecked_field 'スタッドレスタイヤの装着'
-      expect(page).to have_checked_field   'アルコール検査は実施しましたか？'
-
+      expected_form_value_for_daily_log
       click_on '確認'
       expect(current_path).to eq confirm_daily_logs_path
       click_on 'OK'
