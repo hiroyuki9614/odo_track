@@ -1,0 +1,16 @@
+<div>
+  <%= t('activerecord.attributes.vehicle.vehicle_name') %>:<%= @vehicle.vehicle_name %>
+</div>
+<div>
+  <%= t('activerecord.attributes.vehicle.number') %>:<%= @vehicle.number %>
+</div>
+<div>
+  <%= t('activerecord.attributes.vehicle.manufacture') %>:<%= @vehicle.manufacture %>
+</div>
+<div>
+  <%= t('activerecord.attributes.vehicle.current_drive_distance') %>:<%= @vehicle.current_drive_distance %>
+</div>
+<%= f.hidden_field :vehicle_name %>
+<%= f.hidden_field :number %>
+<%= f.hidden_field :manufacture %>
+<%= f.hidden_field :current_drive_distance %>

@@ -1,0 +1,7 @@
+<h2>車両を登録する</h2>
+<%= form_for @vehicle, url: confirm_management_vehicles_path(@vehicle), data: { turbo: false } do |f| %>
+  <%= render partial: 'form', locals: {f: f} %>
+  <div>
+    <%= f.submit '確認画面へ' %>
+  </div>
+<% end %>

@@ -11,7 +11,7 @@ RSpec.describe User, type: :model do
     let(:password) { 'aaaaaa' } # パスワード
     let(:password_confirmation) { 'aaaaaa' } # パスワード(確認)
     let(:is_active) { true } # ユーザーの在籍
-    let(:is_admin) { false } # 管理者権限
+    let(:admin) { false } # 管理者権限
     let(:params) do
       {
         user_name:,
@@ -20,7 +20,7 @@ RSpec.describe User, type: :model do
         password:,
         password_confirmation:,
         is_active:,
-        is_admin:
+        admin:
       }
     end
 
@@ -139,33 +139,14 @@ RSpec.describe User, type: :model do
       it { is_expected.to eq false }
     end
 
-    describe 'methods' do
-      describe '#digest' do
-        it '与えられた文字列に対するBCryptハッシュを返す。' do
-          string = 'password'
-          hash = User.digest(string)
-
-          expect(BCrypt::Password.new(hash)).to be_truthy
-          expect(BCrypt::Password.new(hash).is_password?(string)).to be_truthy
-        end
-      end
-
-      describe '#new_token' do
-        it 'cookieに保存するランダムなキーの動作チェック' do
-          token = User.new_token
-          expect(token).to be_a(String)
-          expect(token).not_to be_empty
-        end
-      end
-    end
-
     context '在籍状況がnil' do
       let(:is_active) { '' }
 
       it { is_expected.to eq false }
     end
+
     context '管理者権限がnil' do
-      let(:is_admin) { '' }
+      let(:admin) { '' }
 
       it { is_expected.to eq false }
     end

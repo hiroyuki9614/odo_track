@@ -4,22 +4,7 @@
   <%= render partial: 'shared/error_messages', locals: { record: @user, symbol: :user_name } %>
 </div>
 <div>
-  <%= f.label :email, 'メールアドレス' %><br>
-  <%= f.text_field :email, size: 10 %>
-  <%= render partial: 'shared/error_messages', locals: { record: @user, symbol: :email } %>
-</div>
-<div>
   <%= f.label :telephone, 'お電話番号' %><br>
   <%= f.number_field :telephone, size: 10 %>
   <%= render partial: 'shared/error_messages', locals: { record: @user, symbol: :telephone } %>
-</div>
-<div>
-  <%= f.label :password, 'パスワード' %><br>
-  <%= f.text_field :password, size: 10 %>
-  <%= render partial: 'shared/error_messages', locals: { record: @user, symbol: :password } %>
-</div>
-<div>
-  <%= f.label :password_confirmation, 'パスワード(確認)' %><br>
-  <%= f.text_field :password_confirmation, size: 10 %>
-  <%= render partial: 'shared/error_messages', locals: { record: @user, symbol: :password_confirmation } %>
 </div>

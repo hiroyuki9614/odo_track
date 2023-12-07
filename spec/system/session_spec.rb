@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe 'ログインとログアウト', type: :system do
   before do
     @user = create :user
-    visit login_path
+    visit new_user_session_path
   end
 
   it 'ログインを行う' do
@@ -13,13 +13,15 @@ RSpec.describe 'ログインとログアウト', type: :system do
     fill_in 'パスワード', with: @user.password
     check 'remember_me'
     has_checked_field?('remember_me')
+    expect(page).to have_field 'メールアドレス', with: @user.email
+    expect(page).to have_field 'パスワード', with: @user.password
     click_on 'ログイン'
     expect(page).to have_current_path(daily_logs_path)
-    expect(User.find(@user.id).remember_digest).not_to eq ''
+    expect(User.find(@user.id).remember_created_at).not_to eq ''
     # ブラウザを再起動してログインが必要か確認する。
     find_by_id('account').click
     click_link 'Log out'
-    expect(current_path).to eq pages_top_path
+    expect(current_path).to eq root_path
     page.has_link? 'ログイン'
   end
 
@@ -29,8 +31,8 @@ RSpec.describe 'ログインとログアウト', type: :system do
       fill_in 'パスワード', with: 'hogehoge'
       click_on 'ログイン'
 
-      expect(current_path).to eq login_path
-      expect(page).to have_content 'ログインに失敗しました。 メールアドレスまたは、パスワードをご確認ください。'
+      expect(current_path).to eq new_user_session_path
+      expect(page).to have_content 'メールアドレス もしくはパスワードが不正です。'
     end
   end
 
@@ -40,8 +42,8 @@ RSpec.describe 'ログインとログアウト', type: :system do
       fill_in 'パスワード', with: '123456'
       click_on 'ログイン'
 
-      expect(current_path).to eq login_path
-      expect(page).to have_content 'ログインに失敗しました。 メールアドレスまたは、パスワードをご確認ください。'
+      expect(current_path).to eq new_user_session_path
+      expect(page).to have_content 'メールアドレス もしくはパスワードが不正です。'
     end
   end
 end

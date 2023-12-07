@@ -3,7 +3,6 @@
 # daily_logのシステム用ヘルパーメソッド
 module DailyLogHelpers
   def fill_in_daily_log_forms
-    # select 'テストくん1', from: 'ユーザー名' テストのため省略
     fill_in '出発日時', with: departure_datetime
     fill_in '到着日時', with: arrival_datetime
     fill_in '出発時の距離', with: departure_distance
@@ -17,7 +16,7 @@ module DailyLogHelpers
 
   def check_daily_log_last_data
     daily_log = DailyLog.last
-    expect(daily_log.user_id).to eq 1
+    expect(daily_log.user_id).to eq @user.id
     expect(daily_log.departure_datetime.strftime('%Y年%m月%d日 %H:%M')).to eq departure_datetime.strftime('%Y年%m月%d日 %H:%M')
     expect(daily_log.arrival_datetime.strftime('%Y年%m月%d日 %H:%M')).to eq arrival_datetime.strftime('%Y年%m月%d日 %H:%M')
     expect(daily_log.departure_distance).to eq departure_distance
@@ -31,7 +30,6 @@ module DailyLogHelpers
 
   def expected_form_value_for_daily_log
     expect(current_path).to eq daily_logs_path
-    expect(page).to have_select 'ユーザー名', selected: 'テストくん1'
     expect(page).to have_field '出発日時', with: departure_datetime.strftime('%Y-%m-%dT%H:%M:%S')
     expect(page).to have_field '到着日時', with: arrival_datetime.strftime('%Y-%m-%dT%H:%M:%S')
     expect(page).to have_field '出発時の距離', with: departure_distance

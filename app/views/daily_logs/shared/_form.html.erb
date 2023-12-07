@@ -1,0 +1,55 @@
+<!-- 車両名 -->
+  <div class="col-md-2 col-sm-2">
+    <div class="form-group">
+      <%= f.label :vehicle_id, '車両名', class:"form-label" %><br>
+      <%= f.collection_select :vehicle_id, Vehicle.selectable_vehicles, :second, :first, { selected: Vehicle.selectable_vehicles.first.second }, class: "form-select", style: "width: 180px" %>
+      <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :vehicle_id } %>
+    </div>
+  </div>
+    <!-- 出発日時 -->
+  <div class="col-md-3 col-sm-3 ps-4">
+    <div class="form-group">
+      <%= f.label :departure_datetime, '出発日時', class:"form-label" %><br>
+      <%= f.datetime_field :departure_datetime, class: "form-control" %>
+      <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :departure_datetime } %>
+    </div>
+    <div class="form-group">
+      <%= f.label :departure_distance, '出発時の距離', class: "form-label" %><br>
+      <%= f.number_field :departure_distance, class: "form-control" %>
+      <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :departure_distance } %>
+    </div>
+    <div class="form-group">
+      <%= f.label :departure_location, '出発場所', class:"form-label" %><br>
+      <%= f.text_field :departure_location, class:"form-control" %>
+      <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :departure_location } %>
+    </div>
+  </div>
+    <!-- 到着日時 -->
+  <div class="col-md-3 col-sm-3 ps-4">
+    <div class="form-group">
+      <%= f.label :arrival_datetime, '到着日時', class:"form-label" %><br>
+      <%= f.datetime_field :arrival_datetime, class: "form-control" %>
+      <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :arrival_datetime } %>
+    </div>
+    <div class="form-group">
+    <%= f.label :arrival_distance, '到着時の距離', class:"form-label" %><br>
+    <%= f.number_field :arrival_distance, class: "form-control" %>
+    <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :arrival_distance } %>
+    </div>
+    <div class="form-group">
+      <%= f.label :arrival_location, '到着場所', class:"form-label" %><br>
+      <%= f.text_field :arrival_location, class:"form-control" %>
+      <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :arrival_location } %>
+  </div>
+</div>
+<div class="col-md-4 col-sm-4">
+  <div class="form-group">
+    <%= f.label :note, 'メモ（件名,客先等)', class:"form-label" %><br>
+    <%= f.text_area :note, class:"form-control" %>
+    <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :note } %>
+  </div>
+  <div class="form-check m-2 justify-content-start">
+    <%= f.check_box :is_studless_tire, class: " form-check-input" %>
+    <%= f.label :is_studless_tire, 'スタッドレスタイヤの装着', class: " form-check-label" %><br>
+    <%= render partial: 'shared/error_messages', locals: { record: @daily_log, symbol: :note } %>
+  </div>

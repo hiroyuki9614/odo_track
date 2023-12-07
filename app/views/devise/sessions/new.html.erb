@@ -1,0 +1,44 @@
+<main id="login_form">
+  <div class="container py-2 h-70">
+    <div class="row d-flex justify-content-center align-items-center h-70">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card shadow-2-strong " style="border-radius: 1rem;">
+          <div class="card-body pt-4 px-4">
+            <h3 class="mb-3 fw-bold text-center">ログイン</h3>
+            <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+              <div class="form-outline mb-4">
+                <%= f.label :email, 'メールアドレス', class: "form-label" %><br />
+                <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control form-control" %>
+              </div>
+              <div class="form-outline mb-4">
+                <%= f.label :password, 'パスワード', class: "form-label" %><br />
+                <%= f.password_field :password, autocomplete: "current-password", class: "form-control form-control" %>
+              </div>
+              <!-- Checkbox -->
+              <% if devise_mapping.rememberable? %>
+                <div class="form-check mb-3 justify-content-start">
+                  <%= f.check_box :remember_me, class: " form-check-input" %>
+                  <%= f.label :remember_me, 'この端末でログインを記録しますか？', class: "form-check-label" %>
+                </div>
+              <% end %>
+              <div class="d-grid">
+                <button class="btn btn-primary btn-block" type="submit">Login</button>
+              </div>
+              <div>
+                <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+                  <div class="float-end mt-2">
+                    <%= link_to "パスワードを忘れた", new_password_path(resource_name) %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+          <div class="mx-3 my-2">
+            <hr class="m-3" id="log_in_hr">
+            <%= render "devise/shared/links" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

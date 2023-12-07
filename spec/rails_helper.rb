@@ -7,6 +7,7 @@ require_relative '../config/environment'
 # Prevent database truncation if the environment is production
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
+require 'devise'
 require_relative 'support/factory_bot'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -74,7 +75,18 @@ RSpec.configure do |config|
   end
 
   Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
-
+  # ルートヘルパーをテストに含める
+  config.include Rails.application.routes.url_helpers, type: :request
+  # system用のテストヘルパー
   config.include DailyLogHelpers, type: :system
   config.include UserHelpers, type: :system
+  config.include EditDailyLogHelpers, type: :system
+  # devise用のテストヘルパー
+  config.include Devise::Test::IntegrationHelpers, type: :feature
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :view
+  config.include Devise::Test::IntegrationHelpers, type: :request
+  config.include Devise::Test::IntegrationHelpers, type: :system
+  config.include Warden::Test::Helpers
+  config.extend ControllerMacros, type: :controller
 end

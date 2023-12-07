@@ -1,17 +1,13 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-
-RSpec.describe 'サインアップとログアウト', type: :system do
-  let(:user_name) { Faker::Name.unique.name }
-  let(:email) { Faker::Internet.email }
-  let(:telephone) { '09000001111' }
-  let(:password) { Faker::Internet.password(min_length: 6) }
-  let(:password_confirmation) { password }
-
+RSpec.describe 'アプリ全体の動作チェック', type: :system do
   before do
-    visit signup_path
+    ActionMailer::Base.deliveries.clear
+    @user = create(:user)
+    visit new_user_registration_path
   end
+  let(:email) { Faker::Internet.unique.email } # ランダムなアドレスを取得するため再定義
 
   # サインアップの流れ
   # 各項目に情報を記入
@@ -27,23 +23,26 @@ RSpec.describe 'サインアップとログアウト', type: :system do
   # ログアウトしてトップページへ移行する。
   it 'サインアップを行う' do
     fill_in_user_forms
-    fill_in 'お名前(フルネーム)', with: user_name
+    fill_in 'お名前(フルネーム)', with: @user.user_name
+    click_on 'サインアップ'
+    expect(page).to have_content '本人確認用のメールを送信しました。メール内のリンクからアカウントを有効化させてください。'
+    expect(current_path).to eq root_path
+    expect(ActionMailer::Base.deliveries.size).to eq 1
+    expect(page).to have_content '本人確認用のメールを送信しました。メール内のリンクからアカウントを有効化させてください。'
+    expect(last_email.to).to include email
 
-    click_on '確認画面へ'
-    expect(current_path).to eq confirm_users_path
-
-    click_on 'OK'
-    # 登録完了
-    expect(current_path).to eq users_path
-    check_user_last_data
-    # ログイン時にremember_digestに値が記録されない。
-    user = User.last
-    expect(user.remember_digest).to eq ''
-
-    find_by_id('account').click
-    click_link 'Log out'
-    expect(current_path).to eq pages_top_path
-    page.has_link? 'ログイン'
+    ctoken = last_email.body.match(/confirmation_token=([^"]+)/)
+    visit "/auth/verification?#{ctoken}"
+    # <a href="http://localhost:3000confirmation_token=KEW9Cz3FctJ1-9kb6y"
+    expect(current_path).to eq new_user_session_path
+    # expect(page).to have_content '1 件のエラーが発生したため user は保存されませんでした:'
+    expect(page).to have_content 'アカウントを登録しました。'
+    # expect(confirmed_at).not_to be_nil
+    fill_in 'メールアドレス', with: email
+    fill_in 'パスワード', with: @user.password
+    click_on 'ログイン'
+    expect(current_path).to eq daily_logs_path
+    expect(page).to have_content 'ログインしました。'
   end
 
   context '入力に不備があり、サインアップできない。' do
@@ -51,35 +50,26 @@ RSpec.describe 'サインアップとログアウト', type: :system do
       fill_in 'お名前(フルネーム)', with: ''
       fill_in_user_forms
 
-      click_on '確認画面へ'
+      click_on 'サインアップ'
 
-      expect(current_path).to eq confirm_users_path
+      expect(current_path).to eq user_registration_path
       expect(page).to have_content 'お名前を入力してください'
     end
   end
-  context '完了画面で戻るを押した場合' do
-    it 'ユーザーを登録できる' do
-      fill_in_user_forms
-      fill_in 'お名前(フルネーム)', with: user_name
-      click_on '確認画面へ'
-      expect(current_path).to eq confirm_users_path
-      expect(current_path).to eq confirm_users_path
-      click_on 'BACK'
-      expected_form_value_for_signup
-      click_on '確認画面へ'
-      expect(current_path).to eq confirm_users_path
 
-      # 確認ページを再読込してもデータが保持されている。
-      visit confirm_users_path
-      click_on 'BACK'
-      expect(current_path).to eq users_path
-      expected_form_value_for_signup
-      click_on '確認画面へ'
-      expect(current_path).to eq confirm_users_path
-      click_on 'OK'
-      expect(current_path).to eq users_path
-      expect(page).to have_text 'ユーザー登録が完了しました！'
-      check_user_last_data
+  context 'サインアップでパスワードを空欄にする。' do
+    it '入力内容に不備がある。' do
+      fill_in 'お名前(フルネーム)', with: @user.user_name
+      fill_in 'メールアドレス', with: @user.email
+      fill_in '電話番号', with: @user.telephone
+      fill_in 'パスワード', with: ''
+      fill_in 'パスワード(確認)', with: ''
+
+      click_on 'サインアップ'
+
+      expect(current_path).to eq user_registration_path
+      expect(page).to have_content 'パスワードを入力してください'
+      expect(ActionMailer::Base.deliveries.size).to eq 0
     end
   end
 end

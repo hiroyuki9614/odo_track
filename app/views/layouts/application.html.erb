@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>OdoTrack</title>
+    <%= favicon_link_tag('favicon.ico') %>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <% if controller_name == 'daily_logs_controller' && action_name == 'confirm' %>
       <meta name="turbo-visit-control" content="reload">
@@ -9,14 +10,28 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_importmap_tags %>
+    <%#= javascript_include_tag 'application', type: 'module', 'data-turbolinks-track': 'reload' %>
+    <%#= javascript_importmap_tags %>
+    <%= vite_client_tag %>
+    <%= vite_javascript_tag 'application' %>
+    <!--
+      If using a TypeScript entrypoint file:
+        vite_typescript_tag 'application'
+
+      If using a .jsx or .tsx entrypoint, add the extension:
+        vite_javascript_tag 'application.jsx'
+
+      Visit the guide for more information: https://vite-ruby.netlify.app/guide/rails
+    -->
+
   </head>
-  <body <%= yield :body_attributes %>>
-    <%= render 'layouts/header' %>
+  <body>
+    <%= render 'layouts/navbar' %>
     <% flash.each do |message_type, message| %>
-      <%= message %>
+      <div class="text-danger text-center text-bold bg-light">
+        <%= message %>
+      </div>
     <% end %>
     <%= yield %>
   </body>
-  </html>
+</html>

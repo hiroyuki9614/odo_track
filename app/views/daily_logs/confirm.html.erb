@@ -4,7 +4,7 @@
   <div>
     <%= t('activerecord.attributes.daily_log.user_id') %>:<%= @daily_log.user.user_name %>
   </div>
-  <%= render partial: 'daily_log_confirm', locals: {f: f} %>
+  <%= render partial: 'daily_logs/shared/daily_log_confirm', locals: {f: f} %>
   <%= f.hidden_field :is_alcohol_check %>
   <%= f.hidden_field :user_id %>
   <%= f.button 'BACK', value: 'back' %><%= f.button 'OK' %>

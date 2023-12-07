@@ -1,0 +1,52 @@
+<main id="signup_form">
+  <div class="container py-2 h-70">
+    <div class="row d-flex justify-content-center align-items-center h-70">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card shadow-2-strong " style="border-radius: 1rem;">
+          <div class="card-body pt-4 px-4">
+            <h3 class="mb-3 fw-bold text-center">ユーザー登録</h3>
+            <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+              <div class="form-outline mb-4">
+                <%= f.label :user_name, 'お名前(フルネーム)', class: "form-label" %><br>
+                <%= f.text_field :user_name, size: 10, class: "form-control form-control" %>
+                <%= render partial: 'shared/error_messages', locals: { record: @user, symbol: :user_name } %>
+              </div>
+              <div class="form-outline mb-4">
+                <%= f.label :telephone, 'お電話番号', class: "form-label" %><br>
+                <%= f.text_field :telephone, size: 10, class: "form-control form-control" %>
+                <%= render partial: 'shared/error_messages', locals: { record: @user, symbol: :telephone } %>
+              </div>
+              <div class="form-outline mb-4">
+                <%= f.label :email, 'メールアドレス', class: "form-label" %><br />
+                <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control form-control" %>
+                <%= render partial: 'shared/error_messages', locals: { record: @user, symbol: :email } %>
+              </div>
+              <div class="form-outline mb-4">
+                <%= f.label :password, 'パスワード', class: "form-label" %>
+                <% if @minimum_password_length %>
+                  <em>(<%= @minimum_password_length %>文字以上)</em>
+                <% end %><br />
+                <%= f.password_field :password, autocomplete: "new-password", class: "form-control form-control" %>
+                <%= render partial: 'shared/error_messages', locals: { record: @user, symbol: :password } %>
+              </div>
+              <div class="form-outline mb-4">
+                <%= f.label :password_confirmation, 'パスワード(確認)', class: "form-label" %><br />
+                <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control form-control" %>
+                <%= render partial: 'shared/error_messages', locals: { record: @user, symbol: :password_confirmation } %>
+              </div>
+              <div class="d-grid">
+                <button class="btn btn-primary btn-block" type="submit">登録する</button>
+              </div>
+              <div>
+              <% end %>
+            </div>
+          </div>
+          <div class="mx-3 my-2">
+            <hr class="m-3" id="log_in_hr">
+            <%= render "devise/shared/links" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

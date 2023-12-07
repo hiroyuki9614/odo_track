@@ -1,0 +1,12 @@
+<h2>車両一覧</h2>
+<% if @vehicles.blank? %>
+  <p>登録されている車両はありません。</p>
+<% else %>
+  <%= paginate @vehicles %>
+  <% @vehicles.each do |vehicle| %>
+    <%= render partial: 'index_table', locals: {vehicle: vehicle} %>
+    <td><%= link_to 'show', management_vehicle_path(vehicle) %></td>
+    <td><%= link_to 'edit', edit_management_vehicle_path(vehicle) %></td>
+    <td><%= link_to 'destroy', management_vehicle_delete_path(vehicle), method: :post %></td>
+  <% end %>
+<% end %>

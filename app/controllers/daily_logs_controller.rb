@@ -3,18 +3,32 @@
 # 運転日報（Daily Logs）に関する操作（CRUDなど）を管理するコントローラーです。
 # このコントローラーでは、運転日報の作成、編集、表示、削除等のアクションを定義しています。
 class DailyLogsController < ApplicationController
+  before_action :authenticate_user!
+  # before_action :correct_user, only: %i[index]
+
   def index
-    @daily_logs = DailyLog.all.order(created_at: :desc).page params[:page]
-    # @search = SearchKeyword.new
+    @user = User.find(current_user.id)
+    @q = @user.daily_logs.all.where(discarded_at: nil).ransack(params[:q])
+    @q.sorts = 'created_at desc' if @q.sorts.empty?
+    @daily_logs = @q.result(distinct: true).page params[:page]
+    # .order(created_at: :desc)
   end
 
   def show
-    @daily_log = DailyLog.find(params[:id])
+    @user = User.find(current_user.id)
+    @daily_log = @user.daily_logs.find(params[:id])
   end
 
   def new
-    @daily_log = DailyLog.new(departure_datetime: Time.zone.today,
-                              arrival_datetime: Time.now.strftime('%Y-%m-%d %H:%M'))
+    @daily_log = current_user.daily_logs.build(
+      departure_datetime: Time.zone.today,
+      arrival_datetime: Time.now.strftime('%Y-%m-%d %H:%M'),
+      # 乗った車(vehicle_id)の最後に記録された走行距離を入力するようにする。
+      # 今は個人の最後の走行距離である。
+      departure_distance: last_arrival_distance
+    )
+    # お気に入りの目的地をセレクトボックスで選べるようにする。 datalist要素
+    # @frequent_destinations = current_user.frequent_destination
   end
 
   def confirm
@@ -24,6 +38,10 @@ class DailyLogsController < ApplicationController
     else
       @daily_log = DailyLog.new(session[:daily_log_data])
     end
+    if @daily_log.user_id != current_user.id
+      flash.now[:alert] = '不正な操作が行われました。'
+      render :new and return
+    end
     return unless @daily_log.invalid?
 
     render :new
@@ -31,41 +49,34 @@ class DailyLogsController < ApplicationController
 
   def create
     @daily_log = DailyLog.new(daily_log_params)
+    if @daily_log.user_id != current_user.id
+      flash[:alert] = '不正な操作が行われました。'
+      render :new and return
+    end
     return render :new if params[:button] == 'back'
 
     if @daily_log.save
       redirect_to daily_logs_path
     else
+      # 失敗時にお気に入りを復旧。　恐らく不要。
+      # @feed_items = current_user.feed
       render :confirm
     end
   end
 
   def edit
     @daily_log = DailyLog.find(params[:id])
-  end
 
-  def edit_confirm
-    if request.patch?
-      @daily_log = DailyLog.find(params[:id])
-      session[:daily_log_data] = daily_log_params
-      @daily_log.attributes = daily_log_params
-    else
-      # ここでセッションから取得したデータを属性にセット
-      @daily_log = DailyLog.new(session[:daily_log_data])
-    end
-    return unless @daily_log.invalid?
+    return unless @daily_log.user_id != current_user.id
 
-    render :edit
+    flash[:alert] = '不正な操作が行われました。'
+    render :index and return
   end
 
   def update
     @daily_log = DailyLog.find(params[:id])
-    if params[:button] == 'back'
-      @daily_log.attributes = session[:daily_log_data]
-      render :edit and return
-    end
     if @daily_log.update(daily_log_params)
-      redirect_to daily_logs_path
+      redirect_to daily_logs_path, notice: '運転日報を更新しました。'
     else
       render :edit, status: :unprocessable_entity
     end
@@ -73,25 +84,10 @@ class DailyLogsController < ApplicationController
 
   def destroy
     @daily_log = DailyLog.find(params[:id])
-    @daily_log.destroy
+    @daily_log.discard
+    flash[:success] = '運転日報を削除しました。'
     redirect_to daily_logs_path, status: :see_other
   end
-
-  # def keywd
-  #   @search = SearchKeyword.new
-  # end
-
-  # def keywd_process
-  #   @search = SearchKeyword.new(params.require(:search_keyword).permit(:keyword))
-  #   if @search.valid?
-  #     # 検索ロジックを実行し、結果を表示するページへリダイレクトする
-  #     # 例えば、検索結果を表示するindexアクションへリダイレクトする場合：
-  #     redirect_to daily_logs_path(keyword: @search.keyword)
-  #   else
-  #     flash[:error] = @search.errors.full_messages[0]
-  #     redirect_to keywd_daily_logs_path
-  #   end
-  # end
 
   private
 
@@ -106,6 +102,21 @@ class DailyLogsController < ApplicationController
                                       :is_alcohol_check,
                                       :is_studless_tire,
                                       :approval_status,
-                                      :user_id)
+                                      :user_id,
+                                      :vehicle_id)
+  end
+
+  def correct_user
+    @daily_log = current_user.daily_logs.find_by(id: params[:id])
+    return unless @daily_log.nil?
+
+    flash[:alert] = '不正な操作が行われました。'
+
+    redirect_to daily_logs_path, status: :see_other
+  end
+
+  def last_arrival_distance
+    last_log = current_user.daily_logs.last
+    last_log&.arrival_distance.present? ? last_log.arrival_distance : ''
   end
 end

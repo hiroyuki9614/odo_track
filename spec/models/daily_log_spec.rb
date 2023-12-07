@@ -5,7 +5,8 @@ require 'rails_helper'
 RSpec.describe DailyLog, type: :model do
   # テストデータ
   describe '#valid?' do
-    let(:user_id) { 1 }
+    let(:user) { FactoryBot.create(:user) }
+    let(:user_id) { user.id }
     let(:departure_datetime) { Time.zone.today } # 出発日時
     let(:arrival_datetime) { Time.now } # 到着日時
     let(:departure_distance) { 123 } # 出発時の距離
@@ -15,7 +16,7 @@ RSpec.describe DailyLog, type: :model do
     let(:note) { '得意先名：ドラゴン商事 件名：照明の交換' } # 備考欄
     let(:is_studless_tire) { false } # スタッドレスタイヤの装着
     let(:is_alcohol_check) { true } # アルコール検査の実施
-    let(:params) do
+    let(:params) do 
       {
         user_id:,
         departure_datetime:,
@@ -43,7 +44,6 @@ RSpec.describe DailyLog, type: :model do
     # paramsの部分的なバリデーションチェック
     context '名前が選択されていない' do
       let(:user_id) { '' }
-
       it { is_expected.to eq false }
     end
 

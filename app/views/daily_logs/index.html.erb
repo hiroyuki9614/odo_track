@@ -1,13 +1,39 @@
-<h2>運転日報</h2>
-<% if @daily_logs&.empty? %>
+<div class="my-4 mx-5">
+  <h2>運転日報</h2>
+</div>
+<% if @daily_logs.blank? %>
   <p>運転日報はありません。</p>
 <% else %>
-  <%= paginate @daily_logs %>
-  <% @daily_logs.each do |daily_log| %>
-    <%= render partial: 'index_table', locals: {daily_log: daily_log} %>
-    <td><%= link_to 'show', daily_logs_show_path(daily_log) %></td>
-    <td><%= link_to 'edit', edit_daily_log_path(daily_log) %></td>
-    <td><%= link_to 'destroy', daily_logs_destroy_path(daily_log),
-          data: { turbo_method: 'delete', turbo_confirm: 'Are you sure?' }%></td>
-  <% end %>
+<!-- ヘッダー部分 -->
+  <section class="daily_log_index">
+    <div class="bg-image h-100">
+      <div class="mask d-flex align-items-center h-100" style="background-color: white;">
+        <div class="container">
+          <!-- 検索とページネーション -->
+          <%= render 'daily_logs/shared/index_header', q: @q, daily_logs: @daily_logs %>
+          <!-- テーブルのヘッダー部分 -->
+          <div class="row justify-content-center">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                      <!-- テーブルタイトル -->
+                      <%= render partial: 'daily_logs/shared/index_table_header' %>
+                        </tr>
+                      </thead>
+                      <!-- テーブルボディ -->
+                      <% @daily_logs.each do |daily_log| %>
+                        <%= render partial: 'daily_logs/shared/index_table', locals: {daily_log: daily_log} %>
+                      <% end %>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 <% end %>

@@ -17,7 +17,10 @@ gem 'sqlite3', '~> 1.4'
 gem 'puma', '>= 5.0'
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
-gem 'importmap-rails'
+# gem 'importmap-rails'
+
+# railsにvite.jsを導入する
+gem 'vite_rails'
 
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem 'turbo-rails'
@@ -55,6 +58,9 @@ gem 'sidekiq'
 # ページネーション
 gem 'kaminari'
 
+# ページネーションにbootstrap5を適用
+gem 'bootstrap5-kaminari-views'
+
 # enumのi18n対応
 gem 'enum_help'
 
@@ -62,7 +68,39 @@ gem 'enum_help'
 gem 'bcrypt', '~> 3.1', require: 'bcrypt'
 
 # bootstrapを適用する
-gem 'bootstrap-sass', '~>3.4'
+gem 'bootstrap', '~> 5.3.2'
+
+# sassを有効にする gem bootstrapに依存
+gem 'dartsass-sprockets'
+
+# アセットパイプライン
+gem 'cssbundling-rails'
+
+# sassを有効にする
+# gem 'dartsass-rails', '~> 0.5.0'
+
+gem 'mini_racer'
+
+# # jqueryを有効にする
+gem 'jquery-rails'
+
+# # ユーザー認証。
+gem 'devise'
+
+# # 論理削除を実装する。
+gem 'discard', '~> 1.2'
+
+# 検索機能とソート機能
+gem 'ransack'
+
+# google API
+# gem 'google-apis-drive_v3', '~> 0.5.0'
+
+# # googleのOAuthクライアントライブラリ
+# gem 'googleauth'
+
+# スプレッドシートにデータを保存・pdf化
+# gem 'google_drive'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

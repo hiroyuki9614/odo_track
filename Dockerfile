@@ -8,6 +8,12 @@ WORKDIR /app
 COPY Gemfile Gemfile.lock ./
 RUN bundle config set frozen false
 RUN bundle install
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - \
+	&& apt-get update -qq \
+	&& apt-get install -y nodejs postgresql-client \
+	&& npm install --global yarn \
+	&& rm -rf /var/lib/apt/lists/*
+
 
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
@@ -16,4 +22,4 @@ EXPOSE 3000
 
 COPY . .
 
-CMD ["bundle", "exec", "foreman", "start"]
+CMD ["foreman", "start"]

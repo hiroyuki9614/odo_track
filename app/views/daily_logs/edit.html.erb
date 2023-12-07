@@ -1,7 +1,23 @@
-<h2>運転日報を編集する</h2>
-<%= form_for @daily_log, url: edit_confirm_daily_log_path(@daily_log), data: { turbo: false } do |f| %>
-  <%= render partial: 'form', locals: {f:  f, edit_flag: true} %>
-  <div>
-    <%= f.submit '確認画面へ' %>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12 mt-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="my-3 mx-5">
+            <h2>運転日報を編集する</h2>
+          </div>
+            <%= form_for @daily_log, url: daily_log_path(@daily_log), method: :patch do |f| %>
+              <div class="field">
+                <div class="row">
+                  <%= render partial: 'daily_logs/shared/form', locals: {f:  f, edit_flag: true} %>
+                <div class="edit-submit-btn ms-3">
+                  <%= f.submit '確認画面へ',class: "btn btn-primary btn-block" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-<% end %>
+</div>

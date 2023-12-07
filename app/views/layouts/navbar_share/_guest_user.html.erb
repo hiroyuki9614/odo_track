@@ -1,0 +1,14 @@
+<div class="nav">
+  <ul class="nav navbar-nav">
+    <% if current_page?(new_user_registration_path) %>
+      <button type="button" id="nav-btn-disabled-info" class="btn btn-info btn-sm rounded-pill m-1" disabled>サインアップ</button>
+    <% else %>
+      <li class="nav-item"><%= link_to_unless_current 'サインアップ', new_user_registration_path, class:"btn btn-sm btn-info rounded-pill text-white nav-btn m-1" %></li>
+    <% end %>
+    <% if current_page?(new_user_session_path) %>
+      <button type="button" id="nav-btn-disabled-danger" class="btn btn-danger btn-sm rounded-pill m-1" disabled>ログイン</button>
+    <% else %>
+      <li class="nav-item"><%= link_to_unless_current 'ログイン', new_user_session_path, class:"btn btn-danger btn-sm rounded-pill nav-btn m-1", id: "nav-btn-danger" %></li>
+    <% end %>
+  </ul>
+</div>

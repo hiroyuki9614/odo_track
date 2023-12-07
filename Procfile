@@ -1,2 +1,2 @@
-web: bin/rails s -p 3000 -b 0.0.0.0
+web: bin/vite dev
 sidekiq: bundle exec sidekiq -q default

@@ -1,0 +1,48 @@
+<nav class="navbar navbar-fixed-top navbar-inverse" style="background-color: #555555; --bs-bg-opacity: .5;" data-bs-theme="dark">
+  <%# ゲストユーザー %>
+  <% unless user_signed_in? %>
+    <div class="container">
+      <%= link_to image_tag("img_logo.png"), root_path, class:"nav-logo" %>
+      <%= render '/layouts/navbar_share/guest_user' %>
+    </div>
+  <% else %>
+    <div class="container">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown link
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+        <li><%= link_to_unless_current 'ユーザー一覧', admins_path %></li>
+        <li><%= link_to_unless_current '車両登録', new_management_vehicle_path %></li>
+        <li><%= link_to_unless_current '車両一覧', management_vehicles_path %></li>
+        <li><%= link_to_unless_current '退職者一覧', admin_users_retired_list_path %></li>
+        <li><%= link_to_unless_current '新規作成', new_daily_log_path %></li>
+        <li><%= link_to_unless_current '運転日報一覧', daily_logs_path %></li>
+        <li><%= link_to_unless_current '削除申請', discarded_daily_logs_path %></li>
+        <li><%= link_to_unless_current '出力', create_spreadsheet_export_daily_logs_path %></li>
+        <li><%= link_to "Help", '#' %></li>
+        <li class="dropdown">
+          <a href="#" id="account" class="dropdown-toggle">
+            Account <b class="caret"></b>
+          </a>
+          <ul id="dropdown-menu" class="dropdown-menu">
+            <li><%= link_to "Profile", current_user %></li>
+            <li><%= link_to "Settings", user_path(current_user) %></li>
+            <li class="divider"></li>
+            <li>
+              <%= link_to "Log out", destroy_user_session_path, data: { "turbo-method": :delete } %>
+            </li>
+          </li>
+        </div>
+      </ul>
+    </div>
+  <% end %>
+</nav>
+</div>
+</nav>

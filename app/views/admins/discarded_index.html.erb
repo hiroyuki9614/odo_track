@@ -1,0 +1,35 @@
+<h2>ユーザーの管理</h2>
+<% if @users&.empty? %>
+  <p>ユーザーは登録されていません。</p>
+<% else %>
+  <%= paginate @users %>
+  <% @users.each do |user| %>
+    <div>
+      <table border="1" >
+        <tr>
+          <th><%= t('activerecord.attributes.user.user_name') %></th>
+          <th><%= t('activerecord.attributes.user.email') %></th>
+          <th><%= t('activerecord.attributes.user.telephone') %></th>
+          <th><%= t('activerecord.attributes.user.is_active') %></th>
+          <th><%= t('activerecord.attributes.user.admin') %></th>
+        </tr>
+        <tr>
+          <td><%= user.user_name %></td>
+          <td><%= user.email %></td>
+          <td><%= user.telephone %></td>
+          <td><%= user.active_text? %></td>
+          <td><%= user.admin_text? %></td>
+          <% unless user.confirmed_at.nil? %>
+            <td><%= link_to 'edit', edit_other_user_registration_path(user) %></td>
+            <td>
+              <%= link_to '退職', admin_user_undelete_path(user), method: :put  %></td>
+          <% else %>
+            <td>未承認</td>
+            <td><%= link_to 'ユーザー登録の取り消し', admin_user_destroy_path(user),
+            data: { turbo_method: 'delete', turbo_confirm: 'ユーザーを削除します。 よろしいでしょうか？' }%></td>
+          <% end %>
+        </tr>
+      </table>
+    <% end %>
+  </div>
+<% end %>

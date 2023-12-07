@@ -1,0 +1,21 @@
+<main id="forgot_password">
+  <div class="content mb-3">
+    <h2>パスワードの再設定</h2>
+    <br>
+    <p>下記のフォームにメールアドレスをご入力ください。<br>
+      パスワード再設定用のリンクを送信します。</p>
+  </div>
+  <div id="form">
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+      <div class="col-4 form-outline mb-4">
+        <%= f.label :email, class: "form-label" %><br />
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
+      </div>
+      <div class="actions">
+        <%= f.submit "パスワード再設定用のメールを送信する", class:"btn btn-outline-secondary btn-block" %>
+      </div>
+    <% end %>
+    <%= render "devise/shared/links" %>
+  </div>
+</main>

@@ -1,0 +1,11 @@
+<thead>
+  <tr>
+    <th><%= sort_link(@q, :created_at, "登録日", class:"text-dark") %></th>
+    <th><%= t('activerecord.attributes.daily_log.departure_datetime') %></th>
+    <th><%= t('activerecord.attributes.daily_log.arrival_datetime') %></th>
+    <th><%= t('activerecord.attributes.daily_log.departure_distance') %></th>
+    <th><%= t('activerecord.attributes.daily_log.arrival_distance') %></th>
+    <th><%= sort_link(@q, :departure_location, "出発場所", class:"text-dark") %></th>
+    <th><%= sort_link(@q, :arrival_location, "目的地", class:"text-dark") %></th>
+    <th></th>
+

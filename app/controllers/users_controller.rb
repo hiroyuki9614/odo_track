@@ -1,63 +1,16 @@
 # frozen_string_literal: true
 
-# ユーザーの管理・認証を行うコントローラー
-# メール認証とパスワードのハッシュ化など
+# ユーザーのお気に入り管理を行うコントローラー
 class UsersController < ApplicationController
-  before_action :logged_in_user, only: %i[edit update]
+  before_action :authenticate_user!
+  # before_action :admin_user, only: %i[index destroy]
 
-  def index
-    @users = User.all.order(created_at: :asc).page params[:page]
-  end
-
-  def show; end
-
-  def new
-    @user = User.new
-  end
-
-  def confirm
-    if request.post?
-      @user = User.new(user_params)
-      session[:user_data] = user_params
-    else
-      @user = User.new(session[:user_data])
-    end
-    return unless @user.invalid?
-
-    render :new
-  end
-
-  def create
-    @user = User.new(user_params)
-    return render :new if params[:button] == 'back'
-
-    Rails.logger.info user_params.inspect
-    if @user.save
-      reset_session
-      log_in @user
-      flash[:notice] = 'ユーザー登録が完了しました！'
-      redirect_to users_path
-    else
-      render :confirm
-    end
+  def show
+    @user = User.find(params[:id])
   end
 
   def edit
     @user = User.find(params[:id])
-  end
-
-  def edit_confirm
-    if request.patch?
-      @user = User.find(params[:id])
-      session[:user_data] = user_params
-      @user.attributes = user_params
-    else
-      # ここでセッションから取得したデータを属性にセット
-      @user = User.new(session[:user_data])
-    end
-    return unless @user.invalid?
-
-    render :edit
   end
 
   def update
@@ -73,12 +26,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def destroy
-    @user = User.find(params[:id])
-    @user.destroy
-    redirect_to users_path, status: :see_other
-  end
-
   private
 
   def user_params
@@ -87,14 +34,13 @@ class UsersController < ApplicationController
                                  :telephone,
                                  :password,
                                  :password_confirmation,
-                                 :is_active,
-                                 :is_admin)
+                                 :is_active)
   end
-end
 
-def logged_in_user
-  return if logged_in?
+  def admin_user
+    return if user_signed_in? && current_user.admin?
 
-  flash[:danger] = 'ログインしてください。'
-  redirect_to login_url, status: :see_other
+    flash[:alert] = 'その操作は権限が無いため実行できません。'
+    redirect_to(root_url, status: :see_other)
+  end
 end

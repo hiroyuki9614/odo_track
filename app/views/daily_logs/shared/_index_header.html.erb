@@ -1,0 +1,12 @@
+<div class="d-flex justify-content-between">
+  <div class="search-form">
+    <%= search_form_for @q, class: "d-flex align-items-center" do |f| %>
+      <%= f.label :departure_location,"出発場所:", class: "form-label mt-1" %>
+      <%= f.search_field :departure_location, class: "form-control form-control-sm flex-grow-0 ms-3", style: "width: 200px;" %>
+      <%= f.submit "Search", class: "btn btn-outline-secondary btn-sm ms-2" %>
+    <% end %>
+  </div>
+  <div class="pagination-container">
+    <%= paginate @daily_logs, theme: 'bootstrap-5', pagination_class: "pagination-sm flex-wrap justify-content-end" %>
+  </div>
+</div>

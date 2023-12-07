@@ -1,3 +1,37 @@
 <h2>今からペンは不要です。 スマホでPCで運転の記録、始めましょう！</h2>
 <h3>1人あたり、たったの380円で始まる働き方改革</h3>
 <h4>このアプリがあなたの会社の社用車管理を強力にサポートします！</h4>
+<div class="btn-group">
+  <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+    Action
+  </button>
+  <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dropdown link
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+  <div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Dropdown button
+    </button>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="#">Action</a></li>
+      <li><a class="dropdown-item" href="#">Another action</a></li>
+      <li><a class="dropdown-item" href="#">Something else here</a></li>
+    </ul>
+  </div>
+  <li class="dropdown">
+    <a href="#" id="account" class="dropdown-toggle">
+      Account <b class="caret"></b>
+    </a>
+    <ul id="dropdown-menu" class="dropdown-menu">
+      <li class="divider"></li>
+      <li>
+        <%= link_to "Log out", destroy_user_session_path, data: { "turbo-method": :delete } %>
+      </li>
+    </li>

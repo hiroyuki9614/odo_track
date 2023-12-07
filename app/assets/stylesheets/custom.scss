@@ -1,25 +1,74 @@
-@import 'bootstrap-sprockets';
-@import 'bootstrap';
-
-body {
-	padding-top: 60px;
+// 全体に適用するためのスタイルシート
+main {
+	padding: 50px;
+	font-family: 'Noto Serif JP', serif;
 }
 /* Dropdown menu */
 
-.dropdown-menu.active {
-	display: block;
-}
-
-.checkbox {
-	margin-top: 10px;
-	margin-bottom: 10px;
-	span {
-		margin-left: 20px;
-		font-weight: normal;
-	}
+.btn-xs {
+	height: 30px;
+	width: 30px;
 }
 
 #session_remember_me {
 	width: auto;
 	margin-left: 0;
+}
+
+#log_in_hr {
+	margin: 0;
+}
+
+#index_menu {
+	border: none !important;
+	background-color: transparent;
+}
+
+#index_menu.dropdown-toggle::after {
+	display: none;
+}
+
+// .custom-dropdown {
+// 	border: none !important;
+// }
+
+// .btn-secondary {
+// 	background-color: transparent;
+// 	border: none !important;
+// }
+
+// .btn-secondary:active:focus {
+// 	background-color: transparent;
+// 	border: none !important;
+// }
+
+// .btn-secondary:focus {
+// 	background-color: transparent;
+// }
+
+// .btn-secondary:active {
+// 	background-color: transparent;
+// }
+
+// .btn-secondary:hover {
+// 	background-color: transparent;
+// }
+
+// .bi-chevron-down {
+// 	color: black;
+// }
+
+// .dropdown-toggle::after {
+// 	display: none;
+// }
+
+.note-cell {
+	width: 200px; /* 幅の設定 */
+	max-height: 100px; /* 最大高さの設定 */
+	overflow: auto; /* 高さが最大値を超えた場合にスクロールバーを表示 */
+	word-break: break-word; /* 単語の途中でも折り返しを許可 */
+}
+
+.edit-submit-btn {
+	margin-top: 45px;
 }

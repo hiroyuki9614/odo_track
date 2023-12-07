@@ -1,0 +1,2 @@
+<% form_url = (request.path_info.to_s == edit_other_user_registration_path(resource)) ? other_user_registration_path(resource): user_registration_path %>
+<%= render 'devise/registrations/form', resource: resource, resource_name: resource_name, form_url: form_url %>
