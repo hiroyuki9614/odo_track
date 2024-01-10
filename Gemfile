@@ -82,10 +82,9 @@ gem 'cssbundling-rails'
 gem 'mini_racer'
 
 # pdfを作成する
+gem 'matrix'
 gem 'prawn'
 gem 'prawn-table'
-
-gem 'matrix'
 
 # ユーザー認証。
 gem 'devise'
@@ -116,9 +115,9 @@ gem 'whenever', require: false
 # gem 'google_drive'
 
 # 本番環境でPostgreSQLデータベースを使用する
-# group :production do
-#   gem 'pg', '0.20.0'
-# end
+group :production do
+  gem 'pg', '>= 0.18', '< 2.0'
+end
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
