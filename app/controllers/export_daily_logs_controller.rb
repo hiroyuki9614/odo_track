@@ -10,25 +10,6 @@ class ExportDailyLogsController < ApplicationController
     @users = User.kept.order(created_at: :desc).page params[:page]
   end
 
-  # def export_pdf
-  #   @today = Time.zone.today
-  #   @first_day = first_day_of_last_month = Date.today.beginning_of_month - 1.month
-  #   @last_day = last_day_of_last_month = first_day_of_last_month.end_of_month
-
-  #   user = User.find_by(params[:id])
-  #   daily_logs = user.daily_logs.kept.where(created_at: first_day_of_last_month..last_day_of_last_month)
-  #   respond_to do |format|
-  #     format.html
-  #     format.pdf do
-  #       # pdfを新規作成。インスタンスを渡す。
-  #       pdf = RecordPdf.new(daily_logs, user)
-  #       send_data pdf.render,
-  #                 filename: "#{user.user_name}_#{Date.today.strftime('%Y%m%d')}.pdf",
-  #                 type: 'application/pdf'
-  #       # disposition: 'inline' # 画面に表示。外すとダウンロードされる。
-  #     end
-  #   end
-  # end
   def export_pdf
     @first_day = Date.today.beginning_of_month - 1.month
     @last_day = @first_day.end_of_month
@@ -46,8 +27,8 @@ class ExportDailyLogsController < ApplicationController
       FileUtils.mkdir_p(save_path) unless Dir.exist?(save_path)
 
       File.open(save_path.join(file_name), 'wb') do |file|
-      file.write(pdf.render)
-end
+        file.write(pdf.render)
+      end
       File.open(Rails.root.join('downloads', file_name), 'wb') do |file|
         file.write(pdf.render, type: 'application/pdf')
       end
