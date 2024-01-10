@@ -22,7 +22,7 @@
     "vee-validate": "^4.12.3",
     "vite-plugin-full-reload": "^1.1.0",
     "vite-plugin-ruby": "^5.0.0",
-    "vite-plugin-vuetify": "^1.0.2",
+    "vite-plugin-vuetify": "^2.0.1",
     "vue": "^3.4.1",
     "vue-i18n": "^9.4.1",
     "vue-router": "^4.2.5",
