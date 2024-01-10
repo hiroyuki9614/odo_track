@@ -374,6 +374,7 @@ DEPENDENCIES
   faker
   foreman
   kaminari
+  matrix
   mini_racer
   prawn
   prawn-table

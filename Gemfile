@@ -85,6 +85,8 @@ gem 'mini_racer'
 gem 'prawn'
 gem 'prawn-table'
 
+gem 'matrix'
+
 # ユーザー認証。
 gem 'devise'
 
