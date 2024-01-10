@@ -11,7 +11,7 @@ RUN bundle install
 RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - \
 	&& apt-get update -qq \
 	&& apt-get install -y nodejs postgresql-client \
-	&& npm install --global yarn \
+	# && npm install --global yarn \
 	&& rm -rf /var/lib/apt/lists/*
 
 # フォントをインストールする。
