@@ -74,7 +74,7 @@ gem 'bootstrap', '~> 5.3.2'
 gem 'dartsass-sprockets'
 
 # アセットパイプライン
-gem 'cssbundling-rails'
+# gem 'cssbundling-rails'
 
 # sassを有効にする
 # gem 'dartsass-rails', '~> 0.5.0'
