@@ -1,7 +1,0 @@
-<% content_for :body_attributes, 'data-turbolinks="false"'.html_safe %>
-<h2>下記の内容で日報を変更してもよろしいですか？</h2>
-<%= form_for @daily_log, url: daily_log_path(@daily_log), data: { turbo: false } do |f| %>
-  <%= render partial: 'daily_logs/shared/daily_log_confirm', locals: {f: f} %>
-  <%= f.button 'BACK', value: 'back' %><%= f.button 'OK' %>
-  <%= f.hidden_field :id %>
-<% end %>

@@ -5,9 +5,10 @@ class DailyLog < ApplicationRecord
   include Discard::Model
   belongs_to :user
   belongs_to :vehicle
+  has_one :favorite_vehicle, through: :user
   # belongs_to :frequent_destination
 
-  enum approval_status: { incomplete: 0, approved: 1, unapproved: 2 }
+  # enum approval_status: { incomplete: 0, approved: 1, unapproved: 2 }
 
   validates :departure_datetime, presence: true
   validates :arrival_datetime, presence: true
@@ -17,7 +18,7 @@ class DailyLog < ApplicationRecord
   validates :arrival_location, presence: true, length: { maximum: 100 }
   validates :note, length: { maximum: 1000 }
   validates :is_alcohol_check, acceptance: { message: 'を実施してください。' }
-  validates :user_id, presence: true
+  # validates :user_id, presence: true, blank: true
   validates :vehicle_id, presence: true
 
   validate :arrival_time_after_departure_time

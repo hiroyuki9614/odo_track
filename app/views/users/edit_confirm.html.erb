@@ -1,6 +1,0 @@
-<% content_for :body_attributes, 'data-turbolinks="false"'.html_safe %>
-<h2>下記の内容で登録内容を変更します。</h2>
-<%= form_for @user, url: user_path(@user), data: { turbo: false } do |f| %>
-  <%= render partial: 'user_confirm', locals: {f: f} %>
-  <%= f.button 'BACK', value: 'back' %><%= f.button 'OK' %>
-<% end %>

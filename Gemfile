@@ -8,7 +8,7 @@ ruby '3.2.2'
 gem 'rails', '~> 7.1.1'
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
-gem 'sprockets-rails'
+# gem 'sprockets-rails'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', '~> 1.4'
@@ -29,7 +29,7 @@ gem 'turbo-rails'
 gem 'stimulus-rails'
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
-gem 'jbuilder'
+# gem 'jbuilder'
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
@@ -81,26 +81,42 @@ gem 'cssbundling-rails'
 
 gem 'mini_racer'
 
-# # jqueryを有効にする
-gem 'jquery-rails'
+# pdfを作成する
+gem 'prawn'
+gem 'prawn-table'
 
-# # ユーザー認証。
+# ユーザー認証。
 gem 'devise'
 
-# # 論理削除を実装する。
+# 論理削除を実装する。
 gem 'discard', '~> 1.2'
 
 # 検索機能とソート機能
 gem 'ransack'
 
+# フロントエンドとバックエンドの連携に使用する。
+# クロスドメイン AJAX 呼び出しを行う
+gem 'rack-cors'
+
+# railsがAPIモードの際に生成されるJSONファイルを整形する。
+gem 'active_model_serializers', '~> 0.10.0'
+
+# 定期的にスクリプトを実行する
+gem 'whenever', require: false
+
 # google API
 # gem 'google-apis-drive_v3', '~> 0.5.0'
 
-# # googleのOAuthクライアントライブラリ
+# googleのOAuthクライアントライブラリ
 # gem 'googleauth'
 
 # スプレッドシートにデータを保存・pdf化
 # gem 'google_drive'
+
+# 本番環境でPostgreSQLデータベースを使用する
+# group :production do
+#   gem 'pg', '0.20.0'
+# end
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

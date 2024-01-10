@@ -14,6 +14,14 @@
     <%#= javascript_importmap_tags %>
     <%= vite_client_tag %>
     <%= vite_javascript_tag 'application' %>
+    <!-- vuetifyのcss -->
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+    <!--  Vuelidate -->
+    <script src="https://cdn.jsdelivr.net/npm/vue-demi"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@vuelidate/core"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@vuelidate/validators"></script>
+
     <!--
       If using a TypeScript entrypoint file:
         vite_typescript_tag 'application'
@@ -27,11 +35,6 @@
   </head>
   <body>
     <%= render 'layouts/navbar' %>
-    <% flash.each do |message_type, message| %>
-      <div class="text-danger text-center text-bold bg-light">
-        <%= message %>
-      </div>
-    <% end %>
     <%= yield %>
   </body>
 </html>

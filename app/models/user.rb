@@ -20,12 +20,16 @@ class User < ApplicationRecord
          :confirmable
 
   has_many :daily_logs, dependent: :destroy
-  has_many :frequent_destinations, dependent: :destroy
+  # has_many :frequent_destinations, dependent: :destroy
+  has_many :favorite_vehicles, dependent: :destroy
+  # has_many :vehicles, through: :favorite_vehicles
 
   validates :user_name, presence: true, length: { maximum: 50 }
   validates :telephone, presence: true, length: { maximum: 11 }, numericality: { only_integer: true }
   validates :discarded_at, presence: true, allow_blank: true
   validates :admin, inclusion: { in: [false, true] }
+  validate :skip_email_validation_on_update, on: :update
+
   # devise使用のため、無効化。
   # validates :email, presence: true, length: { maximum: 100 }, email_format: true
   #  validates :password, length: { minimum: 6 }, allow_blank: true,
@@ -34,7 +38,8 @@ class User < ApplicationRecord
   # validates :password_confirmation, length: { minimum: 6 }, allow_blank: true,
   #                                   format: { with: /\A(?=.*?[a-z])(?=.*?\d)[a-z\d][a-zA-Z0-9]+\z/, message: 'は半角英数字で入力してください' },
   #                                   on: :registration
-  validates :current_password, length: { minimum: 6 }, allow_nil: true
+  # validates :current_password, length: { minimum: 6 }, if: :password_required?
+  # validates :password, presence: true, length: { minimum: 6 }, if: :password_required?
   after_initialize :format_user_name
   after_initialize :format_telephone
   after_initialize :format_email
@@ -62,7 +67,7 @@ class User < ApplicationRecord
   end
 
   def update_without_password(params, *options)
-    params.delete(:current_password)
+    params.delete(:current_password).blank?
 
     params.delete(:password) if params[:password].blank?
     params.delete(:password_confirmation) if params[:password_confirmation].blank?
@@ -116,7 +121,6 @@ class User < ApplicationRecord
   #   frequent_destination.include?(daily_log)
   # end
 
-
   private
 
   def format_user_name
@@ -139,5 +143,12 @@ class User < ApplicationRecord
 
   def password_required?
     !persisted?
+  end
+
+  def skip_email_validation_on_update
+    return unless email_changed?
+
+    # メールアドレスが変更されている場合は、通常のバリデーションを行う
+    validates_presence_of :email
   end
 end

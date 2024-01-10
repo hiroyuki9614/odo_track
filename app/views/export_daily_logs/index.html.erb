@@ -1,0 +1,53 @@
+<% if current_user.admin %>
+	<%= content_tag(:div, "", id: "static_admin_header") %>
+<% else %>
+	<%= content_tag(:div, "", id: "static_header") %>
+<% end %>
+<div class="my-5 export-title">
+	<h5>運転日報の印刷ページ</h5>
+	<%= link_to "全員のPDFを作成する", export_pdf_path %>
+</div>
+<% if @users.blank? %>
+	<p class="m-5">運転日報はありません。</p>
+<% else %>
+<!-- ヘッダー部分 -->
+	<section class="export_daily_log_index">
+		<div class="bg-image h-100">
+			<div class="mask d-flex align-items-center h-100" style="background-color: white">
+				<div class="container">
+					<!-- テーブルのヘッダー部分 -->
+					<div class="row justify-content-center">
+						<div class="col-12">
+							<div class="card">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table class="table table-hover mb-0">
+											<!-- テーブルタイトル -->
+											<thead>
+												<tr>
+													<th><%= t('activerecord.attributes.user.user_name') %></th>
+													<th><%= '今月の運転日報の数' %></th>
+													<th></th>
+													<th></th>
+												</tr>
+											</thead>
+											<!-- テーブルボディ -->
+											<% @users.each do |user| %>
+												<tbody>
+													<tr>
+														<td scope="row"><%= user.user_name %></th>
+														<td class="ms-5"><%= user.daily_logs.length %></td>
+													</tr>
+												</tbody>
+											<% end %>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+<% end %>

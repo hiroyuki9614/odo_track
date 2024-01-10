@@ -27,58 +27,61 @@ class Users::RegistrationsController < Devise::RegistrationsController
       authenticate_scope!
       super
     end
-
-    # PUT /resource
-    def update
-      # 管理者は全てのidを取得できる。
-      Rails.logger.info "Before update: Current user id = #{current_user.id}, session: #{session.inspect}"
-      self.resource = if by_admin_user?(params)
-                        resource_class.to_adapter.get!(params[:id])
-                      else
-                        resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
-                      end
-
-      prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
-
-      # 管理者はパスワード無しで編集を実行できる。
-      resource_updated = if by_admin_user?(params)
-                           update_resource_without_password(resource, account_update_params)
-                           Rails.logger.info "After update: Current user id = #{current_user.id}, session: #{session.inspect}"
-                         else
-                           Rails.logger.info 'Updating with password'
-                           update_resource(resource, account_update_params)
-                         end
-
-      # 管理者のみパスワード無しで編集できる設定。
-      # resource_updated = if by_admin_user?(params)
-      #                            update_resource_without_password(resource, account_update_params)
-      #                            Rails.logger.info "After update: Current user id = #{current_user.id}, session: #{session.inspect}"
-      #                          else
-      #                            Rails.logger.info 'Updating with password'
-      #                            update_resource(resource, account_update_params)
-      #                          end
-
-      yield resource if block_given?
-      if resource_updated
-        set_flash_message_for_update(resource, prev_unconfirmed_email)
-        bypass_sign_in resource, scope: resource_name unless by_admin_user?(params)
-
-        respond_with resource, location: after_update_path_for(resource)
-      # if resource_updated
-      #   set_flash_message_for_update(resource, prev_unconfirmed_email)
-      #   Rails.logger.info "After update resource method: Current user id = #{current_user.id}, session: #{session.inspect}"
-      #   bypass_sign_in resource, scope: resource_name if sign_in_after_change_password?
-      #   # 管理者がユーザー情報を変更してもユーザーのログインを維持する。
-      #   bypass_sign_in resource, scope: resource_name unless by_admin_user?(params)
-      #   Rails.logger.info "Before respond_with: Current user id = #{current_user.id}, session: #{session.inspect}"
-      #   respond_with resource, location: after_update_path_for(resource)
-      else
-        clean_up_passwords resource
-        set_minimum_password_length
-        respond_with resource
-      end
-    end
   end
+
+  # PUT /resource
+  def update
+    super
+  end
+  ## 管理者は全てのidを取得できる。
+  #   Rails.logger.info "Before update: Current user id = #{current_user.id}, session: #{session.inspect}"
+  #   self.resource = if by_admin_user?(params)
+  #                     resource_class.to_adapter.get!(params[:id])
+  #                   else
+  #                     resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
+  #                   end
+
+  #   prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
+
+  #   # 管理者はパスワード無しで編集を実行できる。
+  #   resource_updated = if by_admin_user?(params)
+  #                        update_resource_without_password(resource, account_update_params)
+  #                        Rails.logger.info "After update: Current user id = #{current_user.id}, session: #{session.inspect}"
+  #                      else
+  #                        Rails.logger.info 'Updating with password'
+  #                        update_resource(resource, account_update_params)
+  #                      end
+
+  #   # 管理者のみパスワード無しで編集できる設定。
+  #   # resource_updated = if by_admin_user?(params)
+  #   #                            update_resource_without_password(resource, account_update_params)
+  #   #                            Rails.logger.info "After update: Current user id = #{current_user.id}, session: #{session.inspect}"
+  #   #                          else
+  #   #                            Rails.logger.info 'Updating with password'
+  #   #                            update_resource(resource, account_update_params)
+  #   #                          end
+
+  #   yield resource if block_given?
+  #   if resource_updated
+  #     set_flash_message_for_update(resource, prev_unconfirmed_email)
+  #     bypass_sign_in resource, scope: resource_name unless by_admin_user?(params)
+
+  #     respond_with resource, location: after_update_path_for(resource)
+  #   # if resource_updated
+  #   #   set_flash_message_for_update(resource, prev_unconfirmed_email)
+  #   #   Rails.logger.info "After update resource method: Current user id = #{current_user.id}, session: #{session.inspect}"
+  #   #   bypass_sign_in resource, scope: resource_name if sign_in_after_change_password?
+  #   #   # 管理者がユーザー情報を変更してもユーザーのログインを維持する。
+  #   #   bypass_sign_in resource, scope: resource_name unless by_admin_user?(params)
+  #   #   Rails.logger.info "Before respond_with: Current user id = #{current_user.id}, session: #{session.inspect}"
+  #   #   respond_with resource, location: after_update_path_for(resource)
+  #   else
+  #     clean_up_passwords resource
+  #     set_minimum_password_length
+  #     respond_with resource
+  #   end
+  # end
+  # end
 
   # DELETE /resource
   def destroy
@@ -101,6 +104,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   # パスワード無しで編集を実行できる。
+  def update_resource(resource, params)
+    resource.update_without_password(params)
+  end
+
   def update_resource_without_password(resource, params)
     resource.update_without_password(params)
   end

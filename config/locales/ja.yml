@@ -1,25 +1,26 @@
 ja:
   activerecord:
+    models:
+      vehicle: 車両
     attributes:
       daily_log:
         created_at: 登録日
         departure_datetime: 出発日時
         arrival_datetime: 到着日時
-        departure_distance: 出発時の走行距離
+        departure_distance: 距離(出発)
         departure_location: 出発場所
-        arrival_distance: 到着時の走行距離
+        arrival_distance: 距離(到着)
         arrival_location: 到着場所
         note: 備考(件名・客先名等)
-        is_alcohol_check: アルコール検査
+        is_alcohol_check: 酒気検査
         is_studless_tire: スタッドレスタイヤの装着
         approval_status: 承認状態
         user_id: ユーザー名
         vehicle_id: 車両名
         alcohol_check?: アルコールチェック
         studless_tire?: スタッドレスタイヤ
-
       user:
-        user_name: お名前
+        user_name: 氏名
         email: メールアドレス
         telephone: お電話番号
         password_digest: パスワード
@@ -29,11 +30,15 @@ ja:
         password_confirmation: 確認用パスワード
         current_password: パスワード
       vehicle:
+        vehicle_id: 車両
         created_at: 登録日
         vehicle_name: 車両名
         number: ナンバー
         manufacture: メーカー
         current_drive_distance: 現在の走行距離
+      favorite_vehicle:
+        vehicle_id: 車両
+        favorite_vehicle_note: 備考
 
   enum:
     daily_log:

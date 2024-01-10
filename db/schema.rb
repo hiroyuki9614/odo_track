@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_11_18_122812) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_19_094524) do
   create_table "daily_logs", force: :cascade do |t|
     t.datetime "departure_datetime", null: false
     t.datetime "arrival_datetime", null: false
@@ -31,13 +31,25 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_18_122812) do
     t.index ["user_id"], name: "index_daily_logs_on_user_id"
   end
 
+  create_table "favorite_vehicles", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "vehicle_id", null: false
+    t.text "favorite_vehicle_note", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_favorite_vehicles_on_user_id"
+    t.index ["vehicle_id"], name: "index_favorite_vehicles_on_vehicle_id"
+  end
+
   create_table "frequent_destinations", force: :cascade do |t|
     t.string "destination_name", null: false
     t.text "destination_note", null: false
-    t.integer "user_id"
+    t.integer "daily_log_id"
+    t.integer "user_id_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_frequent_destinations_on_user_id"
+    t.index ["daily_log_id"], name: "index_frequent_destinations_on_daily_log_id"
+    t.index ["user_id_id"], name: "index_frequent_destinations_on_user_id_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -74,4 +86,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_18_122812) do
   end
 
   add_foreign_key "daily_logs", "users", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "favorite_vehicles", "users", on_delete: :restrict
+  add_foreign_key "favorite_vehicles", "vehicles", on_delete: :restrict
+  add_foreign_key "frequent_destinations", "daily_logs", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "frequent_destinations", "user_ids", on_update: :restrict, on_delete: :restrict
 end

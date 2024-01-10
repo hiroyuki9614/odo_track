@@ -29,7 +29,7 @@ ApplicationRecord.transaction do
     email: 'mmm@example.com',
     telephone: '876123',
     password: 'aaaaaa', # 正しいフィールドを使用する
-    password_confirmation: 'aaaaaa', # 正しいフィールドを使用する
+    # password_confirmation: 'aaaaaa', # 正しいフィールドを使用する
     discarded_at: '',
     admin: false,
     confirmed_at: DateTime.now
@@ -39,7 +39,7 @@ ApplicationRecord.transaction do
     email: 'aaa@example.com',
     telephone: '876123',
     password: 'aaaaaa', # 正しいフィールドを使用する
-    password_confirmation: 'aaaaaa', # 正しいフィールドを使用する
+    # password_confirmation: 'aaaaaa', # 正しいフィールドを使用する
     discarded_at: '',
     admin: false,
     confirmed_at: DateTime.now
@@ -49,7 +49,7 @@ ApplicationRecord.transaction do
     email: 'fff@example.com',
     telephone: '876123',
     password: 'aaaaaa', # 正しいフィールドを使用する
-    password_confirmation: 'aaaaaa', # 正しいフィールドを使用する
+    # password_confirmation: 'aaaaaa', # 正しいフィールドを使用する
     discarded_at: '',
     admin: false,
     confirmed_at: DateTime.now
@@ -59,7 +59,7 @@ ApplicationRecord.transaction do
     email: 'ttt@example.com',
     telephone: '876123',
     password: 'aaaaaa', # 正しいフィールドを使用する
-    password_confirmation: 'aaaaaa', # 正しいフィールドを使用する
+    # password_confirmation: 'aaaaaa', # 正しいフィールドを使用する
     discarded_at: '',
     admin: false,
     confirmed_at: DateTime.now
@@ -69,7 +69,7 @@ ApplicationRecord.transaction do
     email: 'ggg@example.com',
     telephone: '876123',
     password: 'aaaaaa', # 正しいフィールドを使用する
-    password_confirmation: 'aaaaaa', # 正しいフィールドを使用する
+    # password_confirmation: 'aaaaaa', # 正しいフィールドを使用する
     discarded_at: '',
     admin: true,
     confirmed_at: DateTime.now
@@ -84,6 +84,14 @@ ApplicationRecord.transaction do
     admin: true,
     confirmed_at: DateTime.now
   )
+  # User.create!(
+  #   user_name: '未承認くん',
+  #   email: 'ooo@example.com',
+  #   telephone: '876123',
+  #   password: 'aaaaaa', # 正しいフィールドを使用する
+  #   password_confirmation: 'aaaaaa', # 正しいフィールドを使用する
+  #   admin: false
+  # )
 end
 
 users = User.order(:created_at).take(3)
@@ -94,6 +102,7 @@ vehicles = Vehicle.order(:created_at).take(3)
       DailyLog.create!(
         user_id: user.id,
         vehicle_id: vehicle.id,
+        # frequent_destination: '',
         departure_datetime: Faker::Time.between(from: DateTime.now - 3, to: DateTime.now - 2),
         arrival_datetime: Faker::Time.between(from: DateTime.now - 1, to: DateTime.now),
         departure_distance: rand(1...100),

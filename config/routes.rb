@@ -17,6 +17,22 @@ Rails.application.routes.draw do
   root to: 'pages#top'
   get 'pages/top'
   get 'pages/help'
+  get 'pages/print'
+
+  # APIのルーティング
+  patch 'api/management_vehicles/undelete/:id', to: 'api/management_vehicles#undelete'
+  patch 'api/management_vehicles/delete/:id', to: 'api/management_vehicles#destroy'
+  patch 'api/users_for_admin/undelete/:id', to: 'api/users_for_admin#undelete'
+  patch 'api/users_for_admin/delete/:id', to: 'api/users_for_admin#delete'
+  patch 'api/daily_logs_for_admin/undelete/:id', to: 'api/daily_logs_for_admin#undelete'
+  patch 'api/daily_logs_for_admin/delete/:id', to: 'api/daily_logs_for_admin#delete'
+  namespace :api do
+    resources :daily_logs
+    resources :management_vehicles
+    resources :users_for_admin
+    resources :daily_logs_for_admin
+    resources :favorite_vehicles
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -26,76 +42,24 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  # daily_logsのルーティング
-  get '/daily_logs/show/:id', to: 'daily_logs#show', as: 'daily_logs_show'
-  # delete '/daily_logs/:id', to: 'daily_logs#destroy', as: 'daily_logs_destroy'
-  get '/daily_log/delete/:id', to: 'daily_logs#destroy'
-  patch '/daily_log/delete/:id', to: 'daily_logs#destroy', as: 'daily_log_delete'
-  resources :daily_logs, except: %i[show delete] do
-    collection do
-      post :confirm
-      get :confirm
-      get :frequent_destinations
-    end
-    member do
-      patch :edit_confirm
-      get :edit_confirm
-    end
-  end
-  # get 'users/signup', to: 'users/new', as: ':users_signup'
-  # get '/users/show/:id', to: 'users#show', as: 'users_show'
-  # get '/users/delete/:id', to: 'users#logical_delete', as: 'user_delete'
-  # patch '/users/delete/:id', to: 'users#logical_delete', as: 'user_delete'
-  resources :users do
-    # collection do
-    #   post :confirm
-    #   get :confirm
-    # end
-    # member do
-    #   patch :user_delete
-    #   get :user_delete
-    #   patch :user_undelete
-    #   get :user_undelete
-    # end
-  end
-  resource :backup_settings, only: %i[edit update] # バックアップ設定
-  delete '/admin/:id', to: 'admins#destroy', as: 'admin_user_destroy'
-  get '/admin/delete/:id', to: 'admins#user_delete', as: 'get_admin_user_delete'
-  patch '/admin/delete/:id', to: 'admins#user_delete', as: 'admin_user_delete'
-  get '/admin/undelete/:id', to: 'admins#user_undelete', as: 'get_admin_user_undelete'
-  patch '/admin/undelete/:id', to: 'admins#user_undelete', as: 'admin_user_undelete'
-  delete '/admin/daily_log/:id', to: 'admins#daily_log_destroy', as: 'daily_log_destroy'
-  get 'admin/discarded_daily_logs/', to: 'admins#discarded_daily_logs_index', as: 'discarded_daily_logs'
-  # get 'admin/user_index', to: 'admins#index', as: 'admin_users_list'
-  get 'admin/user_retired_index', to: 'admins#discarded_index', as: 'admin_users_retired_list'
-  resources :admins do
-    collection do
-      # get :discarded_index
-      #   post :confirm
-      #   get :confirm
-    end
-  end
-  get '/management_vehicle/delete/:id', to: 'management_vehicles#delete'
-  patch '/management_vehicle/delete/:id', to: 'management_vehicles#delete', as: 'management_vehicle_delete'
-  get '/management_vehicle/undelete/:id', to: 'management_vehicles#undelete'
-  patch '/management_vehicle/undelete/:id', to: 'management_vehicles#undelete', as: 'management_vehicle_undelete'
-  resources :management_vehicles do
-    collection do
-      post :confirm
-      get :confirm
-    end
-    member do
-      patch :edit_confirm
-      get :edit_confirm
-    end
-  end
-  resources :frequent_destinations, only: %i[create destroy]
-  resources :export_daily_logs, only: [] do
-    collection do
-      get :download_index # ダウンロード可能なファイルの一覧を表示
-      get :create_spreadsheet
-      post :create_spreadsheet  # スプレッドシートの作成
-      post :export_to_pdf       # PDFへのエクスポート
-    end
-  end
+  # get '/daily_logs', to: 'daily_logs#index', as: :daily_logs
+  resources :daily_logs_for_admin, only: %i[index]
+
+  resources :users
+
+  resources :daily_logs
+
+  resources :users_for_admin
+
+  resources :management_vehicles, only: %i[index]
+
+  # resources :frequent_destinations, only: %i[create destroy]
+
+  get 'export_daily_logs/export_pdf', to: 'export_daily_logs#export_pdf', as: :export_pdf
+  resources :export_daily_logs
+  # collection do
+  #   post :export_to_pdf       # PDFへのエクスポート
+  # end
+
+  resources :favorite_vehicles, only: %i[new create destroy]
 end

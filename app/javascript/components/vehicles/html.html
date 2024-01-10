@@ -1,0 +1,220 @@
+<template lang="">
+	<section class="vehicle_index">
+		<div class="bg-image h-100">
+			<!-- ================================== -->
+			<!-- ここから論理削除した車両のテーブル -->
+			<!-- ================================== -->
+			<div v-if="discardedVehiclesIndex">
+				<v-layout v-resize="onResize" column>
+					<!-- 検索フォーム -->
+					<v-data-table :search="search" :headers="headers" :items="discarded_items" style="background-color: white">
+						<!-- テーブルタイトル -->
+						<template v-slot:top>
+							<v-toolbar flat>
+								<div v-if="!isMobile" style="display: flex; align-items: center">
+									<v-toolbar-title class="table-title">運転日報</v-toolbar-title>
+									<v-divider class="mx-4" inset vertical></v-divider>
+								</div>
+								<v-checkbox v-model="discardedVehiclesIndex" :label="`削除した車両を表示する`" class="discarded-index-check-box" style="display: flex; justify-content: end; font-size: x-small" />
+								<v-divider class="mx-4" inset vertical></v-divider>
+								<div class="search-field">
+									<v-text-field v-model="search" label="検索" single-line hide-details class="search-form" density="compact" />
+								</div>
+								<v-divider class="mx-4" inset vertical></v-divider>
+								<v-dialog v-model="dialog" max-width="1000px">
+									<template v-slot:activator="{ props }">
+										<v-btn color="primary" dark class="" v-bind="props" @click="initialData"> 車両を登録する </v-btn>
+									</template>
+									<!-- 新規作成ダイアログの内容 -->
+									<v-card class="pt-5">
+										<!-- <v-form fast-fail @submit.prevent> -->
+										<v-form ref="form">
+											<v-card-title>
+												<span class="text-h5 ms-5">{{ formTitle }}</span>
+											</v-card-title>
+											<v-card-text class="card-text">
+												<v-container>
+													<v-row>
+														<!-- フォームの内容 -->
+														<v-col cols="12" sm="6" md="3">
+															<v-text-field v-model="vehicle_name" label="車両名称" :rules="vehicleNameRules" />
+														</v-col>
+														<v-col cols="12" sm="6" md="3">
+															<v-text-field v-model="number" required label="ナンバー(4桁ハイフン不要)" :rules="numberRules" />
+														</v-col>
+														<v-col cols="12" sm="6" md="3">
+															<v-text-field v-model="manufacture" required label="メーカー" :rules="manufactureRules" />
+														</v-col>
+														<v-col cols="12" sm="6" md="3">
+															<div v-if="editedIndex == -1">
+																<v-text-field v-model="current_drive_distance" item-value="manufacture" required label="現在の走行距離(任意)" :rules="currentDriveDistanceRules" />
+															</div>
+															<div v-else>
+																<v-text-field v-model="current_drive_distance" item-value="manufacture" required disabled label="現在の走行距離(任意)" :rules="currentDriveDistanceRules" />
+															</div>
+														</v-col>
+													</v-row>
+												</v-container>
+											</v-card-text>
+											<!-- 新規作成/編集ダイアログのボタン -->
+											<v-card-actions class="card-action">
+												<v-spacer></v-spacer>
+												<v-btn color="blue-darken-1" variant="text" @click="close"> 取り消し </v-btn>
+												<v-btn color="blue-darken-1" variant="text" type="submit" @click="save"> 保存 </v-btn>
+											</v-card-actions>
+										</v-form>
+									</v-card>
+								</v-dialog>
+								<!-- 削除ダイアログ -->
+								<v-dialog v-model="dialogUndelete" max-width="500px">
+									<v-card>
+										<v-card-title class="text-center">この車両の削除を取消しますか？</v-card-title>
+										<v-card-actions>
+											<v-spacer></v-spacer>
+											<v-btn color="blue-darken-1" variant="text" @click="closeUndelete">Cancel</v-btn>
+											<v-btn type="submit" color="blue-darken-1" @click="undeleteItemConfirm(item_id)">OK</v-btn>
+											<v-spacer></v-spacer>
+										</v-card-actions>
+									</v-card>
+								</v-dialog>
+								<v-dialog v-model="dialogError" max-width="500px">
+									<v-card>
+										<v-card-title class="body-2 text-center">エラーが発生しました。</v-card-title>
+										<p class="text-center">申し訳ございません。</p>
+										<p class="text-center">エラーが発生し、先程の投稿は無効となりました。</p>
+										<p class="text-center">お手数ですが、再度ご入力下さい。</p>
+										<v-card-actions>
+											<v-spacer></v-spacer>
+											<v-btn color="blue-darken-1" variant="text" @click="closeError">閉じる</v-btn>
+											<v-spacer></v-spacer>
+										</v-card-actions>
+									</v-card>
+								</v-dialog>
+							</v-toolbar>
+						</template>
+						<!-- テーブルの拡張 -->
+						<template v-slot:item.actions="{ columns, item, index}">
+							<v-tooltip v-model="undeleteShow[index]" location="top">
+								<template v-slot:activator="{ props }">
+									<v-icon @mouseenter="undeleteShow[index] = true" @mouseleave="undeleteShow[index] = false" size="small" color="green" v-bind="props" @click="undeleteItem(item)" class="delete-icon"> mdi-undo </v-icon>
+								</template>
+								<span>取消</span>
+							</v-tooltip>
+						</template>
+					</v-data-table>
+				</v-layout>
+			</div>
+			<!-- ================================== -->
+			<!-- ここから通常の車両のテーブル						 -->
+			<!-- ================================== -->
+			<div v-else>
+				<v-layout v-resize="onResize" column>
+					<!-- 検索フォーム -->
+					<v-data-table :search="search" :headers="headers" :items="discarded_items" style="background-color: white">
+						<!-- テーブルタイトル -->
+						<template v-slot:top>
+							<v-toolbar flat>
+								<div v-if="!isMobile" style="display: flex; align-items: center">
+									<v-toolbar-title class="table-title">運転日報</v-toolbar-title>
+									<v-divider class="mx-4" inset vertical></v-divider>
+								</div>
+								<v-checkbox v-model="discardedVehiclesIndex" :label="`削除した車両を表示する`" class="discarded-index-check-box" style="display: flex; justify-content: end; font-size: x-small" />
+								<v-divider class="mx-4" inset vertical></v-divider>
+								<div class="search-field">
+									<v-text-field v-model="search" label="検索" single-line hide-details class="search-form" density="compact" />
+								</div>
+								<v-divider class="mx-4" inset vertical></v-divider>
+								<v-dialog v-model="dialog" max-width="1000px">
+									<template v-slot:activator="{ props }">
+										<v-btn color="primary" dark class="" v-bind="props" @click="initialData"> 車両を登録する </v-btn>
+									</template>
+									<!-- 新規作成ダイアログの内容 -->
+									<v-card class="pt-5">
+										<!-- <v-form fast-fail @submit.prevent> -->
+										<v-form ref="form">
+											<v-card-title>
+												<span class="text-h5 ms-5">{{ formTitle }}</span>
+											</v-card-title>
+											<v-card-text class="card-text">
+												<v-container>
+													<v-row>
+														<!-- フォームの内容 -->
+														<v-col cols="12" sm="6" md="3">
+															<v-text-field v-model="vehicle_name" label="車両名称" :rules="vehicleNameRules" />
+														</v-col>
+														<v-col cols="12" sm="6" md="3">
+															<v-text-field v-model="number" required label="ナンバー(4桁ハイフン不要)" :rules="numberRules" />
+														</v-col>
+														<v-col cols="12" sm="6" md="3">
+															<v-text-field v-model="manufacture" required label="メーカー" :rules="manufactureRules" />
+														</v-col>
+														<v-col cols="12" sm="6" md="3">
+															<div v-if="editedIndex == -1">
+																<v-text-field v-model="current_drive_distance" item-value="manufacture" required label="現在の走行距離(任意)" :rules="currentDriveDistanceRules" />
+															</div>
+															<div v-else>
+																<v-text-field v-model="current_drive_distance" item-value="manufacture" required disabled label="現在の走行距離(任意)" :rules="currentDriveDistanceRules" />
+															</div>
+														</v-col>
+													</v-row>
+												</v-container>
+											</v-card-text>
+											<!-- 新規作成/編集ダイアログのボタン -->
+											<v-card-actions class="card-action">
+												<v-spacer></v-spacer>
+												<v-btn color="blue-darken-1" variant="text" @click="close"> 取り消し </v-btn>
+												<v-btn color="blue-darken-1" variant="text" type="submit" @click="save"> 保存 </v-btn>
+											</v-card-actions>
+										</v-form>
+									</v-card>
+								</v-dialog>
+								<!-- 削除ダイアログ -->
+								<v-dialog v-model="dialogDelete" max-width="500px">
+									<v-card>
+										<v-card-title class="text-center">この車両を除外してもよろしいでしょうか？</v-card-title>
+										<p class="text-center" style="margin-bottom: 0px">この車両は一覧に表示されなくなります</p>
+										<p class="text-center text-body-2" style="margin-top: 0px">(関連付けられた日報は削除されません)</p>
+										<v-card-actions>
+											<v-spacer></v-spacer>
+											<v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
+											<v-btn type="submit" color="blue-darken-1" @click="deleteItemConfirm(item_id)">OK</v-btn>
+											<v-spacer></v-spacer>
+										</v-card-actions>
+									</v-card>
+								</v-dialog>
+								<v-dialog v-model="dialogError" max-width="500px">
+									<v-card>
+										<v-card-title class="body-2 text-center">エラーが発生しました。</v-card-title>
+										<p class="text-center">申し訳ございません。</p>
+										<p class="text-center">エラーが発生し、先程の投稿は無効となりました。</p>
+										<p class="text-center">お手数ですが、再度ご入力下さい。</p>
+										<v-card-actions>
+											<v-spacer></v-spacer>
+											<v-btn color="blue-darken-1" variant="text" @click="closeError">閉じる</v-btn>
+											<v-spacer></v-spacer>
+										</v-card-actions>
+									</v-card>
+								</v-dialog>
+							</v-toolbar>
+						</template>
+						<!-- テーブルの拡張 -->
+						<template v-slot:item.actions="{ columns, item, index}">
+							<v-tooltip v-model="editShow[index]" location="top">
+								<template v-slot:activator="{ props }">
+									<v-icon @mouseenter="editShow[index] = true" @mouseleave="editShow[index] = false" size="small" v-bind="props" class="me-2" @click="editItem(item.id)"> mdi-pencil </v-icon>
+								</template>
+								<span>編集</span>
+							</v-tooltip>
+							<v-tooltip v-model="deleteShow[index]" location="top">
+								<template v-slot:activator="{ props }">
+									<v-icon @mouseenter="deleteShow[index] = true" @mouseleave="deleteShow[index] = false" size="small" color="error" v-bind="props" @click="deleteItem(item)" class="delete-icon"> mdi-delete </v-icon>
+								</template>
+								<span>除外する</span>
+							</v-tooltip>
+						</template>
+					</v-data-table>
+				</v-layout>
+			</div>
+		</div>
+	</section>
+</template>

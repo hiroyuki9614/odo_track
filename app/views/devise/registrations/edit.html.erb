@@ -1,2 +1,48 @@
-<% form_url = (request.path_info.to_s == edit_other_user_registration_path(resource)) ? other_user_registration_path(resource): user_registration_path %>
-<%= render 'devise/registrations/form', resource: resource, resource_name: resource_name, form_url: form_url %>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12 mt-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="my-3 mx-5">
+            <h5>ユーザー情報</h5>
+          </div>
+          <%= form_for(resource, as: resource_name, url: other_user_registration_path(resource_name), html: { method: :put }) do |f| %>
+          <%= render partial: 'shared/error_messages', locals: { record: @user, symbol: :current_password } %>
+          <%= render partial: 'shared/error_messages', locals: { record: @user, symbol: :password } %>
+          <%= render partial: 'shared/error_messages', locals: { record: @user, symbol: :password_confirmation } %>
+          <div class="field">
+            <div class="row">
+              <div class="ms-5 mt-3 col-md-3 col-sm-3">
+                <div class="field">
+                  <%= f.label :user_name, '氏名', class:"form-label" %><br>
+                  <%= f.text_field :user_name, class: "form-control" %>
+                  <%= render partial: 'shared/error_messages', locals: { record: @user, symbol: :user_name } %>
+                </div>
+              </div>
+              <!-- 出発日時 -->
+              <div class="mt-3 col-md-4 col-sm-4 ps-5">
+                <div class="form-group">
+                  <%= f.label :telephone, '電話番号', class:"form-label" %><br>
+                  <%= f.text_field :telephone, class: "form-control" %>
+                  <%= render partial: 'shared/error_messages', locals: { record: @user, symbol: :telephone } %>
+                </div>
+              </div>
+              <!-- 到着日時 -->
+              <div class="mt-3 col-md-4 col-sm-4 ps-5">
+                <div class="form-group">
+                  <%= f.label :email, 'メールアドレス', class: "form-label" %><br>
+                  <%= f.text_field :email, class: "form-control" %>
+                  <%= render partial: 'shared/error_messages', locals: { record: @user, symbol: :email } %>
+                </div>
+              </div>
+                <div class="submit-btn col-11 ms-5 mt-5">
+                  <%= f.submit '確認画面へ',class: "btn btn-primary btn-block float-end" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

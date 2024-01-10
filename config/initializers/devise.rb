@@ -14,7 +14,7 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  # config.secret_key = '82777bc7f6027639d63794ffae1af621c0d1cc9c0454f58901bd21f151e050f3b91df7308b05a21f816134b479b6c2dc08083381dc9df581254648fa5c1292c8'
+  # config.secret_key = 'c5cca81c19afcf8ecf3699dbc9c8c0bddb62e3f96328af7f1a029b539b00d18512cdaf482dcfc3a4c9c4a81459fe63f362764869eb448a001addc9e10200258c'
 
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
@@ -126,7 +126,7 @@ Devise.setup do |config|
   config.stretches = Rails.env.test? ? 1 : 12
 
   # Set up a pepper to generate the hashed password.
-  # config.pepper = '48bd23f6ffef90ba6fb257323397361049dd1cc23396cbcb303486d383edac4f88b1d49bf2f86acc2eff250b58b4b28461dd42e4de5aab5b2ab6f124b2e665ed'
+  # config.pepper = 'b3bfe2274ba4bbe626ca08e35fdc18a017f118c8184aed55457a8b737ad2f71be84cda0d270b22c67cce67f841097e98d83b276be6f1434400e1a5ed64774042'
 
   # Send a notification to the original email when the user's email is changed.
   # config.send_email_changed_notification = false
@@ -143,7 +143,7 @@ Devise.setup do |config|
   # without confirming their account.
   # Default is 0.days, meaning the user cannot access the website without
   # confirming their account.
-  # config.allow_unconfirmed_access_for = 1.days
+  # config.allow_unconfirmed_access_for = 2.days
 
   # A period that the user is allowed to confirm their account before their
   # token becomes invalid. For example, if set to 3.days, the user can confirm
@@ -151,7 +151,7 @@ Devise.setup do |config|
   # their account can't be confirmed with the token any more.
   # Default is nil, meaning there is no restriction on how long a user can take
   # before confirming their account.
-  config.confirm_within = 1.days
+  # config.confirm_within = 3.days
 
   # If true, requires any email changes to be confirmed (exactly the same way as
   # initial account confirmation) to be applied. Requires additional unconfirmed_email
@@ -244,7 +244,7 @@ Devise.setup do |config|
   # Turn scoped views on. Before rendering "sessions/new", it will first check for
   # "users/sessions/new". It's turned off by default because it's slower if you
   # are using only default views.
-  config.scoped_views = true
+  # config.scoped_views = false
 
   # Configure the default scope given to Warden. By default it's the first
   # devise role declared in your routes (usually :user).

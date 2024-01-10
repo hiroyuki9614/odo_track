@@ -1,0 +1,6 @@
+<% if current_user.admin %>
+	<%= content_tag(:div, "", id: "static_admin_header") %>
+<% else %>
+	<%= content_tag(:div, "", id: "static_header") %>
+<% end %>
+<p>ファイルを作成しました</p>

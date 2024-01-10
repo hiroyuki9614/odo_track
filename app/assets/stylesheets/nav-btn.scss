@@ -2,27 +2,32 @@
 	background-color: #000000;
 	vertical-align: bottom;
 }
-
 // gest
 
 // .nav-guest {
 // 	height: 48px;
 // 	vertical-align: top;
 // }
-
+.navbar {
+	background: linear-gradient(180deg, #555555, #8a8a8a);
+	margin: 0px;
+	padding: 0px;
+}
 .navbar-nav {
 	display: flex;
 	flex-direction: row; /* 横並びにする */
 }
-
-.nav-item {
-	// margin-right: 10px; /* 右の要素との間隔 */
+.nav-user {
+	// background-color: #000000;
+	// float: right;
+	// justify-content: end;
+	// margin-left: auto; /* このdiv内の要素を右に寄せる */
 }
 
 .nav-btn {
-	background-color: #555555;
+	background: linear-gradient(180deg, #55555500, #8a8a8a00);
 	color: #ffffff;
-	border-color: #555555;
+	border-color: #8a8a8a00;
 }
 
 .nav-btn:hover {
@@ -40,9 +45,8 @@
 #nav-btn-danger {
 	// margin-right: 10px;
 }
-
-.dropdown-menu.active {
-	display: block;
+.dropdown-menu {
+	--bs-dropdown-link-active-bg: #bebebe;
 }
 
 #nav-btn-disabled-danger {
@@ -55,4 +59,36 @@
 	background-color: #0dcaf0;
 	color: #ffffff;
 	border-color: #ffffff;
+}
+
+// ナビゲーションバーの項目
+// .nav-item {
+// 	background-color: #474747;
+// }
+.nav-link {
+	display: flex;
+	color: #aaaaaa; /* 非アクティブの文字色 */
+	padding: 8px 8px;
+	justify-content: center;
+	font-family: 'Kosugi', sans-serif;
+	// font-family: 'Kiwi Maru', serif;
+	&:active {
+		color: #fff;
+	}
+	&:hover {
+		color: #fff;
+	}
+	&:focus {
+		color: #fff;
+	}
+	&.active {
+		// border-bottom: 2px solid #fff;
+		// padding-top: 100px;
+		width: auto;
+	}
+}
+.nav-link.dropdown-toggle {
+	display: flex;
+	align-items: center; /* 垂直方向の中央揃え */
+	justify-content: space-between; /* アイテムを均等に配置 */
 }

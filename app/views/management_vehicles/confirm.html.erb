@@ -1,7 +1,0 @@
-<% content_for :body_attributes, 'data-turbolinks="false"'.html_safe %>
-<h2>下記の内容で日報を登録してもよろしいですか？</h2>
-<%= form_for @vehicle, url: management_vehicles_path, data: { turbo: false } do |f| %>
-  <%= render partial: 'vehicle_confirm', locals: {f: f} %>
-  <%= f.button 'BACK', value: 'back' %><%= f.button 'OK' %>
-<% end %>
-<div>

@@ -7,10 +7,12 @@ class DailyLogsController < ApplicationController
   # before_action :correct_user, only: %i[index]
 
   def index
-    @user = User.find(current_user.id)
-    @q = @user.daily_logs.all.where(discarded_at: nil).ransack(params[:q])
-    @q.sorts = 'created_at desc' if @q.sorts.empty?
-    @daily_logs = @q.result(distinct: true).page params[:page]
+    # redirect_to('/daily_logs#/daily_logs', allow_other_host: true)
+    # redirect_to daily_logs_path
+    # @user = User.find(current_user.id)
+    # @q = @user.daily_logs.all.where(discarded_at: nil).ransack(params[:q])
+    # @q.sorts = 'created_at desc' if @q.sorts.empty?
+    # @daily_logs = @q.result(distinct: true).page params[:page]
     # .order(created_at: :desc)
   end
 
@@ -92,7 +94,8 @@ class DailyLogsController < ApplicationController
   private
 
   def daily_log_params
-    params.require(:daily_log).permit(:departure_datetime,
+    params.require(:daily_log).permit(:id,
+                                      :departure_datetime,
                                       :arrival_datetime,
                                       :departure_distance,
                                       :arrival_distance,
