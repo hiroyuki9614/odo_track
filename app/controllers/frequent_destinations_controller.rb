@@ -1,4 +1,6 @@
-class PagesController < ApplicationController
+# frozen_string_literal: true
+
+class FrequentDestinationsController < ApplicationController
   def new
     @frequent_destination = current_user.frequent_destinations.new
   end
