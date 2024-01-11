@@ -105,6 +105,9 @@ gem 'active_model_serializers', '~> 0.10.0'
 # 定期的にスクリプトを実行する
 gem 'whenever', require: false
 
+# テストデータの作成
+gem 'faker'
+
 # google API
 # gem 'google-apis-drive_v3', '~> 0.5.0'
 
@@ -143,6 +146,4 @@ group :test do
   gem 'factory_bot_rails'
   gem 'rspec-rails'
   gem 'selenium-webdriver'
-  # テストデータの作成
-  gem 'faker'
 end
