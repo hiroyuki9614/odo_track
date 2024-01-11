@@ -1,6 +1,0 @@
-web: bin/rails server -p 3000 -b 0.0.0.0
-vite: bin/vite dev
-
-web: bin/dev
-css: yarn watch:css
-vite: bin/vite dev
