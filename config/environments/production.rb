@@ -80,7 +80,7 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
   host = ENV['APP_DOMAIN']
-  config.action_mailer.default_url_options = { host: 'lit-tor-41640-5f66b309ac09.herokuapp.com' }
+  config.action_mailer.default_url_options = { host: }
   ActionMailer::Base.smtp_settings = {
     port: ENV['MAILGUN_SMTP_PORT'],
     address: ENV['MAILGUN_SMTP_SERVER'],
