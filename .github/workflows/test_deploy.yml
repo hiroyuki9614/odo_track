@@ -1,5 +1,3 @@
-# app/.github/workflows/test_deploy.yml
-
 name: Test and Deploy
 
 on:
