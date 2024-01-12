@@ -122,7 +122,7 @@ gem 'faker'
 
 # 本番環境でPostgreSQLデータベースを使用する
 group :production do
-  gem 'pg', '>= 0.18', '< 2.0'
+  gem 'pg', '~> 0.18'
 end
 
 group :development, :test do
