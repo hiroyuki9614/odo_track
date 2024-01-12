@@ -72,7 +72,7 @@ Rails.application.configure do
   config.active_job.verbose_enqueue_logs = true
 
   # Suppress logger output for asset requests.
-  config.assets.quiet = true
+  # config.assets.quiet = true
 
   # config.assets.digest = false
 
@@ -89,8 +89,8 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
 
   # アセットを動的にコンパイルする
-  config.assets.compile = true
+  # config.assets.compile = true
 
   # プリコンパイルされたアセットの参照を防ぐ
-  config.assets.prefix = '/dev-assets'
+  # config.assets.prefix = '/dev-assets'
 end
