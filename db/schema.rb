@@ -45,11 +45,9 @@ ActiveRecord::Schema[7.1].define(version: 20_231_219_094_524) do
     t.string 'destination_name', null: false
     t.text 'destination_note', null: false
     t.integer 'daily_log_id'
-    # t.integer "user_id_id"
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
     t.index ['daily_log_id'], name: 'index_frequent_destinations_on_daily_log_id'
-    # t.index ["user_id_id"], name: "index_frequent_destinations_on_user_id_id"
   end
 
   create_table 'users', force: :cascade do |t|
@@ -90,5 +88,4 @@ ActiveRecord::Schema[7.1].define(version: 20_231_219_094_524) do
   add_foreign_key 'favorite_vehicles', 'users', on_delete: :restrict
   add_foreign_key 'favorite_vehicles', 'vehicles', on_delete: :restrict
   add_foreign_key 'frequent_destinations', 'daily_logs', on_update: :restrict, on_delete: :restrict
-  # add_foreign_key "frequent_destinations", "user_ids", on_update: :restrict, on_delete: :restrict
 end
