@@ -16,6 +16,9 @@ gem 'sqlite3', '~> 1.4'
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '>= 5.0'
 
+# 環境変数を管理する
+gem 'dotenv-rails', '>=2.8.1'
+
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 # gem 'importmap-rails'
 
@@ -68,10 +71,10 @@ gem 'enum_help'
 gem 'bcrypt', '~> 3.1', require: 'bcrypt'
 
 # bootstrapを適用する
-gem 'bootstrap', '~> 5.3.2'
+# gem 'bootstrap', '~> 5.3.2'
 
 # sassを有効にする gem bootstrapに依存
-gem 'dartsass-sprockets'
+# gem 'dartsass-sprockets'
 
 # アセットパイプライン
 # gem 'cssbundling-rails'
@@ -107,6 +110,8 @@ gem 'whenever', require: false
 
 # テストデータの作成
 gem 'faker'
+
+gem 'aws-sdk-s3', require: false
 
 # google API
 # gem 'google-apis-drive_v3', '~> 0.5.0'
