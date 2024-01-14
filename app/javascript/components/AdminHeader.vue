@@ -30,7 +30,9 @@ import axios from 'axios';
 const tab = ref(null);
 const links = [
 	{ title: '設定', icon: 'mdi mdi-cog', url: 'http://0.0.0.0:3000/daily_logs#/setting' },
+	{ title: '設定', icon: 'mdi mdi-cog', url: 'http://54.95.118.214/daily_logs#/setting' },
 	{ title: '出力', icon: 'mdi mdi-help-circle', url: 'http://0.0.0.0:3000/export_daily_logs/' },
+	{ title: '出力', icon: 'mdi mdi-help-circle', url: 'http://54.95.118.214/export_daily_logs/' },
 	{ title: 'ログアウト', icon: 'mdi mdi-logout', color: 'error' },
 ]
 const account = [

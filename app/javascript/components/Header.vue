@@ -24,6 +24,9 @@
 import { ref } from 'vue';
 import axios from 'axios';
 
+const pageUrl = "http://54.95.118.214/"
+// const pageUrl = "http://0.0.0.0:3000/"
+
 const tab = ref(null);
 const links = [
 	{title: '設定', icon:'mdi mdi-cog', url:'/setting'},
@@ -39,7 +42,7 @@ const logout = () => {
 	axios.delete('/auth/logout', { headers: { 'X-CSRF-Token': csrfToken } })
         .then(() => {
         	// ログアウト成功時、指定のURLにリダイレクト
-			window.location.href = 'http://0.0.0.0:3000/';
+			window.location.href = pageUrl;
         })
         .catch((error) => {
           // エラー処理

@@ -42,6 +42,9 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
+  get 'downloads', to: 'downloads#index'
+  get 'downloads/:filename', to: 'downloads#show', as: :download
+
   # get '/daily_logs', to: 'daily_logs#index', as: :daily_logs
   resources :daily_logs_for_admin, only: %i[index]
 

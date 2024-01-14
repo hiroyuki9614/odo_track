@@ -860,7 +860,7 @@ watch(dialogError, val => {
 }
 
 @media screen and (max-width: 768px) {
-	.card-action {
+	div.card-action {
 		margin-top: 550px;
 	}
 

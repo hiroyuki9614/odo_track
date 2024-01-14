@@ -3,10 +3,14 @@
 		<v-toolbar color="gray">
 			<!-- <v-spacer></v-spacer> -->
 			<v-tabs	v-model="tab" color="deep-purple-accent-4" align-tabs="start">
-				<v-tab :value="1" href="http://0.0.0.0:3000/daily_logs#/">運転日報</v-tab>
+				<v-tab :value="1" href="http://0.0.0.0:3000/daily_logs">運転日報</v-tab>
 				<v-tab :value="2" href="http://0.0.0.0:3000/daily_logs#/daily_logs_for_admin">日報一覧</v-tab>
 				<v-tab :value="3" href="http://0.0.0.0:3000/daily_logs#/users_for_admin">社員情報</v-tab>
 				<v-tab :value="4" href="http://0.0.0.0:3000/daily_logs#/management_vehicles">車両一覧</v-tab>
+				<v-tab :value="1" href="http://54.95.118.214/daily_logs">運転日報</v-tab>
+				<v-tab :value="2" href="http://54.95.118.214/daily_logs#/daily_logs_for_admin">日報一覧</v-tab>
+				<v-tab :value="3" href="http://54.95.118.214/daily_logs#/users_for_admin">社員情報</v-tab>
+				<v-tab :value="4" href="http://54.95.118.214/daily_logs#/management_vehicles">車両一覧</v-tab>
 			</v-tabs>
 			<v-spacer></v-spacer>
 			<v-menu>
@@ -27,6 +31,10 @@
 import { ref } from 'vue';
 import axios from 'axios';
 
+const pageUrl = "http://54.95.118.214/";
+// const pageUrl = "http://0.0.0.0:3000/";
+
+
 const tab = ref(null);
 const links = [
 	{title: '設定', icon:'mdi mdi-cog', url:'http://0.0.0.0:3000/daily_logs#/setting'},
@@ -46,6 +54,7 @@ const logout = () => {
         .then(() => {
         	// ログアウト成功時、指定のURLにリダイレクト
 			window.location.href = 'http://0.0.0.0:3000/';
+			window.location.href = pageUrl;
         })
         .catch((error) => {
           // エラー処理

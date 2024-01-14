@@ -110,7 +110,7 @@
 											</v-container>
 										</v-card-text>
 										<!-- 新規作成/編集ダイアログのボタン -->
-										<v-card-actions class="card-action">
+										<v-card-actions class="user-card-action">
 											<v-spacer></v-spacer>
 											<v-btn color="blue-darken-1" variant="text" @click="close"> 取り消し </v-btn>
 											<v-btn color="blue-darken-1" :loading="loading" variant="text" type="submit" @click="save"> 保存 </v-btn>
@@ -638,8 +638,8 @@ watch(dialogError, val => {
   max-height: 270px;
 }
 @media screen and (max-width: 768px) {
-  .card-action{
-    margin-top: 550px;
+  div.user-card-action{
+    margin-top: 100px;
   }
   .mobile table.v-table tr {
     max-width: 100%;
