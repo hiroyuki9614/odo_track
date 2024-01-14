@@ -16,9 +16,9 @@ set :output, "#{Rails.root}/log/crontab.log" # cronのログ出力用ファイ�
 every :month, at: 'start of the month at midnight' do
   rake 'pdf_export:export_all'
 end
-# every 1.minute do
-#   rake 'pdf_export:export_all'
-# end
+every 1.minute do
+  rake 'pdf_export:export_all'
+end
 # every 1.minute do
 #   command "echo 'mossmossmossmossmossmoss'"
 # end

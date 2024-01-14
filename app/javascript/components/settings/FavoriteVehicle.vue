@@ -1,5 +1,5 @@
 <template lang="">
-	<section class="daily_log_index">
+	<section class="favorite-vehicle">
 		<div class="bg-image h-100">
 			<!-- 検索フォーム -->
 			<!-- テーブル要素 -->
@@ -35,7 +35,7 @@
 											</v-container>
 										</v-card-text>
 										<!-- 新規作成ダイアログのボタン -->
-										<v-card-actions class="card-action">
+										<v-card-actions class="card-action fv-card-action">
 											<v-spacer></v-spacer>
 											<v-btn color="blue-darken-1" variant="text" @click="close"> 取り消し </v-btn>
 											<v-btn color="blue-darken-1" variant="text" type="submit" @click="save"> 保存 </v-btn>
@@ -61,7 +61,7 @@
 									<p class="text-center">申し訳ございません。</p>
 									<p class="text-center">エラーが発生し、先程の投稿は無効となりました。</p>
 									<p class="text-center">お手数ですが、再度ご入力下さい。</p>
-									<v-card-actions>
+									<v-card-actions id="favorite-vehicles">
 										<v-spacer></v-spacer>
 										<v-btn color="blue-darken-1" variant="text" @click="closeError">閉じる</v-btn>
 										<v-spacer></v-spacer>
@@ -385,8 +385,8 @@ watch(dialogError, (val) => {
 }
 
 @media screen and (max-width: 768px) {
-	.card-action {
-		margin-top: 0px;
+	div.fv-card-action {
+		margin-top: 10px;
 	}
 
 	.mobile table.v-table tr {

@@ -57,7 +57,7 @@
 												</v-container>
 											</v-card-text>
 											<!-- 新規作成/編集ダイアログのボタン -->
-											<v-card-actions class="card-action">
+											<v-card-actions class="card-action vc-card-action">
 												<v-spacer></v-spacer>
 												<v-btn color="blue-darken-1" variant="text" @click="close"> 取り消し </v-btn>
 												<v-btn color="blue-darken-1" variant="text" type="submit" @click="save"> 保存 </v-btn>
@@ -160,7 +160,7 @@
 												</v-container>
 											</v-card-text>
 											<!-- 新規作成/編集ダイアログのボタン -->
-											<v-card-actions class="card-action">
+											<v-card-actions class="card-action vc-card-action">
 												<v-spacer></v-spacer>
 												<v-btn color="blue-darken-1" variant="text" @click="close"> 取り消し </v-btn>
 												<v-btn color="blue-darken-1" variant="text" type="submit" @click="save"> 保存 </v-btn>
@@ -718,7 +718,7 @@ watch(dialogError, val => {
 }
 
 @media screen and (max-width: 768px) {
-  .card-action{
+  div.vc-card-action{
     margin-top: 130px;
   }
   .mobile table.v-table tr {

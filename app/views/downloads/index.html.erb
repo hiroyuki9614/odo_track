@@ -3,13 +3,9 @@
 <% else %>
 	<%= content_tag(:div, "", id: "static_header") %>
 <% end %>
-<div class="my-5 export-title">
-	<h5>運転日報の印刷ページ</h5>
-	<p><%= link_to "全員のPDFを作成する", export_pdf_path %></p>
-	<%= link_to 'PDFをダウンロードする', downloads_path %>
-</div>
-<% if @users.blank? %>
-	<p class="m-5">運転日報はありません。</p>
+<h5 class="mx-5 my-3">ダウンロードファイル一覧</h5>
+<% if @files.blank? %>
+	<p class="m-5">ダウンロード可能な運転日報はありません。</p>
 <% else %>
 <!-- ヘッダー部分 -->
 	<section class="export_daily_log_index">
@@ -26,18 +22,15 @@
 											<!-- テーブルタイトル -->
 											<thead>
 												<tr>
-													<th><%= t('activerecord.attributes.user.user_name') %></th>
-													<th><%= '今月の運転日報の数' %></th>
-													<th></th>
-													<th></th>
+													<th>ダウンロード可能なPDF一覧</th>
 												</tr>
 											</thead>
 											<!-- テーブルボディ -->
-											<% @users.each do |user| %>
+											<% @files.each do |file| %>
 												<tbody>
 													<tr>
-														<td scope="row"><%= user.user_name %></th>
-														<td class="ms-5"><%= user.daily_logs.length %></td>
+                            <% filename = File.basename(file) %>
+                            <td scope="row"><%= link_to filename, download_path(filename) %></td>
 													</tr>
 												</tbody>
 											<% end %>
