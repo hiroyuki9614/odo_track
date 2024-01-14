@@ -1,2 +1,3 @@
-<h1>Pages#help</h1>
-<p>Find me in app/views/pages/help.html.erb</p>
+<% if user_signed_in? %>
+  <%= content_tag(:div, "", id: "static_header") %><br>
+<% end %>

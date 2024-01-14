@@ -1,35 +1,29 @@
-    <% flash.each do |message_type, message| %>
-      <div class="text-danger text-center text-bold bg-light">
-        <%= message %>
-      </div>
-    <% end %>
-<h2>今からペンは不要です。 スマホでPCで運転の記録、始めましょう！</h2>
-<h3>1人あたり、たったの380円で始まる働き方改革</h3>
-<h4>このアプリがあなたの会社の社用車管理を強力にサポートします！</h4><br>
-<%= content_tag(:div, "", id: "app") %><br>
-<br>
-<%= content_tag(:div, "", id: "daily_logs") %><br>
-<div class="btn-group">
-  <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-    Action
-  </button>
-  <div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Dropdown button
-    </button>
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="#">Action</a></li>
-      <li><a class="dropdown-item" href="#">Another action</a></li>
-      <li><a class="dropdown-item" href="#">Something else here</a></li>
-    </ul>
+<% if user_signed_in? %>
+  <%= content_tag(:div, "", id: "static_header") %><br>
+<% end %>
+<% flash.each do |message_type, message| %>
+  <div class="text-danger text-center text-bold bg-light">
+    <%= message %>
   </div>
-  <li class="dropdown">
-    <a href="#" id="account" class="dropdown-toggle">
-      Account <b class="caret"></b>
-    </a>
-    <ul id="dropdown-menu" class="dropdown-menu">
-      <li class="divider"></li>
-      <li>
-        <%= link_to "Log out", destroy_user_session_path, data: { "turbo-method": :delete } %>
-      </li>
-    </li>
+<% end %>
+<h5 class="mx-2 mt-4">このアプリについて</h5><br>
+<p class="m-3">業務での運転日報を記録します。</p>
+<p class="m-3">走行距離や運転した車両を記録し管理します。</p><br>
+<p class="m-2">ユーザーアカウント => email:mmm@example.com password:password</p>
+<p class="m-2">管理者アカウント   => email:admin@example.com password:password</p><br>
+<p class="m-2">制作の背景</p>
+<p class="m-3">前社では、運転日報を手書きで入力しており、管理の煩雑さや入力の面倒さが目に見えて問題となっていました。</p>
+<p class="m-3">そのような日常業務の非効率を少しでも効率化するソフトを作ってみたいという思いからこのソフトを制作しました。</p><br>
+<p class="m-2">- 基本機能</p>
+<p class="m-3">ユーザー: 投稿/編集/削除(論理)/一覧  運転する車両の登録(お気に入り機能のようなものです)</p><br>
+<p class="m-3">
+<p class="m-3">管理者  : 投稿/編集/削除(論理)/一覧  車両・社員情報の閲覧、編集  投稿の自動PDF化(prawn, whennever)</p><br>
+<p class="m-2">- 使用技術</p>
+<p class="m-3">フロントエンド: HTML/CSS Bootstrap, Vue.js Vuetify</p><br>
+<p class="m-3">バックエンド　: Ruby(3.2.2) Ruby on rails (7.1.2)</p><br>
+<p class="m-2">- インフラ</p>
+<p class="m-3">Docker Docker-compose Heroku(DB) nginx AWS(EC2)</p>
+<p class="m-2">- テスト</p>
+<p class="m-3">Rspec(github actionsにて、プルリクエストの際に自動的に実施)</p>
+<p class="m-2">- 開発環境</p>
+<p class="m-3">VScode</p><br>
