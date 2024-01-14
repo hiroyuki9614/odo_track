@@ -3,7 +3,7 @@
 		<v-toolbar color="gray">
 			<!-- <v-spacer></v-spacer> -->
 			<v-tabs	v-model="tab" color="deep-purple-accent-4" align-tabs="start">
-				<v-tab :value="1" to="/">運転日報</v-tab>
+				<v-tab :value="1" href="http://0.0.0.0:3000/daily_logs#/">運転日報</v-tab>
 			</v-tabs>
 			<v-spacer></v-spacer>
 			<v-menu>
