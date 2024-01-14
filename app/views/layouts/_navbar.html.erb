@@ -3,7 +3,6 @@
   <% unless user_signed_in? %>
     <div class="container">
       <%= link_to image_tag("img_logo.png"), root_path, class:"nav-logo" %>
-      <%= vite_image_tag 'app/assets/images/img_logo.png' %>
       <%= render '/layouts/navbar_share/guest_user' %>
     </div>
   <% else %>
