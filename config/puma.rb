@@ -49,4 +49,4 @@ workers ENV.fetch('WEB_CONCURRENCY') { 2 }
 preload_app!
 plugin :tmp_restart
 app_root = File.expand_path('..', __dir__)
-bind "unix:#{app_root}/tmp/sockets/puma.sock"
+# bind "unix:#{app_root}/tmp/sockets/puma.sock"
