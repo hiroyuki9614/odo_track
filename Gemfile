@@ -11,7 +11,7 @@ gem 'rails', '~> 7.1.1'
 # gem 'sprockets-rails'
 
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3', '~> 1.4'
+# gem 'sqlite3', '~> 1.4'
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '>= 5.0'
@@ -111,7 +111,7 @@ gem 'whenever', require: false
 # テストデータの作成
 gem 'faker'
 
-gem 'aws-sdk-s3', require: false
+# gem 'aws-sdk-s3', require: false
 
 # google API
 # gem 'google-apis-drive_v3', '~> 0.5.0'
@@ -124,7 +124,7 @@ gem 'aws-sdk-s3', require: false
 
 # 本番環境でPostgreSQLデータベースを使用する
 group :production do
-  gem 'pg', '~> 0.18'
+  gem 'pg', '~> 1.1'
 end
 
 group :development, :test do
@@ -138,7 +138,7 @@ group :development do
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
-
+  gem 'sqlite3', '~> 1.4'
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
 

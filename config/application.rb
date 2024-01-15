@@ -26,9 +26,12 @@ module OdoTrack
     config.time_zone = 'Tokyo'
     config.active_record.default_timezone = :local
     # config.eager_load_paths << Rails.root.join("extras")
-    
+
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
     config.middleware.use ActionDispatch::ContentSecurityPolicy::Middleware
+
+    # 認証トークンをremoteフォームに埋め込む
+    config.action_view.embed_authenticity_token_in_remote_forms = true
   end
 end
