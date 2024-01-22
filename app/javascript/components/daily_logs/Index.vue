@@ -33,7 +33,6 @@
 													<!-- フォームの内容 -->
 														<v-col cols="12" sm="4" md="3">
 															<v-select v-model="vehicle_id" label="車両" :rules="vehicleRules" @update:modelValue="onChangeVehicleSelect" :items="newFavoriteVehicles" item-title="vehicle_name" item-value="vehicle_id" persistent-hint return-object single-line></v-select>
-															<input type="hidden" v-model="hiddenVehicle" />
 														</v-col>
 														<v-col cols="12" sm="4" md="3">
 															<v-text-field v-model="departure_datetime" label="出発日時" :rules="departureDatetimeRules" />
@@ -56,17 +55,16 @@
 													</v-col>
 												</v-row>
 											</v-container>
-											<v-container	v-if="isMobile">
+											<v-container v-if="isMobile">
 												<v-row>
 													<!-- フォームの内容 -->
 													<v-col cols="12" sm="4" md="3">
 														<v-select v-model="vehicle_id" label="車両" :rules="vehicleRules" @update:modelValue="onChangeVehicleSelect" :items="newFavoriteVehicles" item-title="vehicle_name" item-value="vehicle_id" persistent-hint return-object single-line></v-select>
-														<input type="hidden" v-model="hiddenVehicle" />
 														<v-text-field v-model="departure_datetime" label="出発日時" :rules="departureDatetimeRules" />
-														<v-text-field v-model="departure_distance" required label="出発時の距離" :rules="departureDistanceRules" />
-														<v-text-field v-model="departure_location" required label="出発場所" :rules="departureLocationRules" />
 														<v-text-field v-model="arrival_datetime" required label="到着日時" :rules="arrivalDatetimeRules" />
+														<v-text-field v-model="departure_distance" required label="出発時の距離" :rules="departureDistanceRules" />
 														<v-text-field v-model="arrival_distance" required label="到着時の距離" :rules="arrivalDistanceRules" />
+														<v-text-field v-model="departure_location" required label="出発場所" :rules="departureLocationRules" />
 														<v-text-field v-model="arrival_location" required label="目的地" :rules="arrivalLocationRules" />
 														<v-textarea v-model="note" label="備考" variant="filled" row-height="100" :rules="noteRules" class="form-note" />
 														<div v-if="editedIndex == -1">
@@ -196,15 +194,6 @@ const onResize = () => {
 	else
 		return isMobile.value = false;
 }
-// const changeSort = (column) => {
-//	 console.log(column);
-//	 if (this.pagination.sortBy === column) {
-//		 this.pagination.descending = !this.pagination.descending
-//	 } else {
-//		 this.pagination.sortBy = column
-//		 this.pagination.descending = false
-//	 }
-// }
 
 const editedIndex = ref(-1);
 const expanded = ref([]);
@@ -257,7 +246,17 @@ const isValid = () => {
 		return false;
 	}
 };
-
+const vehicleIsValid = ref(true)
+const vehicleRules = [
+	value => {
+		if (!value) {
+			vehicleIsValid.value = false;
+			return '車両を選択して下さい。';
+		}
+		vehicleIsValid.value = true;
+		return true;
+	}
+];
 const departureDatetimeIsValid = ref(true)
 const departureDatetimeRules = [
 	value => {
@@ -497,11 +496,10 @@ const createItem = async () => {
 			const message = `An error has occured: ${res.status} - ${res.statusText}`;
 			throw new Error(message);
 		}
-
 		const data = await res.json();
 		console.log(data);
 		items.value.push(data);
-
+		location.reload()
 	} catch (err) {
 		console.error('Error:', err.message); // エラー情報をコンソールに表示
 		console.log("エラー内容：" + formErrors.value)
@@ -577,22 +575,6 @@ const updateItem = async () => {
 
 		const index = items.value.findIndex(item => item.id === data.id)
 		items.value[index] = data
-		// window.location.reload();
-		// formErrors.value = {};
-		// departure_datetime.value = '';
-		// arrival_datetime.value = '';
-		// departure_distance.value = '';
-		// arrival_distance.value = '';
-		// departure_location.value = '';
-		// arrival_location.value = '';
-		// note.value = '';
-		// vehicle_id.value = '';
-		// is_alcohol_check.value = '';
-		// is_studless_tire.value = '';
-		// user_id.value = 0;
-		// isEditing.value = false
-
-
 	} catch (err) {
 		console.error('Error:', err.message); // エラー情報をコンソールに表示
 		console.log("エラー内容：" + formErrors.value)

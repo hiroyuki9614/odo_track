@@ -25,9 +25,7 @@ class DailyLogsController < ApplicationController
     @daily_log = current_user.daily_logs.build(
       departure_datetime: Time.zone.today,
       arrival_datetime: Time.now.strftime('%Y-%m-%d %H:%M'),
-      # 乗った車(vehicle_id)の最後に記録された走行距離を入力するようにする。
-      # 今は個人の最後の走行距離である。
-      departure_distance: last_arrival_distance
+      departure_distance: current_user.daily_logs.last_arrival_distance
     )
     # お気に入りの目的地をセレクトボックスで選べるようにする。 datalist要素
     # @frequent_destinations = current_user.frequent_destination

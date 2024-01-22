@@ -48,6 +48,7 @@ import header from '../components/Header.vue';
 import adminHeader from '../components/AdminHeader.vue';
 import staticAdminHeader from '../components/StaticAdminHeader.vue';
 import staticHeader from '../components/StaticHeader.vue';
+import userHelp from '../components/UserHelp.vue';
 import router from '../components/router/Index.js';
 // import VueRouter from 'vue-router';
 
@@ -163,3 +164,8 @@ StaticHeaderApp.use(i18n);
 StaticHeaderApp.use(router);
 StaticHeaderApp.mount('#static_header');
 // Vue.component('v-select', vSelect);
+const UserHelpApp = createApp(userHelp);
+UserHelpApp.use(vuetify);
+UserHelpApp.use(i18n);
+UserHelpApp.use(router);
+UserHelpApp.mount('#user_help');

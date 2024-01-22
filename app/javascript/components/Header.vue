@@ -24,13 +24,14 @@
 import { ref } from 'vue';
 import axios from 'axios';
 
-const pageUrl = "http://54.95.118.214/"
+// const pageUrl = "http://54.95.118.214/"
+const pageUrl = "https://lit-tor-41640-5f66b309ac09.herokuapp.com"
 // const pageUrl = "http://0.0.0.0:3000/"
 
 const tab = ref(null);
 const links = [
 	{title: '設定', icon:'mdi mdi-cog', url:'/setting'},
-	{title: '操作方法', icon:'mdi mdi-help-circle', url:''},
+	{title: '操作方法', icon:'mdi mdi-help-circle', url:'/user_help'},
 	{title: 'ログアウト', icon:'mdi mdi-logout', color:'error'},
 ]
 const account = [
@@ -66,7 +67,6 @@ a.v-tab.v-tab {
 		width: 78px;
 		height: 40px;
 		padding: 0px;
-		
 	}
 
 	.v-btn--icon.v-btn--density-default {

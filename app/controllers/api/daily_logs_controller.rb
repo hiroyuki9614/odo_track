@@ -23,14 +23,18 @@ module Api
     end
 
     def new
-      @daily_log = current_user.daily_logs.build(
-        departure_datetime: Time.zone.today,
-        arrival_datetime: Time.now.strftime('%Y-%m-%d %H:%M'),
-        departure_location: DailyLog.kept.last.arrival_location
-        # 乗った車(vehicle_id)の最後に記録された走行距離を入力するようにする。
-        # 今は個人の最後の走行距離である。
-      )
-      # お気に入りの目的地をセレクトボックスで選べるようにする。 datalist要素
+      @daily_log = if current_user.daily_logs.kept.exists?
+                     current_user.daily_logs.build(
+                       departure_datetime: Time.zone.today,
+                       arrival_datetime: Time.now.strftime('%Y-%m-%d %H:%M'),
+                       departure_location: DailyLog.kept.last.arrival_location
+                     )
+                   else
+                     current_user.daily_logs.build(
+                       departure_datetime: Time.zone.today,
+                       arrival_datetime: Time.now.strftime('%Y-%m-%d %H:%M')
+                     )
+                   end
       render json: {
         daily_log: ActiveModelSerializers::SerializableResource.new(@daily_log, each_serializer: DailyLogSerializer)
       }

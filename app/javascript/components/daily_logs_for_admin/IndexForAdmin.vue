@@ -153,14 +153,13 @@
 													<v-row>
 														<!-- フォームの内容 -->
 														<v-col cols="12" sm="4" md="3">
-															<v-select v-model="vehicle_id" label="車両" :rules="vehicleRules" @update:modelValue="onChangeVehicleSelect" :items="newFavoriteVehicles" item-title="vehicle_name" item-value="vehicle_id" persistent-hint return-object single-line></v-select>
-															<input type="hidden" v-model="hiddenVehicle" />
-															<v-text-field v-model="departure_datetime" label="出発日時" :rules="departureDatetimeRules" />
-															<v-text-field v-model="departure_distance" required label="出発時の距離" :rules="departureDistanceRules" />
-															<v-text-field v-model="departure_location" required label="出発場所" :rules="departureLocationRules" />
-															<v-text-field v-model="arrival_datetime" required label="到着日時" :rules="arrivalDatetimeRules" />
-															<v-text-field v-model="arrival_distance" required label="到着時の距離" :rules="arrivalDistanceRules" />
-															<v-text-field v-model="arrival_location" required label="目的地" :rules="arrivalLocationRules" />
+														<v-select v-model="vehicle_id" label="車両" :rules="vehicleRules" @update:modelValue="onChangeVehicleSelect" :items="newFavoriteVehicles" item-title="vehicle_name" item-value="vehicle_id" persistent-hint return-object single-line></v-select>
+														<v-text-field v-model="departure_datetime" label="出発日時" :rules="departureDatetimeRules" />
+														<v-text-field v-model="arrival_datetime" required label="到着日時" :rules="arrivalDatetimeRules" />
+														<v-text-field v-model="departure_distance" required label="出発時の距離" :rules="departureDistanceRules" />
+														<v-text-field v-model="arrival_distance" required label="到着時の距離" :rules="arrivalDistanceRules" />
+														<v-text-field v-model="departure_location" required label="出発場所" :rules="departureLocationRules" />
+														<v-text-field v-model="arrival_location" required label="目的地" :rules="arrivalLocationRules" />
 															<v-textarea v-model="note" label="備考" variant="filled" row-height="100" :rules="noteRules" class="form-note" />
 															<div v-if="editedIndex == -1">
 																<v-switch v-model="is_alcohol_check" label="アルコール検査" color="primary" :rules="alcoholCheckRules" />
