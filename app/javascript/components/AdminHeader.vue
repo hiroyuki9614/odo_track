@@ -22,7 +22,6 @@
 		</v-toolbar>
 	</v-app>
 </template>
-
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
@@ -57,7 +56,6 @@ const logout = () => {
 			console.error('ログアウト失敗:', error);
 		});
 }
-
 </script>
 <style>
 a.v-tab.v-tab {
