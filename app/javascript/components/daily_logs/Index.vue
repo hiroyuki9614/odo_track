@@ -28,7 +28,7 @@
 											<span class="text-h5 ms-5">{{ formTitle }}</span>
 										</v-card-title>
 										<v-card-text class="card-text">
-											<v-container	v-if="!isMobile">
+											<v-container v-if="!isMobile">
 												<v-row>
 													<!-- フォームの内容 -->
 														<v-col cols="12" sm="4" md="3">

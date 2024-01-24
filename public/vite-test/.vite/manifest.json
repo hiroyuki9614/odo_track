@@ -1,0 +1,61 @@
+{
+  "entrypoints/application.js": {
+    "css": [
+      "assets/application-SqZVJulq.css"
+    ],
+    "file": "assets/application-eBEk_3HJ.js",
+    "imports": [
+      "entrypoints/controllers/application.js",
+      "entrypoints/controllers/hello_controller.js"
+    ],
+    "isEntry": true,
+    "src": "entrypoints/application.js"
+  },
+  "entrypoints/application.scss": {
+    "file": "assets/application-3BWQ7VSq.css",
+    "isEntry": true,
+    "src": "entrypoints/application.scss"
+  },
+  "entrypoints/controllers/application.js": {
+    "file": "assets/application-G9fg1mfV.js",
+    "imports": [
+      "entrypoints/controllers/hello_controller.js"
+    ],
+    "isEntry": true,
+    "src": "entrypoints/controllers/application.js"
+  },
+  "entrypoints/controllers/hello_controller.js": {
+    "file": "assets/hello_controller-ELQ2CGBc.js",
+    "isEntry": true,
+    "src": "entrypoints/controllers/hello_controller.js"
+  },
+  "entrypoints/controllers/index.js": {
+    "file": "assets/index-w40geAFS.js",
+    "isEntry": true,
+    "src": "entrypoints/controllers/index.js"
+  },
+  "entrypoints/custom.scss": {
+    "file": "assets/custom-CYVhY_I4.css",
+    "isEntry": true,
+    "src": "entrypoints/custom.scss"
+  },
+  "entrypoints/custom/menu.js": {
+    "file": "assets/menu-w40geAFS.js",
+    "isEntry": true,
+    "src": "entrypoints/custom/menu.js"
+  },
+  "entrypoints/custom/print.js": {
+    "file": "assets/print-w40geAFS.js",
+    "isEntry": true,
+    "src": "entrypoints/custom/print.js"
+  },
+  "entrypoints/nav-btn.scss": {
+    "file": "assets/nav-btn-4UyfyKLr.css",
+    "isEntry": true,
+    "src": "entrypoints/nav-btn.scss"
+  },
+  "img_logo.png": {
+    "file": "assets/img_logo-tSQR9hzm.png",
+    "src": "img_logo.png"
+  }
+}

@@ -10,7 +10,6 @@ RSpec.describe User, type: :model do
     let(:telephone) { '09051691918' } # 電話番号
     let(:password) { 'aaaaaa' } # パスワード
     let(:password_confirmation) { 'aaaaaa' } # パスワード(確認)
-    let(:is_active) { true } # ユーザーの在籍
     let(:admin) { false } # 管理者権限
     let(:params) do
       {
@@ -19,7 +18,6 @@ RSpec.describe User, type: :model do
         telephone:,
         password:,
         password_confirmation:,
-        is_active:,
         admin:
       }
     end
@@ -135,12 +133,6 @@ RSpec.describe User, type: :model do
     context 'パスワードが一致しない' do
       let(:password_confirmation) { 'aaaaaa' }
       let(:password_confirmation) { 'aaaaab' }
-
-      it { is_expected.to eq false }
-    end
-
-    context '在籍状況がnil' do
-      let(:is_active) { '' }
 
       it { is_expected.to eq false }
     end

@@ -80,8 +80,6 @@ module Api
                                         :arrival_location,
                                         :note,
                                         :is_alcohol_check,
-                                        :is_studless_tire,
-                                        :approval_status,
                                         :user_id,
                                         :vehicle_id)
     end

@@ -8,7 +8,7 @@ class Vehicle < ApplicationRecord
   validates :vehicle_name, presence: true, length: { maximum: 20 }
   validates :number, presence: true, length: { maximum: 5 }, numericality: { only_integer: true }
   validates :manufacture, presence: true, length: { maximum: 20 }
-  validates :current_drive_distance, length: { maximum: 10 }, allow_blank: true
+  validates :current_drive_distance, length: { maximum: 10 }, numericality: { only_integer: true }, allow_blank: true
   validates :discarded_at, presence: true, allow_blank: true
 
   after_initialize :format_number
