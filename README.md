@@ -1,7 +1,7 @@
-## アプリ
+## アプリ名
 ODO TRACK
 
-##概要
+## 概要
 　githubページをご覧頂き、誠にありがとうございます。
 　制作者の黒石　宏行(くろいし ひろゆき)と申します。
 　このアプリは運転日報を簡単にミスを少なく作成するためのWeb技術により作成したアプリです。
@@ -48,57 +48,49 @@ ODO TRACK
 
 ## DB
 運転日報テーブル (daily_logs)
-_________________________________________________________________
-|カラム名		|　説明			|　データ型	|
-------------------------+----------------------------------------
-|user_id		|　ユーザー名		| intger	|
-|vehicle_id		|　車両名称		| integer	|
-|departure_datetime	|　出発時間		| datetime	|
-|arrival_datetime	|　到着時間		| datetime	|
-|departure_distance	|　出発時の距離		| integer	|
-|arrival_distance	|　到着時の距離		| integer	|
-|departure_location	|　出発場所		| string	|
-|arrival_location	|　目的地		| string	|
-|note			|　備考			| text		|
-|is_alcohol_check	|　アルコールチェック	| boolean	|
-|discarded_at	|　論理削除		| datetime	|
-------------------------+-----------------------+----------------
+| カラム名             | 説明                 | データ型   |
+|----------------------|----------------------|------------|
+| user_id              | ユーザー名           | integer    |
+| vehicle_id           | 車両名称             | integer    |
+| departure_datetime   | 出発時間             | datetime   |
+| arrival_datetime     | 到着時間             | datetime   |
+| departure_distance   | 出発時の距離         | integer    |
+| arrival_distance     | 到着時の距離         | integer    |
+| departure_location   | 出発場所             | string     |
+| arrival_location     | 目的地               | string     |
+| note                 | 備考                 | text       |
+| is_alcohol_check     | アルコールチェック   | boolean    |
+| discarded_at         | 論理削除             | datetime   |
 
 ユーザーテーブル (users)
-________________________________________________________________________________
-|カラム名			|　説明				|　データ型	|
---------------------------------+-------------------------------+---------------|
-|user_name			|　氏名				| string	|
-|email				|　メールアドレス		| string	|
-|telephone			|　電話番号			| string	|
-|admin				|　管理者権限			| boolean	|
-|encrypted_password		|　パスワード			| string	|
-|reset_password_token	|　パスワード再設定用トークン	| string	|
-|dreset_password_sent_at	|　パスワード再設定要求時間	| datetime	|
-|remember_created_at	|　remember_me		|datetime	|
-|confirmation_token		|　ユーザー認証トークン		| string	|
-|confirmed_at		|　ユーザー認証時間		| datetime	|
-|confirmation_sent_at	|　ユーザー認証要求時間		| datetime	|
-|unconfirmation_email	|　email未認証			| datetime	|
-|discarded_at		|　論理削除			| datetime	|
---------------------------------+-------------------------------+----------------
+| カラム名                 | 説明                       | データ型   |
+|--------------------------|----------------------------|------------|
+| user_name                | 氏名                       | string     |
+| email                    | メールアドレス             | string     |
+| telephone                | 電話番号                   | string     |
+| admin                    | 管理者権限                 | boolean    |
+| encrypted_password       | パスワード                 | string     |
+| reset_password_token     | パスワード再設定用トークン | string     |
+| reset_password_sent_at   | パスワード再設定要求時間   | datetime   |
+| remember_created_at      | remember_me                | datetime   |
+| confirmation_token       | ユーザー認証トークン       | string     |
+| confirmed_at             | ユーザー認証時間           | datetime   |
+| confirmation_sent_at     | ユーザー認証要求時間       | datetime   |
+| unconfirmation_email     | email未認証                | string     |
+| discarded_at             | 論理削除                   | datetime   |
 
 車両テーブル (vehicles)
-________________________________________________________________________
-|カラム名			|　説明			|　データ型	|
---------------------------------+-----------------------+----------------
-|vehicle_name		|　車両名称		| string	|
-|number			|　ナンバー		| string	|
-|manufacture			|　メーカー		| string	|
-|current_drive_distance	|　現在の走行距離	| integer	|
-|discarded_at		|　論理削除		| datetime	|
---------------------------------+-----------------------+----------------
+| カラム名                 | 説明                 | データ型   |
+|--------------------------|----------------------|------------|
+| vehicle_name             | 車両名称             | string     |
+| number                   | ナンバー             | string     |
+| manufacture              | メーカー             | string     |
+| current_drive_distance   | 現在の走行距離       | integer    |
+| discarded_at             | 論理削除             | datetime   |
 
 よく乗る車両テーブル (favorite_vehicles)
-________________________________________________________________________
-|カラム名			|　説明			|　データ型	|
---------------------------------+-----------------------+----------------
-|user_id			|　車両名称		| string	|
-|vehicle_id			|　ナンバー		| string	|
-|favorite_vehicle_note	|　メーカー		| string	|
---------------------------------+-----------------------+----------------
+| カラム名                 | 説明                 | データ型   |
+|--------------------------|----------------------|------------|
+| user_id                  | ユーザーID           | integer    |
+| vehicle_id               | 車両ID               | integer    |
+| favorite_vehicle_note    | 備考                 | string     |
