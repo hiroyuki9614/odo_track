@@ -1,24 +1,113 @@
-# README
+【自己紹介】
+　本項をご覧頂き、誠にありがとうございます。
+　制作者の黒石　宏行(くろいし ひろゆき)と申します。
+　このアプリケーションは就活用に作成致しましたので、まずは簡単な自己紹介をさせて頂きます。
+　前職では営業職から転職し、電気設計をしておりました。
+　結果的に最後の仕事となったヒーター設備は電気図面と機械設備のラダーと呼ばれるビジュアル言語によるプログラミングを行い、設計業務は
+　ほとんど自分が担当をし、当時ラダープログラミンは未経験ながらも検収まで持っていく事ができました。
+　Web技術の魅力は日常のあらゆることの非効率を少しでもなくせるという事だと私は考えております。
+　このアプリはその中の一つである、手書きの運転日報を自分が効率化するとどうなるか。　という考えから作成を初めました。
+　そのため、難しいことはできませんが、書類が苦手な自分でも可能な限り楽に、かつミスを減らして日報を作成する方法を考えながら作成しました。
+　至らぬ点の多々あるかと存じますが、ご査収のほど、よろしくお願い致します。
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+　恐れ入りますが以降、詳細はトップページに記載のため、トップページの補足を中心とさせて頂きます。
 
-Things you may want to cover:
+【URL】
+　Heroku
+  https://lit-tor-41640-5f66b309ac09.herokuapp.com/#/
+  ※就活期間中にAWSに移行・ドメインの取得を予定しております。
+  　メールサーバーはmailgunを使用していますが、無料プランですのでユーザーの新規作成はできません。
+　※ユーザー名はトップページに記載しております。
+　　トップページ記載のユーザーにてログインをお願い致します。
 
-* Ruby version
+【使用技術】
+ rails 7.1.2
+ vue.js vuetify
+ git
+ docker
+ rspec(テスト)
 
-* System dependencies
+【改良予定】
+ PDFの出力機能の強化（フォルダの作成・指定のgoogle driveアップロードなど)
+ モバイル表示の強化
+ AWSへの移行
 
-* Configuration
+【管理者機能について】
+ 下記は管理者のみが実行可能としております。
+　　ユーザーの編集
+　　車両の登録・編集
+　　PDFの出力
+　また、データ保持の観点から、
+　　ユーザーの削除は原則不可(未認証ユーザーのみ可)
+　　運転日報はユーザーは論理削除のみ可能。(ユーザーが論理削除した運転日報を管理者が物理削除可能)
+　　車両に関しては論理削除と物理削除を管理者が両方可能。
+　としております。
 
-* Database creation
+　PDFの出力について、月に一回、gem whenneverによりPDFが自動に出力されます。
+　現在はポートフォリオによる閲覧用に一時的に今月の運転日報が作成されるように設定しております。
 
-* Database initialization
+【DB】
+運転日報テーブル (daily_logs)
+_________________________________________________________________
+|カラム名		|　説明			|　データ型	|
+------------------------+----------------------------------------
+|user_id		|　ユーザー名		| intger	|
+|vehicle_id		|　車両名称		| integer	|
+|departure_datetime	|　出発時間		| datetime	|
+|arrival_datetime	|　到着時間		| datetime	|
+|departure_distance	|　出発時の距離		| integer	|
+|arrival_distance	|　到着時の距離		| integer	|
+|departure_location	|　出発場所		| string	|
+|arrival_location	|　目的地		| string	|
+|note			|　備考			| text		|
+|is_alcohol_check	|　アルコールチェック	| boolean	|
+|discarded_at	|　論理削除		| datetime	|
+------------------------+-----------------------+----------------
 
-* How to run the test suite
+ユーザーテーブル (users)
+________________________________________________________________________________
+|カラム名			|　説明				|　データ型	|
+--------------------------------+-------------------------------+---------------|
+|user_name			|　氏名				| string	|
+|email				|　メールアドレス		| string	|
+|telephone			|　電話番号			| string	|
+|admin				|　管理者権限			| boolean	|
+|encrypted_password		|　パスワード			| string	|
+|reset_password_token	|　パスワード再設定用トークン	| string	|
+|dreset_password_sent_at	|　パスワード再設定要求時間	| datetime	|
+|remember_created_at	|　remember_me		|datetime	|
+|confirmation_token		|　ユーザー認証トークン		| string	|
+|confirmed_at		|　ユーザー認証時間		| datetime	|
+|confirmation_sent_at	|　ユーザー認証要求時間		| datetime	|
+|unconfirmation_email	|　email未認証			| datetime	|
+|discarded_at		|　論理削除			| datetime	|
+--------------------------------+-------------------------------+----------------
 
-* Services (job queues, cache servers, search engines, etc.)
+車両テーブル (vehicles)
+________________________________________________________________________
+|カラム名			|　説明			|　データ型	|
+--------------------------------+-----------------------+----------------
+|vehicle_name		|　車両名称		| string	|
+|number			|　ナンバー		| string	|
+|manufacture			|　メーカー		| string	|
+|current_drive_distance	|　現在の走行距離	| integer	|
+|discarded_at		|　論理削除		| datetime	|
+--------------------------------+-----------------------+----------------
 
-* Deployment instructions
+よく乗る車両テーブル (favorite_vehicles)
+________________________________________________________________________
+|カラム名			|　説明			|　データ型	|
+--------------------------------+-----------------------+----------------
+|user_id			|　車両名称		| string	|
+|vehicle_id			|　ナンバー		| string	|
+|favorite_vehicle_note	|　メーカー		| string	|
+--------------------------------+-----------------------+----------------
 
-* ...
+以上です。
+最後までご覧いただき、ありがとうございました。
+
+-------------------------------------------------
+　黒石 宏行
+　090-5169-1918
+　pikupin9441@gmail.com
+-------------------------------------------------

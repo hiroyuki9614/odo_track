@@ -7,7 +7,6 @@ FactoryBot.define do
     telephone { '09051691918' } # 電話番号
     password { Faker::Internet.password(min_length: 6) } # パスワード
     password_confirmation { password } # パスワード(確認)
-    is_active { true } # ユーザーの在籍
     admin { false } # 管理者権限
     confirmed_at { Date.today } # deviseのテストに通るようにする。
   end

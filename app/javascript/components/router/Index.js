@@ -1,12 +1,11 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-const Foo = { template: '<div>foo</div>' };
-const Bar = { template: '<div>bar</div>' };
 // import VueRouter from 'vue-router';
 import DailyLogs from '../DailyLogs.vue';
 import DailyLogsForAdmin from '../DailyLogsForAdmin.vue';
 import ManagementVehicles from '../ManagementVehicles.vue';
 import Settings from '../Settings.vue';
 import UsersForAdmin from '../UsersForAdmin.vue';
+import UserHelp from '../UserHelp.vue';
 // import Tools from '@/views/Tools.vue';
 
 // Vue.use(VueRouter);
@@ -36,6 +35,11 @@ const routes = [
 		path: '/users_for_admin',
 		name: 'users_for_admin',
 		component: UsersForAdmin,
+	},
+	{
+		path: '/user_help',
+		name: 'user_help',
+		component: UserHelp,
 	},
 ];
 

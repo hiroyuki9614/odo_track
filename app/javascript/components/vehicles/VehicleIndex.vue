@@ -115,7 +115,7 @@
 						<template v-slot:top>
 							<v-toolbar flat>
 								<div v-if="!isMobile" style="display: flex; align-items: center">
-									<v-toolbar-title class="table-title">運転日報</v-toolbar-title>
+									<v-toolbar-title class="table-title">車両一覧</v-toolbar-title>
 									<v-divider class="mx-4" inset vertical></v-divider>
 								</div>
 								<v-checkbox v-model="discardedVehiclesIndex" :label="`削除した車両を表示する`" class="discarded-index-check-box" style="display: flex; justify-content: end; font-size: x-small" />

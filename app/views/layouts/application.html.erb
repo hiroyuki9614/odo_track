@@ -2,25 +2,25 @@
 <html>
   <head>
     <title>OdoTrack</title>
-    <%= favicon_link_tag('favicon.ico') %>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <% if controller_name == 'daily_logs_controller' && action_name == 'confirm' %>
       <meta name="turbo-visit-control" content="reload">
     <% end %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%#= javascript_include_tag 'application', type: 'module', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', type: 'module', 'data-turbolinks-track': 'reload' %>
     <%#= javascript_importmap_tags %>
+    <%= favicon_link_tag('favicon.png') %>
     <%= vite_client_tag %>
-    <%= vite_javascript_tag 'application' %>
     <%= vite_stylesheet_tag 'application.scss' %>
+    <%= vite_javascript_tag 'application' %>
     <!-- vuetifyのcss -->
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
     <!--  Vuelidate -->
-    <%# <script src="https://cdn.jsdelivr.net/npm/vue-demi"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-demi"></script>
     <script src="https://cdn.jsdelivr.net/npm/@vuelidate/core"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@vuelidate/validators"></script> %>
+    <script src="https://cdn.jsdelivr.net/npm/@vuelidate/validators"></script>
 
     <!--
       If using a TypeScript entrypoint file:

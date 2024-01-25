@@ -6,19 +6,21 @@ RSpec.describe DailyLog, type: :model do
   # テストデータ
   describe '#valid?' do
     let(:user) { FactoryBot.create(:user) }
+    let(:vehicle) { FactoryBot.create(:vehicle) }
     let(:user_id) { user.id }
+    let(:vehicle_id) { vehicle.id }
     let(:departure_datetime) { Time.zone.today } # 出発日時
     let(:arrival_datetime) { Time.now } # 到着日時
     let(:departure_distance) { 123 } # 出発時の距離
     let(:arrival_distance) { 456 } # 到着時の距離
     let(:departure_location) { '本社' } # 出発場所
-    let(:arrival_location) { '名古屋ドーム' } # 到着場所
-    let(:note) { '得意先名：ドラゴン商事 件名：照明の交換' } # 備考欄
-    let(:is_studless_tire) { false } # スタッドレスタイヤの装着
+    let(:arrival_location) { '福岡営業所' } # 到着場所
+    let(:note) { '得意先名：三田商会 件名：打ち合わせ' } # 備考欄
     let(:is_alcohol_check) { true } # アルコール検査の実施
-    let(:params) do 
+    let(:params) do
       {
         user_id:,
+        vehicle_id:,
         departure_datetime:,
         arrival_datetime:,
         departure_distance:,
@@ -26,8 +28,7 @@ RSpec.describe DailyLog, type: :model do
         departure_location:,
         arrival_location:,
         note:,
-        is_alcohol_check:,
-        is_studless_tire:
+        is_alcohol_check:
       }
     end
 
@@ -117,12 +118,6 @@ RSpec.describe DailyLog, type: :model do
       let(:note) { 'a' * 1001 }
 
       it { is_expected.to eq false }
-    end
-
-    context 'スタッドレスタイヤの装着が未チェックの場合' do
-      let(:is_studless_tire) { false }
-
-      it { is_expected.to eq true }
     end
 
     context 'アルコール検査の実施が未チェックの場合' do

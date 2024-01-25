@@ -3,6 +3,7 @@ import RubyPlugin from 'vite-plugin-ruby';
 import FullReload from 'vite-plugin-full-reload';
 import vue from '@vitejs/plugin-vue';
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
+// import imgUrl from './'
 
 
 export default defineConfig({

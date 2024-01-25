@@ -13,7 +13,9 @@ class RecordPdf < Prawn::Document
 
     @daily_logs = daily_logs # メソッドで利用できるようにインスタンス化
     @user = user
-    @first_day = Date.today.beginning_of_month - 1.month
+    # @first_day = Date.today.beginning_of_month - 1.month
+    # ポートフォリオ用に今月に設定。　本来は先月分の日報をPDFにする。
+    @first_day = Date.today.beginning_of_month
     @last_day = @first_day.end_of_month
     font 'app/assets/fonts/ipaexg.ttf'
 
@@ -30,11 +32,11 @@ class RecordPdf < Prawn::Document
     text '運転日報', size: 16, align: :center
     move_down 10
     draw_text '作成日：',
-              at: [430, 736]
+              at: [420, 736]
     text Time.zone.today.to_s, size: 11, align: :right
     move_down 5
     draw_text '氏名　：',
-              at: [430, 721]
+              at: [420, 721]
     text @user.user_name.to_s, size: 11, align: :right
     move_down 20
     text "期間:#{@first_day}〜#{@last_day}", size: 11, align: :center

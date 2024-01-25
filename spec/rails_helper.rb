@@ -77,10 +77,6 @@ RSpec.configure do |config|
   Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
   # ルートヘルパーをテストに含める
   config.include Rails.application.routes.url_helpers, type: :request
-  # system用のテストヘルパー
-  config.include DailyLogHelpers, type: :system
-  config.include UserHelpers, type: :system
-  config.include EditDailyLogHelpers, type: :system
   # devise用のテストヘルパー
   config.include Devise::Test::IntegrationHelpers, type: :feature
   config.include Devise::Test::ControllerHelpers, type: :controller
