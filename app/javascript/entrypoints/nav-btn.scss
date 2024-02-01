@@ -1,21 +1,51 @@
-.nav-logo {
-	background-color: #000000;
-	vertical-align: bottom;
+div.nav-header {
+	display: flex;
+	justify-content: space-between; /* 要素を両端に配置 */
+	align-items: center; /* 要素を垂直方向の中央に配置 */
+	margin-left: 0px;
+	margin-right: 0px;
 }
-// gest
+div.nav {
+	display: flex;
+	float: right;
+	margin-left: auto;
+}
+div.logo {
+	display: flex;
+	margin-right: auto;
+}
+#logo_image {
+	// display: flex;
+	// flex-direction: row;
+	// justify-content: start;
+	// margin-right: auto;
+	background-image: url(./images/img_logo.png);
+	height: 48px;
+	width: 48px;
+}
 
-// .nav-guest {
-// 	height: 48px;
-// 	vertical-align: top;
-// }
+nav.navbar.navbar-fixed-top.navbar-light {
+	display: flex;
+	justify-content: space-between; /* 要素を両端に配置 */
+	align-items: center; /* 要素を垂直方向の中央に配置 */
+}
+
+nav {
+	margin: 0px;
+}
 .navbar {
 	background: linear-gradient(180deg, #555555, #8a8a8a);
-	margin: 0px;
+	// margin-left: auto;
 	padding: 0px;
+	// float: end;
 }
 .navbar-nav {
 	display: flex;
-	flex-direction: row; /* 横並びにする */
+	flex-direction: row;
+	float: right;
+	margin-left: auto;
+	align-items: center;
+	justify-content: end;
 }
 .nav-user {
 	// background-color: #000000;

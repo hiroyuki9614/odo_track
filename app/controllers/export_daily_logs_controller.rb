@@ -2,7 +2,7 @@
 
 class ExportDailyLogsController < ApplicationController
   before_action :authenticate_user!
-  before_action :admin_user, except: %i[show index export_pdf]
+  before_action :admin_user
   # スプレッドシートの表をpdf化する
 
   # ダウンロードできるファイル(csv/pdf)の一覧を表示する
@@ -11,7 +11,9 @@ class ExportDailyLogsController < ApplicationController
   end
 
   def export_pdf
-    @first_day = Date.today.beginning_of_month - 1.month
+    # @first_day = Date.today.beginning_of_month - 1.month
+    # ポートフォリオ用に今月に設定。　本来は先月分の日報をPDFにする。
+    @first_day = Date.today.beginning_of_month
     @last_day = @first_day.end_of_month
 
     User.kept.find_each do |user|
@@ -40,10 +42,20 @@ class ExportDailyLogsController < ApplicationController
 
   def show
     @today = Time.zone.today
-    @first_day = first_day_of_last_month = Date.today.beginning_of_month - 1.month
+    # ポートフォリオ用に今月に設定。　本来は先月分の日報をPDFにする。
+    @first_day = Date.today.beginning_of_month
     @last_day = last_day_of_last_month = first_day_of_last_month.end_of_month
 
     @user = User.find(params[:id])
     @daily_logs = @user.daily_logs.kept.where(created_at: first_day_of_last_month..last_day_of_last_month)
+  end
+
+  private
+
+  def admin_user
+    return if current_user.admin?
+
+    flash[:alert] = 'その操作は権限が無いため実行できません。'
+    redirect_to(root_url, status: :see_other)
   end
 end

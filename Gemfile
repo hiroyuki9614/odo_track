@@ -70,18 +70,6 @@ gem 'enum_help'
 # パスワードのハッシュ化
 gem 'bcrypt', '~> 3.1', require: 'bcrypt'
 
-# bootstrapを適用する
-# gem 'bootstrap', '~> 5.3.2'
-
-# sassを有効にする gem bootstrapに依存
-# gem 'dartsass-sprockets'
-
-# アセットパイプライン
-# gem 'cssbundling-rails'
-
-# sassを有効にする
-# gem 'dartsass-rails', '~> 0.5.0'
-
 gem 'mini_racer'
 
 # pdfを作成する

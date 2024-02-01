@@ -11,7 +11,7 @@
 					<template v-slot:top>
 						<v-toolbar flat>
 							<div v-if="!isMobile" style="display: flex; align-items: center;">
-								<v-toolbar-title class="table-title">車両一覧</v-toolbar-title>
+								<v-toolbar-title class="table-title">社員一覧</v-toolbar-title>
 								<v-divider class="mx-4" inset vertical></v-divider>
 							</div>
 							<v-checkbox v-model="discardedUsersIndex" :label="`削除した社員情報を表示する`" class="discarded-index-check-box" style="display: flex; justify-content: end; font-size: x-small" />
@@ -29,7 +29,7 @@
 							<!-- 削除取消ダイアログ -->
 							<v-dialog v-model="dialogUndelete" max-width="500px">
 								<v-card>
-									<v-card-title class="text-center">この車両の削除を取消しますか？</v-card-title>
+									<v-card-title class="text-center">この社員の削除を取消しますか？</v-card-title>
 									<v-card-actions>
 										<v-spacer></v-spacer>
 										<v-btn color="blue-darken-1" variant="text" @click="closeUndelete">Cancel</v-btn>
@@ -75,7 +75,7 @@
             <template v-slot:top>
 						<v-toolbar flat>
 							<div v-if="!isMobile" style="display: flex; align-items: center;">
-								<v-toolbar-title class="table-title">車両一覧</v-toolbar-title>
+								<v-toolbar-title class="table-title">社員一覧</v-toolbar-title>
 								<v-divider class="mx-4" inset vertical></v-divider>
 							</div>
 							<v-checkbox v-model="discardedUsersIndex" :label="`削除した社員情報を表示する`" class="discarded-index-check-box" style="display: flex; justify-content: end; font-size: x-small" />
@@ -150,7 +150,7 @@
 									<p class="text-center" style="margin-bottom: 0px">この社員情報は完全に削除されます。</p>
 									<v-card-actions>
 										<v-spacer></v-spacer>
-										<v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
+										<v-btn color="blue-darken-1" variant="text" @click="closeDestroy">Cancel</v-btn>
 										<v-btn type="submit" color="blue-darken-1" @click="destroyItemConfirm(item_id)">OK</v-btn>
 										<v-spacer></v-spacer>
 									</v-card-actions>

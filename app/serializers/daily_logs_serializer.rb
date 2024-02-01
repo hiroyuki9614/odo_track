@@ -2,8 +2,7 @@ class DailyLogsSerializer < ActiveModel::Serializer
   include ActiveSupport::NumberHelper
   attributes :id, :departure_datetime, :arrival_datetime, :departure_distance, :arrival_distance,
              :departure_location, :created_at, :arrival_location, :note, :is_alcohol_check,
-             :is_studless_tire, :approval_status, :vehicle_id, :vehicle_name, :vehicle_number,
-             :vehicle_current_drive_distance, :user_name
+             :vehicle_id, :vehicle_name, :vehicle_number, :vehicle_current_drive_distance, :user_name
 
   def created_at
     object.created_at.strftime('%Y/%m/%d %H:%M')

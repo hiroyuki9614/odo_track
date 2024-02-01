@@ -5,7 +5,7 @@ class FavoriteVehicle < ApplicationRecord
   belongs_to :user
 
   validate :unique_vehicle_for_user
-
+  validates :favorite_vehicle_note, length: { maximum: 1000 }
   def unique_vehicle_for_user
     # 同じユーザーが同じ車両をすでに登録しているか確認
     existing_favorite = FavoriteVehicle.find_by(user_id:, vehicle_id:)
