@@ -14,7 +14,7 @@ gem 'rails', '~> 7.1.1'
 # gem 'sqlite3', '~> 1.4'
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem 'puma', '>= 5.0'
+gem 'puma', '4.3.6'
 
 # 環境変数を管理する
 gem 'dotenv-rails', '>=2.8.1'
