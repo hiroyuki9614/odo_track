@@ -56,14 +56,14 @@ jobs:
       - name: Install SSH key
         run: |
           mkdir -p -m 700 ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/odo_track-webapp
-          chmod 600 ~/.ssh/odo_track-webapp
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/rails-deploy-webapp
+          chmod 600 ~/.ssh/rails-deploy-webapp
 
       - name: Deploy
         run: |
           eval $(ssh-agent)
-          ssh-add ~/.ssh/odo_track-webapp
-          ssh -o StrictHostKeyChecking=no -A webapp@${{ secrets.TARGET_HOSTNAME }} "cd odo_track &&
+          ssh-add ~/.ssh/rails-deploy-webapp
+          ssh -o StrictHostKeyChecking=no -A webapp@${{ secrets.TARGET_HOSTNAME }} "cd rails-deploy &&
           git pull origin main &&
           ~/.rbenv/shims/bundle config --local deployment true &&
           ~/.rbenv/shims/bundle config --local without development:test &&
