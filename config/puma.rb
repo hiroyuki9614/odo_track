@@ -36,7 +36,7 @@
 # app_root = File.expand_path('..', __dir__)
 # bind "unix:#{app_root}/tmp/sockets/puma.sock"
 
-bind 'tcp://0.0.0.0:3000'
+# bind 'tcp://0.0.0.0:3000'
 
 # Pumaの設定ファイル
 max_threads_count = ENV.fetch('RAILS_MAX_THREADS') { 5 }
@@ -49,4 +49,4 @@ workers ENV.fetch('WEB_CONCURRENCY') { 2 }
 preload_app!
 plugin :tmp_restart
 app_root = File.expand_path('..', __dir__)
-# bind "unix:#{app_root}/tmp/sockets/puma.sock"
+bind "unix:#{app_root}/tmp/sockets/puma.sock"
