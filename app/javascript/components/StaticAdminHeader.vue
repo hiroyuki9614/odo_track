@@ -6,15 +6,15 @@
 				<!-- <v-tab :value="1" href="http://0.0.0.0:3000/daily_logs">運転日報</v-tab>
 				<v-tab :value="2" href="http://0.0.0.0:3000/daily_logs#/daily_logs_for_admin">日報一覧</v-tab>
 				<v-tab :value="3" href="http://0.0.0.0:3000/daily_logs#/users_for_admin">社員情報</v-tab>
-				<v-tab :value="4" href="http://0.0.0.0:3000/daily_logs#/management_vehicles">車両一覧</v-tab>
+				<v-tab :value="4" href="http://0.0.0.0:3000/daily_logs#/management_vehicles">車両一覧</v-tab> -->
 				<v-tab :value="1" href="http://54.95.118.214/daily_logs">運転日報</v-tab>
 				<v-tab :value="2" href="http://54.95.118.214/daily_logs#/daily_logs_for_admin">日報一覧</v-tab>
 				<v-tab :value="3" href="http://54.95.118.214/daily_logs#/users_for_admin">社員情報</v-tab>
-				<v-tab :value="4" href="http://54.95.118.214/daily_logs#/management_vehicles">車両一覧</v-tab> -->
-				<v-tab :value="1" href="https://lit-tor-41640-5f66b309ac09.herokuapp.com/daily_logs">運転日報</v-tab>
-				<v-tab :value="2" href="https://lit-tor-41640-5f66b309ac09.herokuapp.com/daily_logs#/daily_logs_for_admin">日報一覧</v-tab>
-				<v-tab :value="3" href="https://lit-tor-41640-5f66b309ac09.herokuapp.com/daily_logs#/users_for_admin">社員情報</v-tab>
-				<v-tab :value="4" href="https://lit-tor-41640-5f66b309ac09.herokuapp.com/daily_logs#/management_vehicles">車両一覧</v-tab>
+				<v-tab :value="4" href="http://54.95.118.214/daily_logs#/management_vehicles">車両一覧</v-tab>
+				<!-- <v-tab :value="1" href="https://lit-tor-41640-5f66b309ac09.herokuapp.com/daily_logs">運転日報</v-tab> -->
+				<!-- <v-tab :value="2" href="https://lit-tor-41640-5f66b309ac09.herokuapp.com/daily_logs#/daily_logs_for_admin">日報一覧</v-tab> -->
+				<!-- <v-tab :value="3" href="https://lit-tor-41640-5f66b309ac09.herokuapp.com/daily_logs#/users_for_admin">社員情報</v-tab> -->
+				<!-- <v-tab :value="4" href="https://lit-tor-41640-5f66b309ac09.herokuapp.com/daily_logs#/management_vehicles">車両一覧</v-tab> -->
 			</v-tabs>
 			<v-spacer></v-spacer>
 			<v-menu>
