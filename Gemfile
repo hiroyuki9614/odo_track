@@ -99,7 +99,7 @@ gem 'whenever', require: false
 # テストデータの作成
 gem 'faker'
 
-gem 'aws-sdk-s3', require: false
+# gem 'aws-sdk-s3', require: false
 
 # google API
 # gem 'google-apis-drive_v3', '~> 0.5.0'
