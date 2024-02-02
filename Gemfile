@@ -14,7 +14,7 @@ gem 'rails', '~> 7.1.1'
 # gem 'sqlite3', '~> 1.4'
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem 'puma', '4.3.6'
+gem 'puma', '>= 5.0'
 
 # 環境変数を管理する
 gem 'dotenv-rails', '>=2.8.1'
@@ -99,7 +99,7 @@ gem 'whenever', require: false
 # テストデータの作成
 gem 'faker'
 
-gem 'aws-sdk-s3', '~> 1', require: false
+gem 'aws-sdk-s3', require: false
 
 # google API
 # gem 'google-apis-drive_v3', '~> 0.5.0'
@@ -112,7 +112,7 @@ gem 'aws-sdk-s3', '~> 1', require: false
 
 # 本番環境でPostgreSQLデータベースを使用する
 group :production do
-  gem 'pg', '1.1.4'
+  gem 'pg', '~> 1.1'
 end
 
 group :development, :test do
