@@ -14,6 +14,9 @@ RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - \
 	&& npm install --global yarn \
 	&& rm -rf /var/lib/apt/lists/*
 
+# COPY --from=node /usr/local/bin /usr/local/bin
+# COPY --from=node /usr/local/lib /usr/local/lib
+# COPY --from=node /opt /opt
 
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh

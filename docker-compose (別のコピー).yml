@@ -12,8 +12,8 @@ services:
     ports:
       - "3000:3000"
       - "3036:3036"
-    command: bash -c "bundle install && ./bin/dev"
-    # command: bundle exec puma -e development
+    # command: bash -c "bundle install && ./bin/dev"
+    command: bundle exec puma -e development
     depends_on:
       - mailcatcher
       - redis
@@ -24,18 +24,10 @@ services:
     build:
       context: ./docker
       dockerfile: nginx/Dockerfile
-    ports:
-      - ${WEB_PORT}:80
     volumes:
-      - type: bind
-        source: ./public
-        target: /var/www/public
-        consistency: cached
-      - type: volume
-        source: puma-sock
-        target: /var/www/tmp/sockets
-        volume:
-          nocopy: true
+      - puma-sock:/var/www/tmp/sockets
+    ports:
+      - "80:80"
 
   mailcatcher:
     image: schickling/mailcatcher
