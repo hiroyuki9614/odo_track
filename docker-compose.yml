@@ -12,8 +12,8 @@ services:
     ports:
       - "3000:3000"
       - "3036:3036"
-    command: bash -c "bundle install && ./bin/dev"
-    # command: bundle exec puma -e development
+    # command: bash -c "bundle install && ./bin/dev"
+    command: bundle exec puma -e development
     depends_on:
       - mailcatcher
       - redis
