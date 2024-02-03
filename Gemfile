@@ -112,7 +112,7 @@ gem 'faker'
 
 # 本番環境でPostgreSQLデータベースを使用する
 group :production do
-  gem 'pg', '~> 1.4.1'
+  gem 'pg', '1.3.5'
 end
 
 group :development, :test do
