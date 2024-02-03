@@ -1,3 +1,5 @@
+bind 'tcp://0.0.0.0:3000'
+
 # Pumaの設定ファイル
 max_threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
 min_threads_count = ENV.fetch("RAILS_MIN_THREADS") { max_threads_count }
