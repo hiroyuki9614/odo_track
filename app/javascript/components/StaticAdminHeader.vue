@@ -7,10 +7,14 @@
 				<v-tab :value="2" href="http://0.0.0.0:3000/daily_logs#/daily_logs_for_admin">日報一覧</v-tab>
 				<v-tab :value="3" href="http://0.0.0.0:3000/daily_logs#/users_for_admin">社員情報</v-tab>
 				<v-tab :value="4" href="http://0.0.0.0:3000/daily_logs#/management_vehicles">車両一覧</v-tab> -->
-				<v-tab :value="1" href="http://54.95.118.214/daily_logs">運転日報</v-tab>
+				<!-- <v-tab :value="1" href="http://54.95.118.214/daily_logs">運転日報</v-tab>
 				<v-tab :value="2" href="http://54.95.118.214/daily_logs#/daily_logs_for_admin">日報一覧</v-tab>
 				<v-tab :value="3" href="http://54.95.118.214/daily_logs#/users_for_admin">社員情報</v-tab>
-				<v-tab :value="4" href="http://54.95.118.214/daily_logs#/management_vehicles">車両一覧</v-tab>
+				<v-tab :value="4" href="http://54.95.118.214/daily_logs#/management_vehicles">車両一覧</v-tab> -->
+				<v-tab :value="1" href="https://h9614.link/daily_logs">運転日報</v-tab>
+				<v-tab :value="2" href="https://h9614.link/daily_logs#/daily_logs_for_admin">日報一覧</v-tab>
+				<v-tab :value="3" href="https://h9614.link/daily_logs#/users_for_admin">社員情報</v-tab>
+				<v-tab :value="4" href="https://h9614.link/daily_logs#/management_vehicles">車両一覧</v-tab>
 				<!-- <v-tab :value="1" href="https://lit-tor-41640-5f66b309ac09.herokuapp.com/daily_logs">運転日報</v-tab> -->
 				<!-- <v-tab :value="2" href="https://lit-tor-41640-5f66b309ac09.herokuapp.com/daily_logs#/daily_logs_for_admin">日報一覧</v-tab> -->
 				<!-- <v-tab :value="3" href="https://lit-tor-41640-5f66b309ac09.herokuapp.com/daily_logs#/users_for_admin">社員情報</v-tab> -->
@@ -35,7 +39,8 @@
 import { ref } from 'vue';
 import axios from 'axios';
 
-const pageUrl = "http://54.95.118.214/"
+// const pageUrl = "http://54.95.118.214/"
+const pageUrl = "https://h9614.link/"
 // const pageUrl = "https://lit-tor-41640-5f66b309ac09.herokuapp.com"
 // const pageUrl = "http://0.0.0.0:3000/"
 
@@ -46,9 +51,12 @@ const links = [
 	// {title: '設定', icon:'mdi mdi-cog', url:'http://0.0.0.0:3000/daily_logs#/setting'},
 	// {title: '出力', icon:'mdi mdi-export-variant', url:'http://0.0.0.0:3000/export_daily_logs'},
 	// AWS
-	{title: '設定', icon:'mdi mdi-cog', url:'http://54.95.118.214/daily_logs#/setting'},
-	{title: '出力', icon:'mdi mdi-export-variant', url:'http://54.95.118.214/export_daily_logs'},
-	{title: '操作方法', icon:'mdi mdi-help-circle', url:'http://54.95.118.214/daily_logs#/user_help/'},
+	// {title: '設定', icon:'mdi mdi-cog', url:'http://54.95.118.214/daily_logs#/setting'},
+	// {title: '出力', icon:'mdi mdi-export-variant', url:'http://54.95.118.214/export_daily_logs'},
+	// {title: '操作方法', icon:'mdi mdi-help-circle', url:'http://54.95.118.214/daily_logs#/user_help/'},
+	{title: '設定', icon:'mdi mdi-cog', url:'https://h9614.link/daily_logs#/setting'},
+	{title: '出力', icon:'mdi mdi-export-variant', url:'https://h9614.link/export_daily_logs'},
+	{title: '操作方法', icon:'mdi mdi-help-circle', url:'https://h9614.link/daily_logs#/user_help/'},
 	// heroku
 	// {title: '設定', icon:'mdi mdi-cog', url:'https://lit-tor-41640-5f66b309ac09.herokuapp.com/daily_logs#/setting'},
 	// {title: '出力', icon:'mdi mdi-export-variant', url:'https://lit-tor-41640-5f66b309ac09.herokuapp.com/export_daily_logs/'},

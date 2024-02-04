@@ -30,6 +30,7 @@ const tab = ref(null);
 const links = [
 	// { title: '設定', icon: 'mdi mdi-cog', url: 'http://0.0.0.0:3000/daily_logs#/setting' },
 	// { title: '設定', icon: 'mdi mdi-cog', url: 'https://lit-tor-41640-5f66b309ac09.herokuapp.com/daily_logs#/setting' },
+	// { title: '設定', icon: 'mdi mdi-cog', url: 'http://54.95.118.214/daily_logs#/setting' },
 	{ title: '設定', icon: 'mdi mdi-cog', url: 'http://54.95.118.214/daily_logs#/setting' },
 	// { title: '出力', icon: 'mdi mdi-export-variant', url: 'http://0.0.0.0:3000/export_daily_logs/' },
 	// { title: '出力', icon: 'mdi mdi-export-variant', url: 'https://lit-tor-41640-5f66b309ac09.herokuapp.com/export_daily_logs/' },
