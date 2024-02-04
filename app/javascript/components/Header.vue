@@ -24,8 +24,16 @@
 import { ref } from 'vue';
 import axios from 'axios';
 
+<<<<<<< HEAD
 const pageUrl = "http://54.95.118.214/"
 // const pageUrl = "https://lit-tor-41640-5f66b309ac09.herokuapp.com"
+=======
+// AWS
+const pageUrl = "http://54.95.118.214/"
+// heroku
+// const pageUrl = "https://lit-tor-41640-5f66b309ac09.herokuapp.com"
+// 開発環境
+>>>>>>> aws-deploy
 // const pageUrl = "http://0.0.0.0:3000/"
 
 const tab = ref(null);
@@ -44,10 +52,13 @@ const logout = () => {
         .then(() => {
         	// ログアウト成功時、指定のURLにリダイレクト
 			window.location.href = pageUrl;
+			// AWS
+			location.reload()
         })
         .catch((error) => {
           // エラー処理
 		console.error('ログアウト失敗:', error);
+		location.reload()
         });
 	}
 

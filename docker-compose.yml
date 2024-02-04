@@ -24,10 +24,18 @@ services:
     build:
       context: ./docker
       dockerfile: nginx/Dockerfile
-    volumes:
-      - puma-sock:/var/www/tmp/sockets
     ports:
-      - "80:80"
+      - ${WEB_PORT}:80
+    volumes:
+      - type: bind
+        source: ./public
+        target: /var/www/public
+        consistency: cached
+      - type: volume
+        source: puma-sock
+        target: /var/www/tmp/sockets
+        volume:
+          nocopy: true
 
   mailcatcher:
     image: schickling/mailcatcher

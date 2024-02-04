@@ -13,7 +13,10 @@
     "bootstrap-icons": "^1.11.2",
     "copyfiles": "^2.4.1",
     "cors": "^2.8.5",
+<<<<<<< HEAD
     "nodemon": "^3.0.3",
+=======
+>>>>>>> aws-deploy
     "postcss": "^8.4.31",
     "postcss-cli": "^10.1.0",
     "puppeteer": "^21.6.1",
@@ -39,12 +42,14 @@
     "build:css:prefix": "postcss ./app/assets/builds/application.css --use=autoprefixer --output=./app/assets/builds/application.css",
     "build:css": "npm run build:css:compile && npm run build:css:prefix",
     "watch:css": "nodemon --watch ./app/javascript/entrypoints/ --ext scss --exec \"npm run build:css\"",
-    "dev": "vite"
+    "dev": "vite",
+    "start": "nodemon application.js"
   },
   "browserslist": [
     "defaults"
   ],
   "devDependencies": {
+    "nodemon": "^3.0.3",
     "vite": "^5.0.0"
   }
 }
