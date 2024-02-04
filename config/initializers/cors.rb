@@ -8,6 +8,6 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     resource '*', # すべてのリソースに適用
              headers: :any, # すべてのヘッダーを許可
              methods: :any, # 許可するHTTPメソッド
-             credentials: true # クッキーを含むリクエストを許可
+             credentials: false # クッキーを含むリクエストを許可
   end
 end
