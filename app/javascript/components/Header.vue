@@ -53,6 +53,7 @@ const logout = () => {
         .catch((error) => {
           // エラー処理
 		console.error('ログアウト失敗:', error);
+		location.reload()
         });
 	}
 

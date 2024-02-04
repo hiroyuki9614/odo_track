@@ -48,11 +48,11 @@ const links = [
 	// AWS
 	{title: '設定', icon:'mdi mdi-cog', url:'http://54.95.118.214/daily_logs#/setting'},
 	{title: '出力', icon:'mdi mdi-export-variant', url:'http://54.95.118.214/export_daily_logs'},
-	{title: '操作方法', icon:'mdi mdi-help-circle', url:'http://54.95.118.214/user_help/'},
+	{title: '操作方法', icon:'mdi mdi-help-circle', url:'http://54.95.118.214/daily_logs#/user_help/'},
 	// heroku
 	// {title: '設定', icon:'mdi mdi-cog', url:'https://lit-tor-41640-5f66b309ac09.herokuapp.com/daily_logs#/setting'},
 	// {title: '出力', icon:'mdi mdi-export-variant', url:'https://lit-tor-41640-5f66b309ac09.herokuapp.com/export_daily_logs/'},
-	{title: '操作方法', icon:'mdi mdi-help-circle', url:'https://lit-tor-41640-5f66b309ac09.herokuapp.com/user_help/'},
+	// {title: '操作方法', icon:'mdi mdi-help-circle', url:'https://lit-tor-41640-5f66b309ac09.herokuapp.com/user_help/'},
 	{title: 'ログアウト', icon:'mdi mdi-logout', color:'error'},
 ]
 const account = [
@@ -70,6 +70,7 @@ const logout = () => {
         .catch((error) => {
           // エラー処理
 		console.error('ログアウト失敗:', error);
+		location.reload()
         });
 	}
 
