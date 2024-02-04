@@ -26,7 +26,7 @@
 import { ref } from 'vue';
 import axios from 'axios';
 
-const pageUrl = "https://h9614.link/"
+const pageUrl = "http://h9614.link/"
 const tab = ref(null);
 const links = [
 	// { title: '設定', icon: 'mdi mdi-cog', url: 'http://0.0.0.0:3000/daily_logs#/setting' },
