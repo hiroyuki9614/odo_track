@@ -47,6 +47,8 @@ const logout = () => {
         .then(() => {
         	// ログアウト成功時、指定のURLにリダイレクト
 			window.location.href = pageUrl;
+			// AWS
+			location.reload()
         })
         .catch((error) => {
           // エラー処理
