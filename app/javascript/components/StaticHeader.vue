@@ -33,7 +33,7 @@ const pageUrl = "http://rails-deploy-webapp-1207642703.ap-northeast-1.elb.amazon
 const tab = ref(null);
 const links = [
 	// {title: '設定', icon:'mdi mdi-cog', url:'http://0.0.0.0:3000/daily_logs#/'},
-	{title: '設定', icon:'mdi mdi-cog', url:'http://rails-deploy-webapp-1207642703.ap-northeast-1.elb.amazonaws.com/daily_logs#/'},
+	{ title: '設定', icon: 'mdi mdi-cog', url: pageUrl + 'daily_logs#/setting' },
 	// {title: '設定', icon:'mdi mdi-cog', url:'https://h9614.link/daily_logs#/'},
 	{title: '操作方法', icon:'mdi mdi-help-circle', url:''},
 	{title: 'ログアウト', icon:'mdi mdi-logout', color:'error'},
