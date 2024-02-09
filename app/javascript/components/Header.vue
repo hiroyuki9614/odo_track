@@ -25,8 +25,8 @@ import { ref } from 'vue';
 import axios from 'axios';
 
 // AWS
-const pageUrl = "http://h9614.link/"
-
+// const pageUrl = "http://h9614.link/"
+const pageUrl = "http://rails-deploy-webapp-1207642703.ap-northeast-1.elb.amazonaws.com/"
 // heroku
 // const pageUrl = "https://lit-tor-41640-5f66b309ac09.herokuapp.com"
 // 開発環境

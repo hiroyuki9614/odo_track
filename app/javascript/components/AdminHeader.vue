@@ -26,21 +26,20 @@
 import { ref } from 'vue';
 import axios from 'axios';
 
-const pageUrl = "http://h9614.link/"
+const pageUrl = "http://rails-deploy-webapp-1207642703.ap-northeast-1.elb.amazonaws.com/"
 const tab = ref(null);
 const links = [
 	// { title: '設定', icon: 'mdi mdi-cog', url: 'http://0.0.0.0:3000/daily_logs#/setting' },
 	// { title: '設定', icon: 'mdi mdi-cog', url: 'https://lit-tor-41640-5f66b309ac09.herokuapp.com/daily_logs#/setting' },
-	// { title: '設定', icon: 'mdi mdi-cog', url: 'http://54.95.118.214/daily_logs#/setting' },
-	// { title: '設定', icon: 'mdi mdi-cog', url: 'http://54.95.118.214/daily_logs#/setting' },
-	{ title: '設定', icon: 'mdi mdi-cog', url: 'http://h9614.link/daily_logs#/setting' },
+	{ title: '設定', icon: 'mdi mdi-cog', url: pageUrl + 'daily_logs#/setting' },
+	// { title: '設定', icon: 'mdi mdi-cog', url: 'http://h9614.link/daily_logs#/setting' },
 	// { title: '出力', icon: 'mdi mdi-export-variant', url: 'http://0.0.0.0:3000/export_daily_logs/' },
 	// { title: '出力', icon: 'mdi mdi-export-variant', url: 'https://lit-tor-41640-5f66b309ac09.herokuapp.com/export_daily_logs/' },
-	// { title: '出力', icon: 'mdi mdi-export-variant', url: 'http://54.95.118.214/export_daily_logs/' },
-	{ title: '出力', icon: 'mdi mdi-export-variant', url: 'http://h9614.link/export_daily_logs/' },
+	{ title: '出力', icon: 'mdi mdi-export-variant', url: pageUrl + 'export_daily_logs/' },
+	// { title: '出力', icon: 'mdi mdi-export-variant', url: 'http://h9614.link/export_daily_logs/' },
 	// { title: '操作方法', icon: 'mdi mdi-help-circle', url: 'http://0.0.0.0:3000/user_help/' },
-	// { title: '操作方法', icon: 'mdi mdi-help-circle', url: 'http://54.95.118.214/daily_logs#/user_help/' },
-	{ title: '操作方法', icon: 'mdi mdi-help-circle', url: 'http://h9614.link/daily_logs#/user_help/' },
+	{ title: '操作方法', icon: 'mdi mdi-help-circle', url: pageUrl + 'daily_logs#/user_help/' },
+	// { title: '操作方法', icon: 'mdi mdi-help-circle', url: 'http://h9614.link/daily_logs#/user_help/' },
 	// { title: '操作方法', icon: 'mdi mdi-help-circle', url: 'https://lit-tor-41640-5f66b309ac09.herokuapp.com/daily_logs#/user_help/' },
 	{ title: 'ログアウト', icon: 'mdi mdi-logout', color: 'error' },
 ]
@@ -55,7 +54,6 @@ const logout = () => {
 			// ログアウト成功時、指定のURLにリダイレクト
 			window.location.href = pageUrl;
 			location.reload()
-			// window.location.href = 'https://lit-tor-41640-5f66b309ac09.herokuapp.com/';
 		})
 		.catch((error) => {
 			// エラー処理
