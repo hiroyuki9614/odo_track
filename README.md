@@ -7,6 +7,8 @@ ODO TRACK
 　至らぬ点の多々あるかと存じますが、ご査収のほど、よろしくお願い致します。　恐れ入りますが以降、詳細はアプリのトップページに記載のため、トップページの補足を中心とさせて頂きます。
 
 ## URL
+  AWS
+  http://rails-deploy-webapp-1207642703.ap-northeast-1.elb.amazonaws.com/
 　Heroku
   https://lit-tor-41640-5f66b309ac09.herokuapp.com/
 
@@ -43,7 +45,7 @@ ODO TRACK
  ## 改良予定
  - PDFの出力機能の強化（フォルダの作成・指定のgoogle driveアップロードなど)
  - モバイル表示の強化
- - AWSへの移行(進行中)
+ - SSL対応
 
 ## DB
 運転日報テーブル (daily_logs)
