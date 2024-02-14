@@ -7,10 +7,10 @@ ODO TRACK
 　至らぬ点の多々あるかと存じますが、ご査収のほど、よろしくお願い致します。　恐れ入りますが以降、詳細はアプリのトップページに記載のため、トップページの補足を中心とさせて頂きます。
 
 ## URL
-  AWS
-  http://rails-deploy-webapp-1207642703.ap-northeast-1.elb.amazonaws.com/
-　Heroku
-  https://lit-tor-41640-5f66b309ac09.herokuapp.com/
+  AWS<br>
+  http://rails-deploy-webapp-1207642703.ap-northeast-1.elb.amazonaws.com/<br>
+　Heroku<br>
+  https://lit-tor-41640-5f66b309ac09.herokuapp.com/<br>
 
 ## 基本技術
  - 一般ユーザー&管理ユーザー
