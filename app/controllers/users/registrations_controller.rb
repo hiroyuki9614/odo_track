@@ -7,7 +7,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_sign_up_params, only: [:create]
   before_action :configure_account_update_params, only: [:update]
   before_action :admin_user, only: %i[edit destroy update]
-  protect_from_forgery
+  # protect_from_forgery
 
   # GET /resource/sign_up
   def new
