@@ -34,7 +34,7 @@
 # # Allow puma to be restarted by `bin/rails restart` command.
 # plugin :tmp_restart
 
-bind 'tcp://0.0.0.0:3000'
+# bind 'tcp://0.0.0.0:3000'
 
 # Pumaの設定ファイル
 max_threads_count = ENV.fetch('RAILS_MAX_THREADS') { 5 }
