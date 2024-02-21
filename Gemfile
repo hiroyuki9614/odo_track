@@ -112,7 +112,7 @@ gem 'aws-sdk-s3', require: false
 
 # 本番環境でPostgreSQLデータベースを使用する
 group :production do
-  gem 'pg', '~> 1.3.5'
+  gem 'pg', '1.3.5'
 end
 
 group :development, :test do
