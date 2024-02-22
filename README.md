@@ -8,7 +8,7 @@ githubページをご覧頂き、誠にありがとうございます。<br> こ
 
 ## URL
 AWS<br>
-http://rails-deploy-webapp-1207642703.ap-northeast-1.elb.amazonaws.com/
+http://rails-deploy-webapp-1207642703.ap-northeast-1.elb.amazonaws.com/<br>
 Heroku<br>
 https://lit-tor-41640-5f66b309ac09.herokuapp.com/<br>
 
