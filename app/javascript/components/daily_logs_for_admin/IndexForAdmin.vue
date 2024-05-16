@@ -828,13 +828,9 @@ watch(dialogError, val => {
 
 .note {
 	width: 200px;
-	/* 幅の設定 */
 	max-height: 100px;
-	/* 最大高さの設定 */
 	overflow: auto;
-	/* 高さが最大値を超えた場合にスクロールバーを表示 */
 	word-break: break-word;
-	/* 単語の途中でも折り返しを許可 */
 	padding-top: 15px;
 }
 
