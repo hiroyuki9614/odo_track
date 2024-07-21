@@ -2,10 +2,7 @@
 ODO TRACK
 
 ## URL
-AWS<br>
-http://rails-deploy-webapp-1207642703.ap-northeast-1.elb.amazonaws.com/<br>
-Heroku<br>
-https://lit-tor-41640-5f66b309ac09.herokuapp.com/<br>
+現在停止中です。
 
 ## 基本技術
  - 一般ユーザー&管理ユーザー
