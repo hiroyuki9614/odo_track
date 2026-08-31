@@ -40,7 +40,6 @@ Rails.application.routes.draw do
   get 'downloads/batches/:id', to: 'downloads#batch', as: :download_batch
   get 'downloads/batches/:id/archive', to: 'downloads#archive', as: :download_batch_archive
   get 'downloads/batches/:id/files/:filename', to: 'downloads#batch_file', as: :download_batch_file
-  get 'downloads/:filename', to: 'downloads#show', as: :download
 
   resources :daily_logs_for_admin, only: %i[index]
   resources :users
