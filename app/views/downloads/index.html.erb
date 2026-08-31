@@ -7,33 +7,30 @@
 <% if @files.blank? %>
 	<p class="m-5">ダウンロード可能な運転日報はありません。</p>
 <% else %>
-<!-- ヘッダー部分 -->
 	<section class="export_daily_log_index">
 		<div class="bg-image h-100">
 			<div class="mask d-flex align-items-center h-100" style="background-color: white">
 				<div class="container">
-					<!-- テーブルのヘッダー部分 -->
 					<div class="row justify-content-center">
 						<div class="col-12">
 							<div class="card">
 								<div class="card-body">
 									<div class="table-responsive">
 										<table class="table table-hover mb-0">
-											<!-- テーブルタイトル -->
 											<thead>
 												<tr>
 													<th>ダウンロード可能なPDF一覧</th>
 												</tr>
 											</thead>
-											<!-- テーブルボディ -->
-											<% @files.each do |file| %>
-												<tbody>
+											<tbody>
+												<% @files.each do |file| %>
+													<% display_filename = File.basename(file) %>
+													<% route_filename = File.basename(file, '.pdf') %>
 													<tr>
-                            <% filename = File.basename(file) %>
-                            <td scope="row"><%= link_to filename, download_path(filename) %></td>
+														<td scope="row"><%= link_to display_filename, download_path(route_filename) %></td>
 													</tr>
-												</tbody>
-											<% end %>
+												<% end %>
+											</tbody>
 										</table>
 									</div>
 								</div>
