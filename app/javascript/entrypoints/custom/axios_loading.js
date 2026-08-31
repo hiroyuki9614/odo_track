@@ -182,6 +182,8 @@ axios.interceptors.request.use(
 			const cachedResponse = responseCache.get(cacheKey);
 			if (cachedResponse) {
 				config.__odoTrackFromCache = true;
+				config.__odoTrackLoading = true;
+				showLoading();
 				config.adapter = async () => ({
 					data: cloneData(cachedResponse.data),
 					status: cachedResponse.status,
