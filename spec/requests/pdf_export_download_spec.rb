@@ -7,7 +7,6 @@ RSpec.describe 'PDF export and download', type: :request do
 
   let(:admin) { create(:user, admin: true, user_name: 'PDF管理者') }
   let(:download_dir) { Rails.root.join('downloads') }
-  let(:created_files) { [] }
   let(:created_directories) { [] }
 
   before do
@@ -16,13 +15,30 @@ RSpec.describe 'PDF export and download', type: :request do
   end
 
   after do
-    created_files.each { |path| FileUtils.rm_f(path) }
     created_directories.each { |path| FileUtils.rm_rf(path) }
+  end
+
+  def create_daily_log_for(user, created_at:)
+    vehicle = create(:vehicle)
+    DailyLog.create!(
+      user: user,
+      vehicle: vehicle,
+      departure_datetime: created_at,
+      arrival_datetime: created_at + 1.hour,
+      departure_distance: 100,
+      arrival_distance: 101,
+      departure_location: '本社',
+      arrival_location: '支店',
+      note: 'PDF出力テスト',
+      is_alcohol_check: true,
+      created_at: created_at
+    )
   end
 
   it 'creates a monthly export batch with individual PDFs and a ZIP archive' do
     rendered_pdf = "%PDF-1.4\nrequest-spec\n"
     pdf = instance_double(RecordPdf, render: rendered_pdf)
+    create_daily_log_for(admin, created_at: Time.zone.local(2026, 9, 10, 9, 0))
 
     allow(User).to receive(:kept).and_return(User.where(id: admin.id))
     allow(RecordPdf).to receive(:new).and_return(pdf)
@@ -42,6 +58,29 @@ RSpec.describe 'PDF export and download', type: :request do
       expect(File.binread(expected_path)).to eq(rendered_pdf)
       expect(File.file?(pdf_export.archive_path)).to be(true)
     end
+  end
+
+  it 'skips users who have no kept daily logs in the target month' do
+    with_logs = create(:user, user_name: '日報あり')
+    without_logs = create(:user, user_name: '日報なし')
+    create_daily_log_for(with_logs, created_at: Time.zone.local(2026, 9, 15, 9, 0))
+
+    rendered_pdf = "%PDF-1.4\nonly-user-with-logs\n"
+    pdf = instance_double(RecordPdf, render: rendered_pdf)
+    allow(User).to receive(:kept).and_return(User.where(id: [with_logs.id, without_logs.id]))
+    allow(RecordPdf).to receive(:new).and_return(pdf)
+
+    post export_pdf_path, params: { month: '2026-09' }
+
+    pdf_export = PdfExport.order(:id).last
+    created_directories << pdf_export.directory
+
+    expect(response).to redirect_to(download_batch_path(pdf_export))
+    expect(pdf_export.status).to eq('completed')
+    expect(pdf_export.pdf_count).to eq(1)
+    expect(File.file?(pdf_export.directory.join("user_#{with_logs.id}_日報あり_2026-09.pdf"))).to be(true)
+    expect(File.file?(pdf_export.directory.join("user_#{without_logs.id}_日報なし_2026-09.pdf"))).to be(false)
+    expect(RecordPdf).to have_received(:new).once
   end
 
   it 'serves a batch ZIP as an attachment' do
@@ -92,32 +131,5 @@ RSpec.describe 'PDF export and download', type: :request do
     expect(response.body).to include('user_01_2026-09.pdf')
     expect(response.body).to include('user_20_2026-09.pdf')
     expect(response.body).not_to include('user_21_2026-09.pdf')
-  end
-
-  it 'keeps legacy generated PDFs downloadable as attachments' do
-    filename = "request-spec-#{SecureRandom.hex(6)}.pdf"
-    filepath = download_dir.join(filename)
-    created_files << filepath
-    File.binwrite(filepath, "%PDF-1.4\ndownload-spec\n")
-
-    get download_path(File.basename(filename, '.pdf'))
-
-    expect(response).to have_http_status(:ok)
-    expect(response.media_type).to eq('application/pdf')
-    expect(response.headers['Content-Disposition']).to include('attachment')
-    expect(response.headers['Content-Disposition']).to include(filename)
-  end
-
-  it 'renders canonical legacy download links without duplicating the pdf extension' do
-    filename = "link-spec-#{SecureRandom.hex(6)}.pdf"
-    filepath = download_dir.join(filename)
-    created_files << filepath
-    File.binwrite(filepath, "%PDF-1.4\nlink-spec\n")
-
-    get downloads_path
-
-    expect(response).to have_http_status(:ok)
-    expect(response.body).to include(download_path(File.basename(filename, '.pdf')))
-    expect(response.body).not_to include("#{filename}.pdf")
   end
 end

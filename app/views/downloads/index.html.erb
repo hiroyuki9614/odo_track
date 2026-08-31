@@ -14,7 +14,7 @@
 	</div>
 
 	<% if @pdf_exports.blank? %>
-		<div class="alert alert-light border">まだ新形式のPDF出力履歴はありません。</div>
+		<div class="alert alert-light border">まだPDF出力履歴はありません。</div>
 	<% else %>
 		<div class="card mb-4">
 			<div class="card-body p-0">
@@ -56,25 +56,6 @@
 		</div>
 		<div class="d-flex justify-content-center mb-4">
 			<%= paginate @pdf_exports %>
-		</div>
-	<% end %>
-
-	<% if @legacy_files.present? %>
-		<div class="mt-5">
-			<h6>旧形式PDF（移行前）</h6>
-			<p class="text-muted">以前に作成したPDFも引き続きダウンロードできます。</p>
-			<div class="card">
-				<div class="list-group list-group-flush">
-					<% @legacy_files.each do |file| %>
-						<% display_filename = File.basename(file) %>
-						<% route_filename = File.basename(file, '.pdf') %>
-						<%= link_to display_filename, download_path(route_filename), class: 'list-group-item list-group-item-action' %>
-					<% end %>
-				</div>
-			</div>
-			<div class="d-flex justify-content-center mt-3">
-				<%= paginate @legacy_files, param_name: :legacy_page %>
-			</div>
 		</div>
 	<% end %>
 </div>

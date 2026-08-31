@@ -12,7 +12,10 @@ module PdfExports
       generated_paths = []
 
       each_user do |user|
-        generated_paths << generate_pdf(user)
+        daily_logs = daily_logs_for(user)
+        next if daily_logs.none?
+
+        generated_paths << generate_pdf(user, daily_logs)
       end
 
       archive_filename = build_archive(generated_paths)
@@ -44,8 +47,11 @@ module PdfExports
       end
     end
 
-    def generate_pdf(user)
-      daily_logs = user.daily_logs.kept.where(created_at: target_period)
+    def daily_logs_for(user)
+      user.daily_logs.kept.where(created_at: target_period)
+    end
+
+    def generate_pdf(user, daily_logs)
       pdf = RecordPdf.new(daily_logs, user)
       path = pdf_export.directory.join(pdf_filename(user))
       File.binwrite(path, pdf.render)
