@@ -3,42 +3,78 @@
 <% else %>
 	<%= content_tag(:div, "", id: "static_header") %>
 <% end %>
-<h5 class="mx-5 my-3">ダウンロードファイル一覧</h5>
-<% if @files.blank? %>
-	<p class="m-5">ダウンロード可能な運転日報はありません。</p>
-<% else %>
-	<section class="export_daily_log_index">
-		<div class="bg-image h-100">
-			<div class="mask d-flex align-items-center h-100" style="background-color: white">
-				<div class="container">
-					<div class="row justify-content-center">
-						<div class="col-12">
-							<div class="card">
-								<div class="card-body">
-									<div class="table-responsive">
-										<table class="table table-hover mb-0">
-											<thead>
-												<tr>
-													<th>ダウンロード可能なPDF一覧</th>
-												</tr>
-											</thead>
-											<tbody>
-												<% @files.each do |file| %>
-													<% display_filename = File.basename(file) %>
-													<% route_filename = File.basename(file, '.pdf') %>
-													<tr>
-														<td scope="row"><%= link_to display_filename, download_path(route_filename) %></td>
-													</tr>
-												<% end %>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+
+<div class="container my-4">
+	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+		<div>
+			<h5 class="mb-1">PDF出力履歴</h5>
+			<p class="text-muted mb-0">1回の出力ごとにZIPまたは個別PDFをダウンロードできます。</p>
+		</div>
+		<%= link_to '新しくPDFを作成', export_daily_logs_path, class: 'btn btn-primary' %>
+	</div>
+
+	<% if @pdf_exports.blank? %>
+		<div class="alert alert-light border">まだ新形式のPDF出力履歴はありません。</div>
+	<% else %>
+		<div class="card mb-4">
+			<div class="card-body p-0">
+				<div class="table-responsive">
+					<table class="table table-hover mb-0 align-middle">
+						<thead>
+							<tr>
+								<th>対象月</th>
+								<th>件数</th>
+								<th>作成日時</th>
+								<th>作成者</th>
+								<th>状態</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% @pdf_exports.each do |pdf_export| %>
+								<% status_label = { 'processing' => '作成中', 'completed' => '完了', 'failed' => '失敗' }.fetch(pdf_export.status, pdf_export.status) %>
+								<tr>
+									<td><%= pdf_export.target_month.strftime('%Y年%-m月') %></td>
+									<td><%= pdf_export.pdf_count %>件</td>
+									<td><%= pdf_export.created_at.in_time_zone.strftime('%Y/%m/%d %H:%M') %></td>
+									<td><%= pdf_export.created_by&.user_name || '不明' %></td>
+									<td><%= status_label %></td>
+									<td>
+										<div class="d-flex flex-wrap gap-2">
+											<%= link_to '個別PDF', download_batch_path(pdf_export), class: 'btn btn-sm btn-outline-secondary' %>
+											<% if pdf_export.status == 'completed' && pdf_export.archive_path.present? && File.file?(pdf_export.archive_path) %>
+												<%= link_to 'ZIP', download_batch_archive_path(pdf_export), class: 'btn btn-sm btn-primary' %>
+											<% end %>
+										</div>
+									</td>
+								</tr>
+							<% end %>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
-	</section>
-<% end %>
+		<div class="d-flex justify-content-center mb-4">
+			<%= paginate @pdf_exports %>
+		</div>
+	<% end %>
+
+	<% if @legacy_files.present? %>
+		<div class="mt-5">
+			<h6>旧形式PDF（移行前）</h6>
+			<p class="text-muted">以前に作成したPDFも引き続きダウンロードできます。</p>
+			<div class="card">
+				<div class="list-group list-group-flush">
+					<% @legacy_files.each do |file| %>
+						<% display_filename = File.basename(file) %>
+						<% route_filename = File.basename(file, '.pdf') %>
+						<%= link_to display_filename, download_path(route_filename), class: 'list-group-item list-group-item-action' %>
+					<% end %>
+				</div>
+			</div>
+			<div class="d-flex justify-content-center mt-3">
+				<%= paginate @legacy_files, param_name: :legacy_page %>
+			</div>
+		</div>
+	<% end %>
+</div>

@@ -33,6 +33,7 @@ import './controllers/application.js';
 import './controllers/hello_controller.js';
 // import '../controllers/index.js';
 import './custom/menu.js';
+import './custom/axios_loading.js';
 // import './custom/print.js';
 import * as bootstrap from 'bootstrap';
 import { createApp } from 'vue';
@@ -54,7 +55,6 @@ import router from '../components/router/Index.js';
 
 // import  from '../components/dailyLogs.vue';
 // import vuetify from '../plugins/vuetify.js';
-import axios from 'axios';
 // import Vuetify from 'vuetify';
 import 'vuetify/dist/vuetify.min.css';
 // vuetifyのi18n対応

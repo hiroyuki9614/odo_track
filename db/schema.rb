@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_24_055822) do
+ActiveRecord::Schema[7.1].define(version: 2026_09_01_010000) do
   create_table "daily_logs", force: :cascade do |t|
     t.datetime "departure_datetime", null: false
     t.datetime "arrival_datetime", null: false
@@ -37,6 +37,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_24_055822) do
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_favorite_vehicles_on_user_id"
     t.index ["vehicle_id"], name: "index_favorite_vehicles_on_vehicle_id"
+  end
+
+  create_table "pdf_exports", force: :cascade do |t|
+    t.date "target_month", null: false
+    t.string "status", default: "processing", null: false
+    t.integer "pdf_count", default: 0, null: false
+    t.string "zip_filename"
+    t.integer "created_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_pdf_exports_on_created_at"
+    t.index ["created_by_id"], name: "index_pdf_exports_on_created_by_id"
   end
 
   create_table "users", force: :cascade do |t|

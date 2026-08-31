@@ -21,10 +21,10 @@ Rails.application.routes.draw do
 
   # APIのルーティング
   patch 'api/management_vehicles/undelete/:id', to: 'api/management_vehicles#undelete'
-  patch 'api/management_vehicles/delete/:id', to: 'api/management_vehicles#destroy'
   patch 'api/users_for_admin/undelete/:id', to: 'api/users_for_admin#undelete'
-  patch 'api/users_for_admin/delete/:id', to: 'api/users_for_admin#delete'
   patch 'api/daily_logs_for_admin/undelete/:id', to: 'api/daily_logs_for_admin#undelete'
+  patch 'api/management_vehicles/delete/:id', to: 'api/management_vehicles#destroy'
+  patch 'api/users_for_admin/delete/:id', to: 'api/users_for_admin#delete'
   patch 'api/daily_logs_for_admin/delete/:id', to: 'api/daily_logs_for_admin#delete'
   namespace :api do
     resources :daily_logs
@@ -33,36 +33,23 @@ Rails.application.routes.draw do
     resources :daily_logs_for_admin
     resources :favorite_vehicles
   end
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
   get 'up' => 'rails/health#show', as: :rails_health_check
 
-  # Defines the root path route ("/")
-  # root "posts#index"
-
   get 'downloads', to: 'downloads#index'
+  get 'downloads/batches/:id', to: 'downloads#batch', as: :download_batch
+  get 'downloads/batches/:id/archive', to: 'downloads#archive', as: :download_batch_archive
+  get 'downloads/batches/:id/files/:filename', to: 'downloads#batch_file', as: :download_batch_file
   get 'downloads/:filename', to: 'downloads#show', as: :download
 
-  # get '/daily_logs', to: 'daily_logs#index', as: :daily_logs
   resources :daily_logs_for_admin, only: %i[index]
-
   resources :users
-
   resources :daily_logs
-
   resources :users_for_admin
-
   resources :management_vehicles, only: %i[index]
 
-  # resources :frequent_destinations, only: %i[create destroy]
-
-  get 'export_daily_logs/export_pdf', to: 'export_daily_logs#export_pdf', as: :export_pdf
+  post 'export_daily_logs/export_pdf', to: 'export_daily_logs#export_pdf', as: :export_pdf
   resources :export_daily_logs
-  # collection do
-  #   post :export_to_pdf       # PDFへのエクスポート
-  # end
 
   resources :favorite_vehicles, only: %i[new create destroy]
 end

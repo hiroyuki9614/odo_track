@@ -9,26 +9,21 @@ class ExportDailyLogsController < ApplicationController
   end
 
   def export_pdf
-    first_day = Date.current.beginning_of_month
-    last_day = first_day.end_of_month
-    period = first_day.beginning_of_day..last_day.end_of_day
-    save_path = Rails.root.join('downloads')
-    FileUtils.mkdir_p(save_path)
+    pdf_export = PdfExport.create!(
+      target_month: requested_target_month,
+      status: 'processing',
+      created_by: current_user
+    )
 
-    generated_count = 0
+    PdfExports::Generate.new(pdf_export: pdf_export).call
 
-    User.kept.find_each do |user|
-      daily_logs = user.daily_logs.kept.where(created_at: period)
-      pdf = RecordPdf.new(daily_logs, user)
-      safe_user_name = user.user_name.to_s.gsub(%r{[\\/\0]}, '_').presence || "user_#{user.id}"
-      file_name = "#{safe_user_name}_#{Date.current.strftime('%Y%m%d')}.pdf"
-
-      File.binwrite(save_path.join(file_name), pdf.render)
-      generated_count += 1
-    end
-
-    redirect_to downloads_path,
-                notice: "PDFを#{generated_count}件作成しました。ダウンロードするファイルを選択してください。"
+    redirect_to download_batch_path(pdf_export),
+                notice: "#{pdf_export.target_month.strftime('%Y年%-m月')}のPDFを#{pdf_export.pdf_count}件作成しました。"
+  rescue Date::Error
+    redirect_to export_daily_logs_path, alert: '対象月の形式が正しくありません。'
+  rescue ActiveRecord::RecordInvalid, RuntimeError => e
+    Rails.logger.error("PDF export failed: #{e.class}")
+    redirect_to downloads_path, alert: 'PDFの作成に失敗しました。'
   end
 
   def show
@@ -41,6 +36,12 @@ class ExportDailyLogsController < ApplicationController
   end
 
   private
+
+  def requested_target_month
+    return Date.current.beginning_of_month if params[:month].blank?
+
+    Date.strptime(params[:month], '%Y-%m').beginning_of_month
+  end
 
   def admin_user
     return if current_user.admin?
