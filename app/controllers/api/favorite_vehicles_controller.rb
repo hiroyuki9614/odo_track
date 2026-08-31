@@ -25,7 +25,7 @@ module Api
     end
 
     def destroy
-      @favorite_vehicle = FavoriteVehicle.find(params[:id])
+      @favorite_vehicle = current_user.favorite_vehicles.find(params[:id])
 
       if @favorite_vehicle.destroy
         render json: @favorite_vehicle, status: :no_content

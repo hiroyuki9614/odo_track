@@ -3,12 +3,12 @@
 require 'googleauth'
 
 credentials = Google::Auth::UserRefreshCredentials.new(
-  client_id: '948718533666-p97dgh1i0nle94o53bcs1cbdpbahk8a7.apps.googleusercontent.com',
-  client_secret: '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',
+  client_id: ENV.fetch('GOOGLE_CLIENT_ID'),
+  client_secret: ENV.fetch('GOOGLE_CLIENT_SECRET'),
   scope: [
     'https://www.googleapis.com/auth/drive',
     'https://spreadsheets.google.com/feeds/'
   ],
-  redirect_uri: 'http://localhost:3000/callback'
+  redirect_uri: ENV.fetch('GOOGLE_REDIRECT_URI', 'http://localhost:3000/callback')
 )
 credentials.authorization_uri

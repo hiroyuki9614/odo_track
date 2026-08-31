@@ -5,18 +5,15 @@ Rails.application.configure do
   config.cache_classes = true
 
   # Eager load code on boot. This eager loads most of Rails and
-  # your application in memory, allowing both threaded web servers
-  # and those relying on copy on write to perform better.
-  # Rake tasks automatically ignore this option for performance.
+  # all of your application code, giving you better performance and memory savings
+  # via copy-on-write on supported servers.
   config.eager_load = true
 
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
-  # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
-  # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
-  # config.require_master_key = true
+  config.require_master_key = false
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
@@ -25,9 +22,6 @@ Rails.application.configure do
   # Compress CSS using a preprocessor.
   # config.assets.css_compressor = :sass
 
-  # Do not fallback to assets pipeline if a precompiled asset is missed.
-  # config.assets.compile = false
-
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = 'http://assets.example.com'
 
@@ -35,8 +29,7 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
-  # アップロードされたファイルをAWSに保存する
-  config.active_storage.service = :amazon
+  config.active_storage.service = ENV.fetch('ACTIVE_STORAGE_SERVICE', 'local').to_sym
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
@@ -44,11 +37,11 @@ Rails.application.configure do
   # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = false
+  config.force_ssl = ENV.fetch('FORCE_SSL', 'false') == 'true'
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = :debug
+  config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info').to_sym
 
   # Prepend all log lines with the following tags.
   config.log_tags = [:request_id]
@@ -56,26 +49,33 @@ Rails.application.configure do
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
 
-  # Use a real queuing backend for Active Job (and separate queues per environment).
-  # config.active_job.queue_adapter     = :resque
-  # config.active_job.queue_name_prefix = "sample_app_production"
-
   config.action_mailer.perform_caching = false
 
-  # Ignore bad email addresses and do not raise email delivery errors.
-  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
+  # Production mail is fail-loud by design. Devise confirmation/recovery must never
+  # claim success while messages are silently routed to the test delivery adapter.
+  # Missing/invalid SMTP credentials therefore surface as a delivery error when mail
+  # is actually sent, while still allowing assets to be built without embedding secrets.
+  config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
-  host = ENV['APP_DOMAIN']
-  config.action_mailer.default_url_options = { host: }
-  ActionMailer::Base.smtp_settings = {
-    port: ENV['MAILGUN_SMTP_PORT'],
-    address: ENV['MAILGUN_SMTP_SERVER'],
-    user_name: ENV['MAILGUN_SMTP_LOGIN'],
-    password: ENV['MAILGUN_SMTP_PASSWORD'],
-    domain: host,
-    authentication: :plain
+
+  host = ENV.fetch('APP_DOMAIN', 'odt.hiroyuki9614.com')
+  protocol = ENV.fetch('APP_PROTOCOL', 'https')
+  config.action_mailer.default_url_options = {
+    host: host,
+    protocol: protocol
   }
+  config.action_mailer.smtp_settings = {
+    address: ENV.fetch('SMTP_ADDRESS', 'smtp.resend.com'),
+    port: ENV.fetch('SMTP_PORT', 587).to_i,
+    user_name: ENV.fetch('SMTP_USERNAME', 'resend'),
+    password: ENV['SMTP_PASSWORD'],
+    domain: ENV.fetch('SMTP_DOMAIN', host),
+    authentication: :plain,
+    enable_starttls_auto: true
+  }
+
+  config.active_job.queue_adapter = :sidekiq
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
@@ -101,22 +101,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # Inserts middleware to perform automatic connection switching.
-  # The `database_selector` hash is used to pass options to the DatabaseSelector
-  # middleware. The `delay` is used to determine how long to wait after a write
-  # to send a subsequent read to the primary.
-  #
-  # The `database_resolver` class is used by the middleware to determine which
-  # database is appropriate to use based on the time delay.
-  #
-  # The `database_resolver_context` class is used by the middleware to set
-  # timestamps for the last write to the primary. The resolver uses the context
-  # class timestamps to determine how long to wait before reading from the
-  # replica.
-  #
-  # By default Rails will store a last write timestamp in the session. The
-  # DatabaseSelector middleware is designed as such you can define your own
-  # strategy for connection switching and pass that into the middleware through
-  # these configuration options.
+  # The `database_selector` hash is used to define the delay after a write.
   # config.active_record.database_selector = { delay: 2.seconds }
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session

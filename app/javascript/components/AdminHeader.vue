@@ -26,12 +26,11 @@
 import { ref } from 'vue';
 import axios from 'axios';
 
-const pageUrl = "http://rails-deploy-webapp-1207642703.ap-northeast-1.elb.amazonaws.com/"
 const tab = ref(null);
 const links = [
-	{ title: '設定', icon: 'mdi mdi-cog', url: pageUrl + 'daily_logs#/setting' },
-	{ title: '出力', icon: 'mdi mdi-export-variant', url: pageUrl + 'export_daily_logs/' },
-	{ title: '操作方法', icon: 'mdi mdi-help-circle', url: pageUrl + 'daily_logs#/user_help/' },
+	{ title: '設定', icon: 'mdi mdi-cog', url: '/daily_logs#/setting' },
+	{ title: '出力', icon: 'mdi mdi-export-variant', url: '/export_daily_logs/' },
+	{ title: '操作方法', icon: 'mdi mdi-help-circle', url: '/daily_logs#/user_help/' },
 	{ title: 'ログアウト', icon: 'mdi mdi-logout', color: 'error' },
 ]
 const account = [
@@ -42,9 +41,8 @@ const logout = () => {
 	const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 	axios.delete('/auth/logout', { headers: { 'X-CSRF-Token': csrfToken } })
 		.then(() => {
-			// ログアウト成功時、指定のURLにリダイレクト
-			window.location.href = pageUrl;
-			location.reload()
+			// ログアウト成功時はトップページへ戻す
+			window.location.href = '/';
 		})
 		.catch((error) => {
 			// エラー処理

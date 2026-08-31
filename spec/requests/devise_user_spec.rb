@@ -7,26 +7,51 @@ RSpec.describe 'ユーザーの登録や編集に関するテスト', type: :req
   let(:other_user) { create(:user, user_name: 'hogehoge') }
   let(:admin_user) { create(:user, admin: true) }
   let(:user_params) { attributes_for(:user) }
-  let(:other_user_params) { attributes_for(:user, user_name: 'hogehoge') }
   let(:invalid_user_params) { attributes_for(:user, password_confirmation: '') }
+
+  around do |example|
+    original_options = ActionMailer::Base.default_url_options
+    ActionMailer::Base.default_url_options = {
+      host: 'odt.hiroyuki9614.com',
+      protocol: 'https'
+    }
+    example.run
+  ensure
+    ActionMailer::Base.default_url_options = original_options
+  end
+
   describe 'POST /user_registration' do
     before do
       ActionMailer::Base.deliveries.clear
     end
+
     context 'サインアップに必要なパラメータが妥当な場合' do
       it 'リクエストが成功する' do
-        patch user_registration_path, params: { user: user_params }
-        expect(response.status).to eq 302
+        post user_registration_path, params: { user: user_params }
+        expect(response).to have_http_status(:see_other)
       end
 
-      it '認証メールが送信されること' do
+      it '本人確認メールを正しい宛先・送信元・HTTPS URLで生成すること' do
         post user_registration_path, params: { user: user_params }
+
         expect(ActionMailer::Base.deliveries.size).to eq 1
+        mail = ActionMailer::Base.deliveries.last
+        expect(mail.to).to include(user_params[:email])
+        expect(mail.from).to include('no-reply@mail.hiroyuki9614.com')
+        expect(mail.body.encoded).to include('https://odt.hiroyuki9614.com')
+        expect(mail.body.encoded).to include('confirmation_token=')
       end
+
       it 'createが成功すること' do
         expect do
           post user_registration_path, params: { user: user_params }
         end.to change(User, :count).by 1
+      end
+
+      it 'サインアップ時にadmin権限を付与できないこと' do
+        post user_registration_path, params: { user: user_params.merge(admin: true) }
+
+        expect(User.order(:created_at).last.admin).to be(false)
       end
 
       it 'リダイレクトされること' do
@@ -34,6 +59,7 @@ RSpec.describe 'ユーザーの登録や編集に関するテスト', type: :req
         expect(response).to redirect_to root_url
       end
     end
+
     context 'パラメータが不正な場合' do
       it 'リクエストが成功すること' do
         post user_registration_path, params: { user: invalid_user_params }
@@ -62,15 +88,18 @@ RSpec.describe 'ユーザーの登録や編集に関するテスト', type: :req
         admin_user.confirm
         sign_in admin_user
       end
+
       it '他ユーザーの編集ページにアクセスできる' do
         get edit_other_user_registration_path(other_user)
         expect(response.status).to eq 200
       end
+
       context '一般ユーザーの場合' do
         before do
           user.confirm
           sign_in user
         end
+
         it 'リダイレクトされること' do
           get edit_other_user_registration_path(other_user)
           expect(response).to redirect_to root_path
