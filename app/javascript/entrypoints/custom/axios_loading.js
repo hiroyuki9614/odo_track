@@ -2,7 +2,62 @@ import axios from 'axios';
 
 const OVERLAY_ID = 'odo-track-axios-loading-overlay';
 const STYLE_ID = 'odo-track-axios-loading-style';
+const CACHEABLE_PATHS = new Set([
+	'/api/daily_logs/',
+	'/api/daily_logs_for_admin/',
+]);
+
 let activeRequests = 0;
+let cacheGeneration = 0;
+const responseCache = new Map();
+
+const cloneData = value => {
+	if (value === undefined || value === null) return value;
+	if (typeof structuredClone === 'function') return structuredClone(value);
+	return JSON.parse(JSON.stringify(value));
+};
+
+const requestMethod = config => (config.method || 'get').toLowerCase();
+
+const requestUrl = config => {
+	try {
+		return new URL(config.url || '', config.baseURL || window.location.origin);
+	} catch (_error) {
+		return null;
+	}
+};
+
+const isCacheableRequest = config => {
+	if (requestMethod(config) !== 'get') return false;
+	const url = requestUrl(config);
+	return url ? CACHEABLE_PATHS.has(url.pathname) : false;
+};
+
+const cacheKeyFor = config => {
+	const url = requestUrl(config);
+	if (!url) return config.url || '';
+
+	const searchParams = new URLSearchParams(url.search);
+	if (config.params && typeof config.params === 'object') {
+		Object.entries(config.params)
+			.sort(([left], [right]) => left.localeCompare(right))
+			.forEach(([key, value]) => {
+				if (Array.isArray(value)) {
+					value.forEach(item => searchParams.append(key, item));
+				} else if (value !== undefined && value !== null) {
+					searchParams.set(key, value);
+				}
+			});
+	}
+
+	const query = searchParams.toString();
+	return query ? `${url.pathname}?${query}` : url.pathname;
+};
+
+const invalidateCache = () => {
+	cacheGeneration += 1;
+	responseCache.clear();
+};
 
 const ensureLoadingStyle = () => {
 	if (document.getElementById(STYLE_ID)) return;
@@ -91,14 +146,56 @@ const hideLoading = () => {
 	document.body?.removeAttribute('aria-busy');
 };
 
-const shouldTrack = config => {
-	const method = (config.method || 'get').toLowerCase();
-	return method === 'get' && config.skipGlobalLoading !== true;
+const refreshInBackground = config => {
+	const refreshConfig = {
+		method: 'get',
+		url: config.url,
+		baseURL: config.baseURL,
+		params: config.params,
+		headers: config.headers,
+		withCredentials: config.withCredentials,
+		skipSpaCache: true,
+		skipGlobalLoading: true,
+	};
+
+	Promise.resolve()
+		.then(() => axios.request(refreshConfig))
+		.catch(error => {
+			console.debug('Background refresh failed:', error);
+		});
 };
 
 axios.interceptors.request.use(
 	config => {
-		if (shouldTrack(config)) {
+		if (requestMethod(config) !== 'get') {
+			invalidateCache();
+			return config;
+		}
+
+		if (!isCacheableRequest(config)) return config;
+
+		const cacheKey = cacheKeyFor(config);
+		config.__odoTrackCacheKey = cacheKey;
+		config.__odoTrackCacheGeneration = cacheGeneration;
+
+		if (config.skipSpaCache !== true) {
+			const cachedResponse = responseCache.get(cacheKey);
+			if (cachedResponse) {
+				config.__odoTrackFromCache = true;
+				config.adapter = async () => ({
+					data: cloneData(cachedResponse.data),
+					status: cachedResponse.status,
+					statusText: cachedResponse.statusText,
+					headers: cachedResponse.headers,
+					config,
+					request: null,
+				});
+				queueMicrotask(() => refreshInBackground(config));
+				return config;
+			}
+		}
+
+		if (config.skipGlobalLoading !== true) {
 			config.__odoTrackLoading = true;
 			showLoading();
 		}
@@ -109,6 +206,20 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
 	response => {
+		if (
+			isCacheableRequest(response.config) &&
+			response.config.__odoTrackFromCache !== true &&
+			response.config.__odoTrackCacheGeneration === cacheGeneration
+		) {
+			const cacheKey = response.config.__odoTrackCacheKey || cacheKeyFor(response.config);
+			responseCache.set(cacheKey, {
+				data: cloneData(response.data),
+				status: response.status,
+				statusText: response.statusText,
+				headers: response.headers,
+			});
+		}
+
 		if (response.config?.__odoTrackLoading) hideLoading();
 		return response;
 	},
