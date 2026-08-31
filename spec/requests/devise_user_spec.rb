@@ -10,14 +10,14 @@ RSpec.describe 'ユーザーの登録や編集に関するテスト', type: :req
   let(:invalid_user_params) { attributes_for(:user, password_confirmation: '') }
 
   around do |example|
-    original_options = Rails.application.config.action_mailer.default_url_options
-    Rails.application.config.action_mailer.default_url_options = {
+    original_options = ActionMailer::Base.default_url_options
+    ActionMailer::Base.default_url_options = {
       host: 'odt.hiroyuki9614.com',
       protocol: 'https'
     }
     example.run
   ensure
-    Rails.application.config.action_mailer.default_url_options = original_options
+    ActionMailer::Base.default_url_options = original_options
   end
 
   describe 'POST /user_registration' do
@@ -28,7 +28,7 @@ RSpec.describe 'ユーザーの登録や編集に関するテスト', type: :req
     context 'サインアップに必要なパラメータが妥当な場合' do
       it 'リクエストが成功する' do
         post user_registration_path, params: { user: user_params }
-        expect(response.status).to eq 302
+        expect(response).to have_http_status(:see_other)
       end
 
       it '本人確認メールを正しい宛先・送信元・HTTPS URLで生成すること' do
