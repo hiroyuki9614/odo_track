@@ -3,38 +3,32 @@
 class ExportDailyLogsController < ApplicationController
   before_action :authenticate_user!
   before_action :admin_user
-  # スプレッドシートの表をpdf化する
 
-  # ダウンロードできるファイル(csv/pdf)の一覧を表示する
   def index
     @users = User.kept.order(created_at: :desc).page params[:page]
   end
 
   def export_pdf
-    # @first_day = Date.today.beginning_of_month - 1.month
-    # ポートフォリオ用に今月に設定。　本来は先月分の日報をPDFにする。
-    @first_day = Date.today.beginning_of_month
-    @last_day = @first_day.end_of_month
+    first_day = Date.current.beginning_of_month
+    last_day = first_day.end_of_month
+    period = first_day.beginning_of_day..last_day.end_of_day
+    save_path = Rails.root.join('downloads')
+    FileUtils.mkdir_p(save_path)
+
+    generated_count = 0
 
     User.kept.find_each do |user|
-      daily_logs = user.daily_logs.kept.where(created_at: @first_day..@last_day)
+      daily_logs = user.daily_logs.kept.where(created_at: period)
       pdf = RecordPdf.new(daily_logs, user)
+      safe_user_name = user.user_name.to_s.gsub(%r{[\\/\0]}, '_').presence || "user_#{user.id}"
+      file_name = "#{safe_user_name}_#{Date.current.strftime('%Y%m%d')}.pdf"
 
-      # PDFファイルの名前をユーザーごとに設定
-      file_name = "#{user.user_name}_#{Date.today.strftime('%Y%m%d')}.pdf"
-
-      # PDFをファイルとして保存するか、直接レスポンスとして出 力する
-      # 例: ファイルとして保存
-      save_path = Rails.root.join('downloads')
-      FileUtils.mkdir_p(save_path) unless Dir.exist?(save_path)
-
-      File.open(save_path.join(file_name), 'wb') do |file|
-        file.write(pdf.render)
-      end
+      File.binwrite(save_path.join(file_name), pdf.render)
+      generated_count += 1
     end
 
-    # または、直接レスポンスとして出力
-    # send_data pdf.render, filename: file_name, type: 'application/pdf', disposition: 'inline'
+    redirect_to downloads_path,
+                notice: "PDFを#{generated_count}件作成しました。ダウンロードするファイルを選択してください。"
   end
 
   def show
@@ -43,7 +37,7 @@ class ExportDailyLogsController < ApplicationController
     @last_day = @first_day.end_of_month
 
     @user = User.find(params[:id])
-    @daily_logs = @user.daily_logs.kept.where(created_at: @first_day..@last_day)
+    @daily_logs = @user.daily_logs.kept.where(created_at: @first_day.beginning_of_day..@last_day.end_of_day)
   end
 
   private

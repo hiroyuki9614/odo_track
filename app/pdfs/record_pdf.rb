@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class RecordPdf < Prawn::Document
-  # 受け取ったものがrecordに入っている
   def initialize(daily_logs, user)
     super(
       page_size: 'A4',
@@ -11,32 +10,24 @@ class RecordPdf < Prawn::Document
       right_margin: 20
     )
 
-    @daily_logs = daily_logs # メソッドで利用できるようにインスタンス化
+    @daily_logs = daily_logs
     @user = user
-    # @first_day = Date.today.beginning_of_month - 1.month
-    # ポートフォリオ用に今月に設定。　本来は先月分の日報をPDFにする。
-    @first_day = Date.today.beginning_of_month
+    @first_day = Date.current.beginning_of_month
     @last_day = @first_day.end_of_month
-    font 'app/assets/fonts/ipaexg.ttf'
+    font Rails.root.join('app/assets/fonts/ipaexg.ttf').to_s
 
-    # stroke_axis
-
-    # 下記で作成したコンポーネントを表示順に
     header
     move_down 40
     contents
   end
 
-  # コンポーネント作成
   def header
     text '運転日報', size: 16, align: :center
     move_down 10
-    draw_text '作成日：',
-              at: [420, 736]
+    draw_text '作成日：', at: [420, 736]
     text Time.zone.today.to_s, size: 11, align: :right
     move_down 5
-    draw_text '氏名　：',
-              at: [420, 721]
+    draw_text '氏名　：', at: [420, 721]
     text @user.user_name.to_s, size: 11, align: :right
     move_down 20
     text "期間:#{@first_day}〜#{@last_day}", size: 11, align: :center
@@ -44,11 +35,8 @@ class RecordPdf < Prawn::Document
 
   def contents
     header = %w[登録日 車両名 出発時間 到着時間 距離(出) 距離(着) 出発場所 目的地 酒気検査]
-    all_data_rows = []
-
-    @daily_logs.each do |log|
-      # 余分な角括弧を取り除き、配列に直接要素を追加
-      data = [
+    all_data_rows = @daily_logs.map do |log|
+      [
         log.created_at.strftime('%Y-%m-%d'),
         "#{log.vehicle.vehicle_name} - #{log.vehicle.number}",
         log.departure_datetime.strftime('%Y-%m-%d %H:%M'),
@@ -59,10 +47,8 @@ class RecordPdf < Prawn::Document
         log.arrival_location.to_s,
         log.is_alcohol_check ? '実施' : '未実施'
       ]
-      all_data_rows << data
     end
 
-    # ヘッダーと全てのデータ行を含む表を描画
     table [header] + all_data_rows,
           header: true,
           cell_style: { size: 9 }
