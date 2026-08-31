@@ -6,14 +6,14 @@ RSpec.describe 'パスワードの再設定に関するテスト', type: :reques
   let(:user) { create(:user) }
 
   around do |example|
-    original_options = Rails.application.config.action_mailer.default_url_options
-    Rails.application.config.action_mailer.default_url_options = {
+    original_options = ActionMailer::Base.default_url_options
+    ActionMailer::Base.default_url_options = {
       host: 'odt.hiroyuki9614.com',
       protocol: 'https'
     }
     example.run
   ensure
-    Rails.application.config.action_mailer.default_url_options = original_options
+    ActionMailer::Base.default_url_options = original_options
   end
 
   describe 'PATCH /user_password' do
