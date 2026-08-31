@@ -33,7 +33,9 @@ esac
 
 docker info >/dev/null 2>&1 || fail "rootless Docker is not reachable at ${DOCKER_HOST}"
 
-if [[ -n "$(git -C "$APP_DIR" status --porcelain --untracked-files=no)" ]]; then
+tracked_changes="$(git -C "$APP_DIR" status --porcelain --untracked-files=no)"
+if [[ -n "$tracked_changes" ]]; then
+  printf '[odo-deploy] tracked local modifications detected:\n%s\n' "$tracked_changes" >&2
   fail "production checkout has tracked local modifications"
 fi
 
