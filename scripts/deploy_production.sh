@@ -27,7 +27,7 @@ export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/${AGENT_UID}}"
 export DOCKER_HOST="${DOCKER_HOST:-unix://${XDG_RUNTIME_DIR}/docker.sock}"
 
 case "$DOCKER_HOST" in
-  unix:/run/user/*/docker.sock) ;;
+  unix:///run/user/*/docker.sock) ;;
   *) fail "refusing non-rootless Docker endpoint: ${DOCKER_HOST}" ;;
 esac
 
@@ -40,8 +40,12 @@ fi
 log "fetching origin/main"
 git -C "$APP_DIR" fetch --prune origin main
 
-git -C "$APP_DIR" checkout main
-git -C "$APP_DIR" merge --ff-only origin/main
+if git -C "$APP_DIR" show-ref --verify --quiet refs/heads/main; then
+  git -C "$APP_DIR" checkout main
+  git -C "$APP_DIR" merge --ff-only origin/main
+else
+  git -C "$APP_DIR" checkout --track -b main origin/main
+fi
 
 compose=(
   docker compose
