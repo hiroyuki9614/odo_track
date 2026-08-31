@@ -32,55 +32,10 @@ esac
 
 docker info >/dev/null 2>&1 || fail "rootless Docker is not reachable at ${DOCKER_HOST}"
 
-backup_dir="${HOME}/odo_track-deploy-backups"
-mkdir -p -m 700 "$backup_dir"
-
 tracked_changes="$(git -C "$APP_DIR" status --porcelain --untracked-files=no)"
 if [[ -n "$tracked_changes" ]]; then
   printf '[odo-deploy] tracked local modifications detected:\n%s\n' "$tracked_changes" >&2
-
-  # One-time bounded recovery for the known Codex working-tree residue that was
-  # left unstaged on the VPS before the same work was reviewed and merged to main.
-  # Any other tracked drift still fails closed.
-  mapfile -t dirty_paths < <(
-    git -C "$APP_DIR" status --porcelain --untracked-files=no | sed -E 's/^.. //'
-  )
-
-  for path in "${dirty_paths[@]}"; do
-    case "$path" in
-      .github/workflows/test_deploy.yml|\
-      config/environments/production.rb|\
-      config/initializers/devise.rb|\
-      spec/requests/devise_user_spec.rb|\
-      spec/requests/forget_password_spec.rb)
-        ;;
-      *)
-        fail "refusing to reset unexpected tracked drift: ${path}"
-        ;;
-    esac
-  done
-
-  backup_file="${backup_dir}/pre-main-sync-$(date -u +%Y%m%dT%H%M%SZ).patch"
-  git -C "$APP_DIR" diff HEAD --binary -- "${dirty_paths[@]}" > "$backup_file"
-  chmod 600 "$backup_file"
-  log "backed up known Codex working-tree residue to ${backup_file}"
-
-  git -C "$APP_DIR" restore --source=HEAD --staged --worktree -- "${dirty_paths[@]}"
-  [[ -z "$(git -C "$APP_DIR" status --porcelain --untracked-files=no)" ]] \
-    || fail "tracked checkout remained dirty after bounded recovery"
-fi
-
-# The same abandoned Codex lane also left this deployment script as an untracked
-# file before it was committed to main. Preserve it outside the repository before
-# allowing the tracked main version to take its place. No other untracked path is
-# removed automatically.
-legacy_untracked="${APP_DIR}/scripts/deploy_production.sh"
-if [[ -f "$legacy_untracked" ]] \
-  && ! git -C "$APP_DIR" ls-files --error-unmatch scripts/deploy_production.sh >/dev/null 2>&1; then
-  legacy_backup="${backup_dir}/pre-main-sync-deploy-script-$(date -u +%Y%m%dT%H%M%SZ).sh"
-  install -m 600 "$legacy_untracked" "$legacy_backup"
-  rm -f "$legacy_untracked"
-  log "backed up known untracked Codex deploy script to ${legacy_backup}"
+  fail "production checkout has tracked local modifications"
 fi
 
 log "fetching origin/main"
