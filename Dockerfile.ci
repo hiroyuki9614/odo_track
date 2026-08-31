@@ -19,5 +19,6 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
+RUN mkdir -p storage tmp/pids
 
-CMD ["bash", "-lc", "RAILS_ENV=test bundle exec rails assets:precompile && bundle exec rspec"]
+CMD ["bash", "-lc", "bundle exec rails db:prepare && bundle exec rails assets:precompile && bundle exec rspec"]
