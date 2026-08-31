@@ -5,71 +5,63 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
+concurrency:
+  group: odo-track-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-latest
-    env:
-      PUPPETEER_SKIP_DOWNLOAD: 'true'
+    # Never execute untrusted fork code on the production self-hosted runner.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, Linux, X64, odo-track]
+    timeout-minutes: 30
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.2.2
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-
-      - name: Cache bundle
-        uses: actions/cache@v4
-        with:
-          path: vendor/bundle
-          key: bundle-v1-${{ hashFiles('Gemfile.lock') }}
-
-      - name: Cache npm
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: yarn-v1-${{ hashFiles('package-lock.json') }}
-
-      - name: Run bundle install
+      - name: Bind rootless Docker
+        shell: bash
         run: |
-          bundle config --local path vendor/bundle
-          bundle config --local without production
-          bundle install
+          set -euo pipefail
+          test "$(id -un)" = "agent"
+          uid="$(id -u)"
+          echo "XDG_RUNTIME_DIR=/run/user/${uid}" >> "$GITHUB_ENV"
+          echo "DOCKER_HOST=unix:///run/user/${uid}/docker.sock" >> "$GITHUB_ENV"
+          export XDG_RUNTIME_DIR="/run/user/${uid}"
+          export DOCKER_HOST="unix:///run/user/${uid}/docker.sock"
+          docker info >/dev/null
 
-      - run: RAILS_ENV=test bundle exec rails assets:precompile
+      - name: Build CI image
+        run: docker build -f Dockerfile.ci -t "odo-track-ci:${GITHUB_SHA}" .
 
-      - name: Run RSpec
-        run: bundle exec rspec
+      - name: Run assets and RSpec
+        run: docker run --rm "odo-track-ci:${GITHUB_SHA}"
+
+      - name: Cleanup CI image
+        if: always()
+        run: docker image rm -f "odo-track-ci:${GITHUB_SHA}" >/dev/null 2>&1 || true
 
   deploy:
-    name: Deploy app to AWS
+    name: Deploy production
     needs: test
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, Linux, X64, odo-track]
+    timeout-minutes: 30
 
     steps:
-      - name: Install SSH key
-        run: |
-          mkdir -p -m 700 ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/rails-deploy-webapp
-          chmod 600 ~/.ssh/rails-deploy-webapp
+      - uses: actions/checkout@v4
 
-      - name: Deploy
+      - name: Bind rootless Docker
+        shell: bash
         run: |
-          eval $(ssh-agent)
-          ssh-add ~/.ssh/rails-deploy-webapp
-          ssh -o StrictHostKeyChecking=no -A webapp@${{ secrets.TARGET_HOSTNAME }} "cd rails-deploy &&
-          git pull origin main &&
-          ~/.rbenv/shims/bundle config --local deployment true &&
-          ~/.rbenv/shims/bundle config --local without development:test &&
-          ~/.rbenv/shims/bundle install &&
-          RAILS_ENV=production ~/.rbenv/shims/bundle exec rails assets:precompile &&
-          RAILS_ENV=production ~/.rbenv/shims/bundle exec rails db:migrate &&
-          ~/.rbenv/shims/bundle exec pumactl restart"
+          set -euo pipefail
+          test "$(id -un)" = "agent"
+          uid="$(id -u)"
+          echo "XDG_RUNTIME_DIR=/run/user/${uid}" >> "$GITHUB_ENV"
+          echo "DOCKER_HOST=unix:///run/user/${uid}/docker.sock" >> "$GITHUB_ENV"
+
+      - name: Deploy current main to VPS
+        run: bash scripts/deploy_production.sh
