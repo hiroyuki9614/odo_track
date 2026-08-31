@@ -1,0 +1,54 @@
+<% if current_user.admin %>
+	<%= content_tag(:div, "", id: "static_admin_header") %>
+<% else %>
+	<%= content_tag(:div, "", id: "static_header") %>
+<% end %>
+
+<div class="container my-4">
+	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+		<div>
+			<h5 class="mb-1"><%= @pdf_export.target_month.strftime('%Y年%-m月') %>のPDF</h5>
+			<p class="text-muted mb-0"><%= @pdf_export.pdf_count %>件の個別PDFがあります。</p>
+		</div>
+		<div class="d-flex flex-wrap gap-2">
+			<%= link_to '出力履歴へ戻る', downloads_path, class: 'btn btn-outline-secondary' %>
+			<% if @pdf_export.status == 'completed' && @pdf_export.archive_path.present? && File.file?(@pdf_export.archive_path) %>
+				<%= link_to 'ZIPをダウンロード', download_batch_archive_path(@pdf_export), class: 'btn btn-primary' %>
+			<% end %>
+		</div>
+	</div>
+
+	<% if @files.blank? %>
+		<div class="alert alert-light border">ダウンロード可能な個別PDFはありません。</div>
+	<% else %>
+		<div class="card">
+			<div class="card-body p-0">
+				<div class="table-responsive">
+					<table class="table table-hover mb-0 align-middle">
+						<thead>
+							<tr>
+								<th>ファイル名</th>
+								<th class="text-end">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% @files.each do |file| %>
+								<% filename = File.basename(file) %>
+								<% route_filename = File.basename(file, '.pdf') %>
+								<tr>
+									<td><%= filename %></td>
+									<td class="text-end">
+										<%= link_to 'ダウンロード', download_batch_file_path(@pdf_export, route_filename), class: 'btn btn-sm btn-outline-primary' %>
+									</td>
+								</tr>
+							<% end %>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="d-flex justify-content-center mt-3">
+			<%= paginate @files %>
+		</div>
+	<% end %>
+</div>
