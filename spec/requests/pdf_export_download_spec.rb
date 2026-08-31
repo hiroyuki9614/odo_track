@@ -18,10 +18,27 @@ RSpec.describe 'PDF export and download', type: :request do
     created_directories.each { |path| FileUtils.rm_rf(path) }
   end
 
+  def create_daily_log_for(user, created_at:)
+    vehicle = create(:vehicle)
+    DailyLog.create!(
+      user: user,
+      vehicle: vehicle,
+      departure_datetime: created_at,
+      arrival_datetime: created_at + 1.hour,
+      departure_distance: 100,
+      arrival_distance: 101,
+      departure_location: '本社',
+      arrival_location: '支店',
+      note: 'PDF出力テスト',
+      is_alcohol_check: true,
+      created_at: created_at
+    )
+  end
+
   it 'creates a monthly export batch with individual PDFs and a ZIP archive' do
     rendered_pdf = "%PDF-1.4\nrequest-spec\n"
     pdf = instance_double(RecordPdf, render: rendered_pdf)
-    create(:daily_log, user_id: admin.id, created_at: Time.zone.local(2026, 9, 10, 9, 0))
+    create_daily_log_for(admin, created_at: Time.zone.local(2026, 9, 10, 9, 0))
 
     allow(User).to receive(:kept).and_return(User.where(id: admin.id))
     allow(RecordPdf).to receive(:new).and_return(pdf)
@@ -46,7 +63,7 @@ RSpec.describe 'PDF export and download', type: :request do
   it 'skips users who have no kept daily logs in the target month' do
     with_logs = create(:user, user_name: '日報あり')
     without_logs = create(:user, user_name: '日報なし')
-    create(:daily_log, user_id: with_logs.id, created_at: Time.zone.local(2026, 9, 15, 9, 0))
+    create_daily_log_for(with_logs, created_at: Time.zone.local(2026, 9, 15, 9, 0))
 
     rendered_pdf = "%PDF-1.4\nonly-user-with-logs\n"
     pdf = instance_double(RecordPdf, render: rendered_pdf)
