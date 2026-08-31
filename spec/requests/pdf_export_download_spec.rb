@@ -33,7 +33,7 @@ RSpec.describe 'PDF export and download', type: :request do
 
       pdf_export = PdfExport.order(:id).last
       created_directories << pdf_export.directory
-      expected_path = pdf_export.directory.join("PDF管理者_#{admin.id}_2026-09.pdf")
+      expected_path = pdf_export.directory.join("user_#{admin.id}_PDF管理者_2026-09.pdf")
 
       expect(response).to redirect_to(download_batch_path(pdf_export))
       expect(pdf_export.target_month).to eq(Date.new(2026, 9, 1))
