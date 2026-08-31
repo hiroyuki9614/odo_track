@@ -57,8 +57,8 @@ module PdfExports
     end
 
     def pdf_filename(user)
-      safe_user_name = user.user_name.to_s.gsub(%r{[\\/\0]}, '_').presence || "user_#{user.id}"
-      "#{safe_user_name}_#{user.id}_#{pdf_export.target_month.strftime('%Y-%m')}.pdf"
+      safe_user_name = user.user_name.to_s.gsub(%r{[\\/\0]}, '_').presence || 'unknown'
+      "user_#{user.id}_#{safe_user_name}_#{pdf_export.target_month.strftime('%Y-%m')}.pdf"
     end
 
     def build_archive(generated_paths)
