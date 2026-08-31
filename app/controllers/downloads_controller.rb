@@ -3,19 +3,22 @@ class DownloadsController < ApplicationController
   before_action :admin_user
 
   def index
-    @files = Dir.glob(Rails.root.join('downloads', '*'))
+    @files = Dir.glob(Rails.root.join('downloads', '*.pdf')).sort_by { |file| File.mtime(file) }.reverse
   end
 
   def show
-    filename = params[:filename].to_s
-    return render plain: 'ファイルが見つかりません', status: :not_found unless filename.match?(/\A[^\\\/\0]+\z/)
+    requested_filename = params[:filename].to_s
+    return render plain: 'ファイルが見つかりません', status: :not_found unless requested_filename.match?(/\A[^\\\/\0]+\z/)
 
-    filepath = Rails.root.join('downloads', "#{filename}.pdf").cleanpath
+    filename = requested_filename.delete_suffix('.pdf')
+    return render plain: 'ファイルが見つかりません', status: :not_found if filename.blank?
+
     download_root = Rails.root.join('downloads').cleanpath
+    filepath = download_root.join("#{filename}.pdf").cleanpath
     return render plain: 'ファイルが見つかりません', status: :not_found unless filepath.dirname == download_root
 
-    if File.exist?(filepath)
-      send_file(filepath, filename: "#{filename}.pdf", type: 'application/pdf', disposition: 'inline')
+    if File.file?(filepath)
+      send_file(filepath, filename: filepath.basename.to_s, type: 'application/pdf', disposition: 'attachment')
     else
       render plain: 'ファイルが見つかりません', status: :not_found
     end
