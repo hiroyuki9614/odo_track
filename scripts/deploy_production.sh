@@ -20,7 +20,6 @@ fail() {
 [[ "$(id -un)" == "$EXPECTED_USER" ]] || fail "must run as ${EXPECTED_USER}, not $(id -un)"
 [[ -d "$APP_DIR/.git" ]] || fail "production checkout not found: ${APP_DIR}"
 [[ -f "$ENV_FILE" ]] || fail "production env file not found: ${ENV_FILE}"
-[[ -f "$COMPOSE_FILE" ]] || fail "compose file not found: ${COMPOSE_FILE}"
 
 AGENT_UID="$(id -u)"
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/${AGENT_UID}}"
@@ -93,6 +92,8 @@ if git -C "$APP_DIR" show-ref --verify --quiet refs/heads/main; then
 else
   git -C "$APP_DIR" checkout --track -b main origin/main
 fi
+
+[[ -f "$COMPOSE_FILE" ]] || fail "compose file not found after main sync: ${COMPOSE_FILE}"
 
 compose=(
   docker compose
