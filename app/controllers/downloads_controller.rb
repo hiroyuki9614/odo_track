@@ -4,8 +4,6 @@ class DownloadsController < ApplicationController
 
   def index
     @pdf_exports = PdfExport.recent_first.page(params[:page]).per(20)
-    legacy_files = Dir.glob(Rails.root.join('downloads', '*.pdf')).sort_by { |file| File.mtime(file) }.reverse
-    @legacy_files = Kaminari.paginate_array(legacy_files).page(params[:legacy_page]).per(20)
   end
 
   def batch
@@ -37,18 +35,6 @@ class DownloadsController < ApplicationController
                 filename: filepath.basename.to_s,
                 type: 'application/pdf',
                 disposition: 'attachment'
-    else
-      render plain: 'ファイルが見つかりません', status: :not_found
-    end
-  end
-
-  def show
-    requested_filename = params[:filename].to_s
-    filename = requested_filename.delete_suffix('.pdf')
-    filepath = safe_file_path(Rails.root.join('downloads'), filename, '.pdf')
-
-    if filepath && File.file?(filepath)
-      send_file filepath, filename: filepath.basename.to_s, type: 'application/pdf', disposition: 'attachment'
     else
       render plain: 'ファイルが見つかりません', status: :not_found
     end
