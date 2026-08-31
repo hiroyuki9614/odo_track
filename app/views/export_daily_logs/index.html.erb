@@ -5,42 +5,50 @@
 <% end %>
 <div class="my-5 export-title">
 	<h5>運転日報の印刷ページ</h5>
-	<p><%= link_to "全員のPDFを作成する", export_pdf_path %></p>
-	<%= link_to 'PDFをダウンロードする', downloads_path %>
+	<div class="card my-3">
+		<div class="card-body">
+			<h6 class="card-title">月次PDFを作成</h6>
+			<p class="text-muted">対象月の全ユーザー分を個別PDFで作成し、ZIPにまとめます。</p>
+			<%= form_with url: export_pdf_path, method: :post do |form| %>
+				<div class="d-flex flex-wrap align-items-end gap-2">
+					<div>
+						<%= form.label :month, '対象月', class: 'form-label' %>
+						<%= form.month_field :month, value: Date.current.strftime('%Y-%m'), class: 'form-control' %>
+					</div>
+					<%= form.submit '全員分を作成する', class: 'btn btn-primary' %>
+				</div>
+			<% end %>
+		</div>
+	</div>
+	<%= link_to 'PDF出力履歴を見る', downloads_path, class: 'btn btn-outline-secondary' %>
 </div>
 <% if @users.blank? %>
 	<p class="m-5">運転日報はありません。</p>
 <% else %>
-<!-- ヘッダー部分 -->
 	<section class="export_daily_log_index">
 		<div class="bg-image h-100">
 			<div class="mask d-flex align-items-center h-100" style="background-color: white">
 				<div class="container">
-					<!-- テーブルのヘッダー部分 -->
 					<div class="row justify-content-center">
 						<div class="col-12">
 							<div class="card">
 								<div class="card-body">
 									<div class="table-responsive">
 										<table class="table table-hover mb-0">
-											<!-- テーブルタイトル -->
 											<thead>
 												<tr>
 													<th><%= t('activerecord.attributes.user.user_name') %></th>
 													<th><%= '今月の運転日報の数' %></th>
-													<th></th>
-													<th></th>
 												</tr>
 											</thead>
-											<!-- テーブルボディ -->
-											<% @users.each do |user| %>
-												<tbody>
+											<tbody>
+												<% @users.each do |user| %>
 													<tr>
-														<td scope="row"><%= user.user_name %></th>
+														<td scope="row"><%= user.user_name %></td>
 														<td class="ms-5"><%= user.daily_logs.length %></td>
 													</tr>
-												</tbody>
-											<% end %>
+												<% end %>
+											</tbody>
 										</table>
 									</div>
 								</div>
