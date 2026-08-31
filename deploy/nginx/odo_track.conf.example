@@ -5,7 +5,7 @@ upstream odo_track_app {
 server {
   listen 80;
   listen [::]:80;
-  server_name odo.hiroyuki9614.com;
+  server_name odt.hiroyuki9614.com;
 
   location / {
     proxy_pass http://odo_track_app;
