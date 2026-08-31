@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - uses: ruby/setup-ruby@v1
         with:
@@ -20,17 +20,17 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
       - run: npm ci
 
       - name: Cache bundle
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: vendor/bundle
           key: bundle-v1-${{ hashFiles('Gemfile.lock') }}
 
       - name: Cache npm
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: node_modules
           key: yarn-v1-${{ hashFiles('package-lock.json') }}
