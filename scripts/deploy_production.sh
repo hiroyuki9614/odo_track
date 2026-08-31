@@ -33,6 +33,9 @@ esac
 
 docker info >/dev/null 2>&1 || fail "rootless Docker is not reachable at ${DOCKER_HOST}"
 
+backup_dir="${HOME}/odo_track-deploy-backups"
+mkdir -p -m 700 "$backup_dir"
+
 tracked_changes="$(git -C "$APP_DIR" status --porcelain --untracked-files=no)"
 if [[ -n "$tracked_changes" ]]; then
   printf '[odo-deploy] tracked local modifications detected:\n%s\n' "$tracked_changes" >&2
@@ -58,8 +61,6 @@ if [[ -n "$tracked_changes" ]]; then
     esac
   done
 
-  backup_dir="${HOME}/odo_track-deploy-backups"
-  mkdir -p -m 700 "$backup_dir"
   backup_file="${backup_dir}/pre-main-sync-$(date -u +%Y%m%dT%H%M%SZ).patch"
   git -C "$APP_DIR" diff HEAD --binary -- "${dirty_paths[@]}" > "$backup_file"
   chmod 600 "$backup_file"
@@ -68,6 +69,19 @@ if [[ -n "$tracked_changes" ]]; then
   git -C "$APP_DIR" restore --source=HEAD --staged --worktree -- "${dirty_paths[@]}"
   [[ -z "$(git -C "$APP_DIR" status --porcelain --untracked-files=no)" ]] \
     || fail "tracked checkout remained dirty after bounded recovery"
+fi
+
+# The same abandoned Codex lane also left this deployment script as an untracked
+# file before it was committed to main. Preserve it outside the repository before
+# allowing the tracked main version to take its place. No other untracked path is
+# removed automatically.
+legacy_untracked="${APP_DIR}/scripts/deploy_production.sh"
+if [[ -f "$legacy_untracked" ]] \
+  && ! git -C "$APP_DIR" ls-files --error-unmatch scripts/deploy_production.sh >/dev/null 2>&1; then
+  legacy_backup="${backup_dir}/pre-main-sync-deploy-script-$(date -u +%Y%m%dT%H%M%SZ).sh"
+  install -m 600 "$legacy_untracked" "$legacy_backup"
+  rm -f "$legacy_untracked"
+  log "backed up known untracked Codex deploy script to ${legacy_backup}"
 fi
 
 log "fetching origin/main"
