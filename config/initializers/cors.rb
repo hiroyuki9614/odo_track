@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
+  allowed_origins = ENV.fetch('CORS_ORIGINS', '').split(',').map(&:strip).reject(&:empty?)
+  next if allowed_origins.empty?
+
   allow do
-    # origins 'http://0.0.0.0:3000' 
-    origins 'https://h9614.link/', 'http://0.0.0.0:3000' # 許可するオリジン（ドメイン）を指定
-    resource '*', # すべてのリソースに適用
-             headers: :any, # すべてのヘッダーを許可
-             methods: :any, # 許可するHTTPメソッド
-             credentials: true # クッキーを含むリクエストを許可
+    origins(*allowed_origins)
+    resource '*',
+             headers: %w[Accept Content-Type X-CSRF-Token],
+             methods: %i[get post put patch delete options head],
+             credentials: true
   end
 end

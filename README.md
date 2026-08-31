@@ -1,11 +1,11 @@
 ## アプリ名
 ODO TRACK
 
-## URL
-AWS<br>
-http://rails-deploy-webapp-1207642703.ap-northeast-1.elb.amazonaws.com/<br>
-Heroku<br>
-https://lit-tor-41640-5f66b309ac09.herokuapp.com/<br>
+## Live Demo
+
+The current live URL is maintained separately from this repository while the VPS
+deployment is being finalized. See the deployment notes supplied with the
+portfolio for the active address and demo credentials.
 
 ## 基本技術
  - 一般ユーザー&管理ユーザー
@@ -31,16 +31,33 @@ https://lit-tor-41640-5f66b309ac09.herokuapp.com/<br>
 
 
  ## 使用技術
- - rails 7.1.2
+ - rails 7.1.3
  - vue.js vuetify
  - git(github actionによりテストの自動実行)
  - docker
  - rspec(テスト)
 
+## Deployment architecture
+
+Production runs as a rootless Docker Compose stack on the VPS:
+
+```text
+Nginx (host, HTTPS) -> 127.0.0.1:3100 -> Rails/Puma container
+                                  -> PostgreSQL and Redis containers
+```
+
+Secrets are supplied through the VPS-only `.env.production` file and are not
+committed to Git.
+
+## Demo account usage
+
+Demo accounts are provisioned with deployment-local credentials. Do not reuse
+them outside the portfolio environment or use the demo admin account for real
+data.
+
  ## 改良予定
  - PDFの出力機能の強化（フォルダの作成・指定のgoogle driveアップロードなど)
  - モバイル表示の強化
- - SSL対応
 
 ## DB
 運転日報テーブル (daily_logs)

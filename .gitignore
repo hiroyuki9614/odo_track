@@ -50,4 +50,8 @@ node_modules
 
 /vender
 
+# VPS production secrets and local container state.
+/.env.production
+/.docker-data/
+
 .env

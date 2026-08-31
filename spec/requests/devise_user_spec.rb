@@ -29,6 +29,12 @@ RSpec.describe 'ユーザーの登録や編集に関するテスト', type: :req
         end.to change(User, :count).by 1
       end
 
+      it 'サインアップ時にadmin権限を付与できないこと' do
+        post user_registration_path, params: { user: user_params.merge(admin: true) }
+
+        expect(User.order(:created_at).last.admin).to be(false)
+      end
+
       it 'リダイレクトされること' do
         post user_registration_path, params: { user: user_params }
         expect(response).to redirect_to root_url

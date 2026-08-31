@@ -51,7 +51,7 @@ module Api
     end
 
     def update
-      @daily_log = DailyLog.find(params[:id])
+      @daily_log = current_user.daily_logs.find(params[:id])
       if @daily_log.update(daily_log_params)
         render json: @daily_log, status: :ok
       else
@@ -60,7 +60,7 @@ module Api
     end
 
     def destroy
-      @daily_log = DailyLog.find(params[:id])
+      @daily_log = current_user.daily_logs.find(params[:id])
       if @daily_log.discard
         render json: @daily_log, status: :no_content
       else

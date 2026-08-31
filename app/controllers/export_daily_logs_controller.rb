@@ -31,9 +31,6 @@ class ExportDailyLogsController < ApplicationController
       File.open(save_path.join(file_name), 'wb') do |file|
         file.write(pdf.render)
       end
-      File.open(Rails.root.join('downloads', file_name), 'wb') do |file|
-        file.write(pdf.render, type: 'application/pdf')
-      end
     end
 
     # または、直接レスポンスとして出力
@@ -42,12 +39,11 @@ class ExportDailyLogsController < ApplicationController
 
   def show
     @today = Time.zone.today
-    # ポートフォリオ用に今月に設定。　本来は先月分の日報をPDFにする。
-    @first_day = Date.today.beginning_of_month
-    @last_day = last_day_of_last_month = first_day_of_last_month.end_of_month
+    @first_day = Date.current.beginning_of_month
+    @last_day = @first_day.end_of_month
 
     @user = User.find(params[:id])
-    @daily_logs = @user.daily_logs.kept.where(created_at: first_day_of_last_month..last_day_of_last_month)
+    @daily_logs = @user.daily_logs.kept.where(created_at: @first_day..@last_day)
   end
 
   private
