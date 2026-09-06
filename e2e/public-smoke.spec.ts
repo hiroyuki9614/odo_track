@@ -16,7 +16,8 @@ test.describe('public experience', () => {
   test('registers a new user', async ({ page }, testInfo) => {
     const email = `playwright-${testInfo.project.name}-${Date.now()}@example.test`;
 
-    await page.goto('/auth/cmon_let_me_in');
+    await page.goto('/auth/login');
+    await page.getByRole('link', { name: 'ユーザー登録はこちら' }).click();
     await expect(page.getByRole('heading', { name: 'ユーザー登録' })).toBeVisible();
 
     await page.getByLabel('お名前(フルネーム)').fill('Playwright テスト');
