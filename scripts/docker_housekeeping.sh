@@ -23,8 +23,8 @@ validate_percent() {
   (( value >= 0 && value <= 100 )) || fail "${name} must be between 0 and 100: ${value}"
 }
 
-[[ "$PHASE" == "pre-build" || "$PHASE" == "post-deploy" ]] \
-  || fail "usage: $0 {pre-build|post-deploy}"
+[[ "$PHASE" == "pre-build" || "$PHASE" == "post-build" || "$PHASE" == "post-deploy" ]] \
+  || fail "usage: $0 {pre-build|post-build|post-deploy}"
 validate_percent "ODO_DOCKER_HIGH_WATER_PERCENT" "$HIGH_WATER_PERCENT"
 validate_percent "ODO_DOCKER_ABORT_PERCENT" "$ABORT_PERCENT"
 [[ "$MIN_FREE_GB" =~ ^[0-9]+$ ]] || fail "ODO_DOCKER_MIN_FREE_GB must be an integer: ${MIN_FREE_GB}"
@@ -93,7 +93,7 @@ if (( capacity_exhausted == 1 )); then
   if [[ "$PHASE" == "pre-build" ]]; then
     fail "insufficient Docker disk headroom: usage=${usage_after}% free_kb=${available_after_kb}; require usage<${ABORT_PERCENT}% and free>=${MIN_FREE_GB}GiB"
   fi
-  log "WARNING: low Docker disk headroom after deployment: usage=${usage_after}% free_kb=${available_after_kb}"
+  log "WARNING: low Docker disk headroom after ${PHASE}: usage=${usage_after}% free_kb=${available_after_kb}"
 fi
 
 log "housekeeping completed"
