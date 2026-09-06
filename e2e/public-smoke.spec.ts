@@ -24,6 +24,6 @@ test.describe('public experience', () => {
     await password.fill('playwright-password');
     await expect(email).toHaveValue('playwright@example.test');
     await expect(password).toHaveValue('playwright-password');
-    await expect(page.getByRole('button', { name: 'ログイン' })).toBeVisible();
+    await expect(page.locator('#new_user').getByRole('button', { name: 'ログイン' })).toBeVisible();
   });
 });
