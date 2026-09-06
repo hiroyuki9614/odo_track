@@ -45,7 +45,9 @@ jobs:
         run: npx playwright install webkit
 
       - name: Prepare test database
-        run: bundle exec rails db:prepare
+        run: |
+          bundle exec rails db:prepare
+          bundle exec rails runner script/prepare_playwright_e2e.rb
 
       - name: Run macOS and iOS E2E
         run: npm run test:e2e
