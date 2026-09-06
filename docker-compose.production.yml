@@ -27,6 +27,7 @@ services:
     restart: unless-stopped
 
   app:
+    image: odo_track-app:latest
     build:
       context: .
       dockerfile: Dockerfile.production
@@ -57,9 +58,7 @@ services:
     restart: unless-stopped
 
   worker:
-    build:
-      context: .
-      dockerfile: Dockerfile.production
+    image: odo_track-app:latest
     env_file:
       - .env.production
     environment:
