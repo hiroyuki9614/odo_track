@@ -13,6 +13,24 @@ test.describe('public experience', () => {
     ).toBeVisible();
   });
 
+  test('registers a new user', async ({ page }, testInfo) => {
+    const email = `playwright-${testInfo.project.name}-${Date.now()}@example.test`;
+
+    await page.goto('/auth/cmon_let_me_in');
+    await expect(page.getByRole('heading', { name: 'ユーザー登録' })).toBeVisible();
+
+    await page.getByLabel('お名前(フルネーム)').fill('Playwright テスト');
+    await page.getByLabel('お電話番号').fill('09012345678');
+    await page.getByLabel('メールアドレス').fill(email);
+    await page.getByLabel('パスワード', { exact: true }).fill('playwright-password');
+    await page.getByLabel('パスワード(確認)').fill('playwright-password');
+    await page.getByRole('button', { name: '登録する' }).click();
+
+    await expect(
+      page.getByText('本人確認用のメールを送信しました。メール内のリンクからアカウントを有効化させてください。'),
+    ).toBeVisible();
+  });
+
   test('renders an interactive login form', async ({ page }) => {
     await page.goto('/auth/login');
 
