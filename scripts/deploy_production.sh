@@ -7,6 +7,7 @@ COMPOSE_FILE="${ODO_COMPOSE_FILE:-${APP_DIR}/docker-compose.production.yml}"
 PUBLIC_HEALTH_URL="${ODO_PUBLIC_HEALTH_URL:-https://odt.hiroyuki9614.com/up}"
 LOCAL_HEALTH_URL="${ODO_LOCAL_HEALTH_URL:-http://127.0.0.1:3100/up}"
 EXPECTED_USER="${ODO_DEPLOY_USER:-agent}"
+HOUSEKEEPING_SCRIPT="${ODO_DOCKER_HOUSEKEEPING_SCRIPT:-${APP_DIR}/scripts/docker_housekeeping.sh}"
 
 log() {
   printf '[odo-deploy] %s\n' "$*"
@@ -49,6 +50,7 @@ else
 fi
 
 [[ -f "$COMPOSE_FILE" ]] || fail "compose file not found after main sync: ${COMPOSE_FILE}"
+[[ -f "$HOUSEKEEPING_SCRIPT" ]] || fail "Docker housekeeping script not found: ${HOUSEKEEPING_SCRIPT}"
 
 compose=(
   docker compose
@@ -56,6 +58,9 @@ compose=(
   --env-file "$ENV_FILE"
   -f "$COMPOSE_FILE"
 )
+
+log "running Docker housekeeping before build"
+bash "$HOUSEKEEPING_SCRIPT" pre-build
 
 log "building application images"
 "${compose[@]}" build app worker
@@ -87,6 +92,9 @@ worker_id="$("${compose[@]}" ps -q worker)"
 log "checking external HTTPS endpoint"
 curl --fail --silent --show-error --max-time 15 "$PUBLIC_HEALTH_URL" >/dev/null \
   || fail "external health check failed: ${PUBLIC_HEALTH_URL}"
+
+log "running Docker housekeeping after deployment"
+bash "$HOUSEKEEPING_SCRIPT" post-deploy
 
 log "deployment succeeded"
 "${compose[@]}" ps
