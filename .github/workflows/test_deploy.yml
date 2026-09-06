@@ -39,6 +39,9 @@ jobs:
           bash -n scripts/deploy_production.sh scripts/docker_housekeeping.sh tests/scripts/docker_housekeeping_test.sh
           bash tests/scripts/docker_housekeeping_test.sh
 
+      - name: Reclaim Docker headroom before CI build
+        run: bash scripts/docker_housekeeping.sh pre-build
+
       - name: Build CI image
         run: docker build -f Dockerfile.ci -t "odo-track-ci:${GITHUB_SHA}" .
 
