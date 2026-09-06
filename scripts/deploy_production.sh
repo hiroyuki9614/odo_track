@@ -62,8 +62,8 @@ compose=(
 log "running Docker housekeeping before build"
 bash "$HOUSEKEEPING_SCRIPT" pre-build
 
-log "building application images"
-"${compose[@]}" build app worker
+log "building shared production image"
+"${compose[@]}" build app
 
 log "ensuring database and redis are running"
 "${compose[@]}" up -d db redis
