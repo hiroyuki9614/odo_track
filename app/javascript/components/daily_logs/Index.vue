@@ -23,7 +23,7 @@
 								<!-- 新規作成ダイアログの内容 -->
 								<v-card class="pt-5">
 									<!-- <v-form fast-fail @submit.prevent> -->
-									<v-form ref="form">
+									<v-form ref="form" @submit.prevent="save">
 										<v-card-title>
 											<span class="text-h5 ms-5">{{ formTitle }}</span>
 										</v-card-title>
@@ -81,7 +81,7 @@
 										<v-card-actions class="card-action">
 											<v-spacer></v-spacer>
 											<v-btn color="blue-darken-1" variant="text" @click="close"> 取り消し </v-btn>
-											<v-btn color="blue-darken-1" variant="text" type="submit" @click="save"> 保存 </v-btn>
+											<v-btn color="blue-darken-1" variant="text" type="submit"> 保存 </v-btn>
 										</v-card-actions>
 									</v-form>
 								</v-card>
@@ -485,7 +485,7 @@ const createItem = async () => {
 			const errorData = await res.json(); // エラーレスポンスの内容を取得
 			console.error('Error Response:', errorData); // エラーレスポンスをコンソールに表示
 			formErrors.value = errorData.errors || {};
-			if (isValid.value) {
+			if (isValid()) {
 				return dialogError.value = true;
 			}
 			console.error('フォームエラー:', JSON.stringify(toRaw(formErrors.value), null, 2));
@@ -503,7 +503,7 @@ const createItem = async () => {
 	} catch (err) {
 		console.error('Error:', err.message); // エラー情報をコンソールに表示
 		console.log("エラー内容：" + formErrors.value)
-		if (isValid.value) {
+		if (isValid()) {
 			dialogError.value = true;
 		}
 	}
@@ -560,7 +560,7 @@ const updateItem = async () => {
 			console.error('Error Response:', errorData); // エラーレスポンスをコンソールに表示
 			formErrors.value = errorData.errors || {};
 			console.error('フォームエラー:', JSON.stringify(toRaw(formErrors.value), null, 2));
-			if (isValid.value) {
+			if (isValid()) {
 				dialogError.value = true;
 			}
 			if (errorData.errors) {
@@ -578,7 +578,7 @@ const updateItem = async () => {
 	} catch (err) {
 		console.error('Error:', err.message); // エラー情報をコンソールに表示
 		console.log("エラー内容：" + formErrors.value)
-		if (isValid.value) {
+		if (isValid()) {
 			dialogError.value = true;
 		}
 	}
@@ -614,18 +614,14 @@ function closeError() {
 		editedIndex.value = -1
 	})
 }
-function save() {
-	// 編集時
+async function save() {
+	const { valid } = await form.value.validate();
+	if (!valid) return;
+
 	if (editedIndex.value > -1) {
-		// console.log('編集')
-		updateItem();
-		// 新規作成時
+		await updateItem();
 	} else {
-		// console.log('新規作成')
-		createItem();
-	}
-	if (isValid) {
-		// close()
+		await createItem();
 	}
 }
 

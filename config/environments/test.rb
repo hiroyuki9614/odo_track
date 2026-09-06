@@ -31,8 +31,8 @@ Rails.application.configure do
   # Raise exceptions instead of rendering exception templates.
   config.action_dispatch.show_exceptions = :rescuable
 
-  # Disable request forgery protection in test environment.
-  config.action_controller.allow_forgery_protection = false
+  # Keep ordinary tests lightweight, but exercise real CSRF behavior in browser E2E.
+  config.action_controller.allow_forgery_protection = ENV['PLAYWRIGHT_E2E'] == 'true'
 
   # Store uploaded files on the local file system in a temporary directory.
   config.active_storage.service = :test

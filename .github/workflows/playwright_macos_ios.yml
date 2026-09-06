@@ -1,0 +1,63 @@
+name: Playwright macOS and iOS
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: odo-track-playwright-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    name: macOS WebKit / iOS Safari
+    runs-on: macos-15-intel
+    timeout-minutes: 30
+    env:
+      RAILS_ENV: test
+      SECRET_KEY_BASE: playwright-test-secret-key-base
+      BUNDLE_WITHOUT: production
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: 'true'
+
+      - name: Install Playwright WebKit
+        run: npx playwright install webkit
+
+      - name: Prepare test database
+        run: |
+          bundle exec rails db:prepare
+          bundle exec rails runner script/prepare_playwright_e2e.rb
+
+      - name: Run macOS and iOS E2E
+        run: npm run test:e2e
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-macos-ios
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7

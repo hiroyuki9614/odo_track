@@ -39,12 +39,16 @@
     "build:css": "npm run build:css:compile && npm run build:css:prefix",
     "watch:css": "nodemon --watch ./app/javascript/entrypoints/ --ext scss --exec \"npm run build:css\"",
     "dev": "vite",
-    "start": "nodemon application.js"
+    "start": "nodemon application.js",
+    "test:e2e": "playwright test",
+    "test:e2e:macos": "playwright test --project=macos-webkit",
+    "test:e2e:ios": "playwright test --project=ios-safari"
   },
   "browserslist": [
     "defaults"
   ],
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "nodemon": "^3.0.3",
     "vite": "^5.0.0"
   }
