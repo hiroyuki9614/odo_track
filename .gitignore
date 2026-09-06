@@ -55,3 +55,8 @@ node_modules
 /.docker-data/
 
 .env
+
+# Playwright
+/playwright-report/
+/test-results/
+/blob-report/
