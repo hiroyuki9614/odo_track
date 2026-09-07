@@ -1,0 +1,50 @@
+name: Inspect old ODO production
+
+on:
+  push:
+    branches:
+      - ops/recover-old-remote-20260907
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: [self-hosted, Linux, X64, odo-track]
+    timeout-minutes: 10
+    steps:
+      - name: Inspect old production without secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(hostname)" = "x162-43-90-90"
+          test "$(id -un)" = "agent"
+          export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+          export DOCKER_HOST="unix:///run/user/$(id -u)/docker.sock"
+          prod=/home/agent/odo_track
+          echo "host=$(hostname) user=$(id -un)"
+          if [ -d "$prod/.git" ]; then echo "prod_sha=$(git -C "$prod" rev-parse HEAD)"; else echo "prod_checkout=missing"; fi
+          if [ -f "$prod/.env.production" ]; then stat -c 'env_present=yes mode=%a owner=%U:%G size=%s' "$prod/.env.production"; else echo 'env_present=no'; fi
+          echo '--- containers ---'
+          docker ps -a --format '{{.Names}}|{{.Image}}|{{.Status}}' | grep '^odo-' || true
+          echo '--- volumes ---'
+          docker volume ls --format '{{.Name}}' | grep '^odo-' | sort || true
+          for v in odo-postgres-data odo-redis-data odo-storage odo-downloads; do
+            if docker volume inspect "$v" >/dev/null 2>&1; then
+              mp=$(docker volume inspect -f '{{.Mountpoint}}' "$v")
+              bytes=$(du -sb "$mp" 2>/dev/null | awk '{print $1}' || true)
+              files=$(find "$mp" -type f 2>/dev/null | wc -l || true)
+              echo "$v bytes=${bytes:-unknown} files=${files:-unknown}"
+            else
+              echo "$v missing"
+            fi
+          done
+          echo '--- app health ---'
+          curl -fsS --max-time 10 http://127.0.0.1:3100/up >/dev/null && echo 'local_health=pass' || echo 'local_health=fail'
+          echo '--- db semantic counts ---'
+          db=$(docker ps --format '{{.Names}}' | grep '^odo-.*postgres\|^odo-postgres' | head -1 || true)
+          if [ -n "$db" ]; then
+            docker exec "$db" sh -lc 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -Atc "select ''users=''||count(*) from users; select ''vehicles=''||count(*) from vehicles; select ''daily_logs=''||count(*) from daily_logs; select ''favorite_vehicles=''||count(*) from favorite_vehicles;"' || true
+          else
+            echo 'db_container=not_found'
+          fi
