@@ -56,7 +56,7 @@ test.describe('public experience', () => {
 
     await page.getByRole('button', { name: '登録する' }).click();
     await expect(page.getByText('車両を登録する')).toBeVisible();
-    await page.getByRole('combobox', { name: '車両' }).click();
+    await page.getByRole('dialog').getByRole('combobox').click();
     await page.getByText(candidateLabel, { exact: true }).last().click();
     await page.getByLabel('備考').fill('Playwright favorite vehicle');
 
