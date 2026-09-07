@@ -1,0 +1,25 @@
+name: Recover old Remote Desktop channel
+
+on:
+  push:
+    branches:
+      - ops/recover-old-remote-20260907
+
+permissions:
+  contents: read
+
+jobs:
+  recover:
+    runs-on: [self-hosted, Linux, X64, odo-track]
+    timeout-minutes: 5
+    steps:
+      - name: Verify old host and start Remote Desktop user service
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(hostname)" = "x162-43-90-90"
+          test "$(id -un)" = "agent"
+          export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+          systemctl --user start desktop-commander-remote.service
+          systemctl --user show desktop-commander-remote.service \
+            --property=LoadState,ActiveState,SubState,UnitFileState,Restart,NRestarts
