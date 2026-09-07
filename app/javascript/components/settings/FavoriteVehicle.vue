@@ -17,7 +17,7 @@
 								<!-- 新規作成ダイアログの内容 -->
 								<v-card class="pt-5">
 									<!-- <v-form fast-fail @submit.prevent> -->
-									<v-form ref="form">
+									<v-form ref="form" @submit.prevent="save">
 										<v-card-title>
 											<span class="text-h5 ms-5">{{ formTitle }}</span>
 										</v-card-title>
@@ -38,7 +38,7 @@
 										<v-card-actions class="card-action fv-card-action">
 											<v-spacer></v-spacer>
 											<v-btn color="blue-darken-1" variant="text" @click="close"> 取り消し </v-btn>
-											<v-btn color="blue-darken-1" variant="text" type="submit" @click="save"> 保存 </v-btn>
+											<v-btn color="blue-darken-1" variant="text" type="submit"> 保存 </v-btn>
 										</v-card-actions>
 									</v-form>
 								</v-card>
@@ -290,18 +290,16 @@ function closeError() {
 		editedIndex.value = -1;
 	});
 }
-function save() {
+async function save() {
+	const { valid } = await form.value.validate();
+	if (!valid || !isValid()) return;
+
 	// 編集時
 	if (editedIndex.value > -1) {
-		// console.log('編集')
-		updateItem();
+		await updateItem();
 		// 新規作成時
 	} else {
-		// console.log('新規作成')
-		createItem();
-	}
-	if (isValid) {
-		// close()
+		await createItem();
 	}
 }
 
