@@ -2,7 +2,6 @@ module Api
   class FavoriteVehiclesController < ApplicationController
     before_action :authenticate_user!
     # before_action :admin_user, except: %i[show index]
-    protect_from_forgery except: %i[create destroy]
 
     def index
       @favorite_vehicles = current_user.favorite_vehicles.order(created_at: :asc).page params[:page]

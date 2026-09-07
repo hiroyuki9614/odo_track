@@ -13,9 +13,9 @@ unless Rails.env.production? && ENV['ALLOW_PRODUCTION_SEEDS'] != 'true'
 
     5.times do |_n|
       Vehicle.create!(
-        vehicle_name: Faker::Vehicle.model,
+        vehicle_name: Faker::Vehicle.model.to_s[0, 20],
         number: rand(0...9999),
-        manufacture: Faker::Vehicle.manufacture,
+        manufacture: Faker::Vehicle.manufacture.to_s[0, 20],
         current_drive_distance: rand(0...10_000)
       )
     end

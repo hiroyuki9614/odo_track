@@ -17,7 +17,7 @@
 								<!-- 新規作成ダイアログの内容 -->
 								<v-card class="pt-5">
 									<!-- <v-form fast-fail @submit.prevent> -->
-									<v-form ref="form">
+									<v-form ref="form" @submit.prevent="save">
 										<v-card-title>
 											<span class="text-h5 ms-5">{{ formTitle }}</span>
 										</v-card-title>
@@ -38,7 +38,7 @@
 										<v-card-actions class="card-action fv-card-action">
 											<v-spacer></v-spacer>
 											<v-btn color="blue-darken-1" variant="text" @click="close"> 取り消し </v-btn>
-											<v-btn color="blue-darken-1" variant="text" type="submit" @click="save"> 保存 </v-btn>
+											<v-btn color="blue-darken-1" variant="text" type="submit"> 保存 </v-btn>
 										</v-card-actions>
 									</v-form>
 								</v-card>
@@ -109,7 +109,7 @@ const vehicle_id = ref('');
 const favorite_vehicle_note = ref('');
 const vehicle_name = ref('');
 const vehicle_number = ref('');
-const vehicles = ref('');
+const vehicles = ref([]);
 const current_vehicle_id = ref('');
 const formErrors = ref({});
 const newFavoriteVehicles = ref([]);
@@ -118,9 +118,7 @@ const item_id = ref(0);
 const isMobile = ref(false);
 
 const onChangeVehicleSelect = (value) => {
-	let v = value.id
-	vehicle_id.value = v
-	return;
+	vehicle_id.value = value?.id ?? '';
 };
 
 const onResize = () => {
@@ -172,9 +170,9 @@ const vehicleRules = [
 const favoriteVehicleNoteIsValid = ref(true);
 const favoriteVehicleNoteRules = [
 	(value) => {
-		if (value > 200) {
+		if ((value?.length ?? 0) > 1000) {
 			favoriteVehicleNoteIsValid.value = false;
-			return '200文字以内で入力して下さい。';
+			return '1000文字以内で入力して下さい。';
 		}
 		favoriteVehicleNoteIsValid.value = true;
 		return true;
@@ -213,50 +211,41 @@ fetchFavoriteVehicles();
 
 // 登録の際にフォームのデータを空にする。
 const initialRegistrationData = () => {
-	vehicle_id.value = '',
-		favorite_vehicle_note.value = ''
-	return;
+	id.value = null;
+	vehicle_id.value = '';
+	favorite_vehicle_note.value = '';
 };
 
-// 投稿(create) daily_logを作成する。
+// よく乗る車両を登録する。
+const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
 const createItem = async () => {
 	try {
 		const res = await fetch(API_URL, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
+				'X-CSRF-Token': csrfToken,
 			},
 			body: JSON.stringify({
 				vehicle_id: vehicle_id.value,
 				favorite_vehicle_note: favorite_vehicle_note.value,
 			}),
 		});
-		// 失敗した場合の処理
+
 		if (!res.ok) {
-			const errorData = await res.json(); // エラーレスポンスの内容を取得
-			console.error('Error Response:', errorData); // エラーレスポンスをコンソールに表示
-			formErrors.value = errorData.errors || {};
-			if (isValid.value) {
-				return (dialogError.value = true);
-			}
-			console.error('フォームエラー:', JSON.stringify(toRaw(formErrors.value), null, 2));
-			if (errorData.errors) {
-				// エラーメッセージがある場合はそれを表示
-				console.error('Validation Errors:', errorData.errors);
-			}
-			const message = `An error has occured: ${res.status} - ${res.statusText}`;
-			throw new Error(message);
+			formErrors.value = await res.json();
+			dialogError.value = true;
+			return false;
 		}
 
 		const data = await res.json();
-		console.log(data);
 		items.value.push(data);
+		close();
+		return true;
 	} catch (err) {
-		console.error('Error:', err.message); // エラー情報をコンソールに表示
-		console.log('エラー内容：' + formErrors.value);
-		if (isValid.value) {
-			dialogError.value = true;
-		}
+		console.error('Error:', err.message);
+		dialogError.value = true;
+		return false;
 	}
 };
 
@@ -265,9 +254,14 @@ function deleteItem(item) {
 	dialogDelete.value = true;
 }
 const deleteItemConfirm = async (id) => {
-	await fetch(`${API_URL}${id}`, {
+	const res = await fetch(`${API_URL}${id}`, {
 		method: 'DELETE',
+		headers: { 'X-CSRF-Token': csrfToken },
 	});
+	if (!res.ok) {
+		dialogError.value = true;
+		return;
+	}
 	items.value = items.value.filter((item) => item.id !== id);
 	dialogDelete.value = false;
 };
@@ -290,19 +284,11 @@ function closeError() {
 		editedIndex.value = -1;
 	});
 }
-function save() {
-	// 編集時
-	if (editedIndex.value > -1) {
-		// console.log('編集')
-		updateItem();
-		// 新規作成時
-	} else {
-		// console.log('新規作成')
-		createItem();
-	}
-	if (isValid) {
-		// close()
-	}
+async function save() {
+	const { valid } = await form.value.validate();
+	if (!valid) return;
+
+	await createItem();
 }
 
 // ダイアログが閉じられたときの動作。
