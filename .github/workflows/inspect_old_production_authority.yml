@@ -1,0 +1,37 @@
+name: Inspect old ODO production authority
+
+on:
+  push:
+    branches:
+      - ops/recover-old-remote-20260907
+
+permissions:
+  contents: read
+
+jobs:
+  inspect-authority:
+    runs-on: [self-hosted, Linux, X64, odo-track]
+    timeout-minutes: 10
+    steps:
+      - name: Locate listener and Docker authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(hostname)" = "x162-43-90-90"
+          test "$(id -un)" = "agent"
+          echo "identity=$(id)"
+          echo '--- port 3100 listener ---'
+          ss -ltnp 2>/dev/null | grep ':3100' || true
+          echo '--- relevant processes ---'
+          ps -eo user:16,pid,ppid,args --sort=pid | grep -E '[p]uma|[s]idekiq|[p]ostgres|[r]edis-server|[d]ocker-proxy|[c]ontainerd-shim' || true
+          echo '--- docker sockets ---'
+          for s in /var/run/docker.sock /run/docker.sock /run/user/$(id -u)/docker.sock; do
+            if [ -S "$s" ]; then stat -c '%n mode=%a owner=%U:%G' "$s"; else echo "$s absent"; fi
+          done
+          echo '--- default Docker authority (no forced DOCKER_HOST) ---'
+          env -u DOCKER_HOST docker info --format 'root={{.DockerRootDir}} driver={{.Driver}}' 2>&1 || true
+          env -u DOCKER_HOST docker ps -a --format '{{.Names}}|{{.Image}}|{{.Status}}' 2>&1 || true
+          echo '--- rootless Docker authority ---'
+          export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+          DOCKER_HOST="unix:///run/user/$(id -u)/docker.sock" docker info --format 'root={{.DockerRootDir}} driver={{.Driver}}' 2>&1 || true
+          DOCKER_HOST="unix:///run/user/$(id -u)/docker.sock" docker ps -a --format '{{.Names}}|{{.Image}}|{{.Status}}' 2>&1 || true
