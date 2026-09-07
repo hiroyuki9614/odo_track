@@ -32,6 +32,46 @@ test.describe('public experience', () => {
     ).toBeVisible();
   });
 
+  test('registers a favorite vehicle after login', async ({ page }, testInfo) => {
+    const email = `playwright-${testInfo.project.name}@example.test`;
+    const candidateIndex = testInfo.project.name === 'ios-safari' ? 2 : 1;
+    const candidateLabel = `PWC${candidateIndex} - 80${candidateIndex}`;
+
+    await page.goto('/auth/login');
+    await page.getByLabel('メールアドレス').fill(email);
+    await page.getByLabel('パスワード').fill('playwright-password');
+
+    const loginResponse = page.waitForResponse(
+      response => response.url().endsWith('/api/daily_logs/') && response.request().method() === 'GET',
+    );
+    await page.locator('#new_user').getByRole('button', { name: 'ログイン' }).click();
+    await loginResponse;
+
+    const settingsResponse = page.waitForResponse(
+      response => response.url().endsWith('/api/favorite_vehicles/') && response.request().method() === 'GET',
+    );
+    await page.goto('/daily_logs#/setting');
+    await settingsResponse;
+    await expect(page.getByText('登録した車両一覧')).toBeVisible();
+
+    await page.getByRole('button', { name: '登録する' }).click();
+    await expect(page.getByText('車両を登録する')).toBeVisible();
+    await page.getByRole('combobox', { name: '車両' }).click();
+    await page.getByText(candidateLabel, { exact: true }).last().click();
+    await page.getByLabel('備考').fill('Playwright favorite vehicle');
+
+    const createResponse = page.waitForResponse(
+      response => response.url().endsWith('/api/favorite_vehicles/') && response.request().method() === 'POST',
+    );
+    const saveButton = page.getByRole('button', { name: '保存' });
+    if (testInfo.project.name === 'ios-safari') await saveButton.tap();
+    else await saveButton.click();
+
+    expect((await createResponse).status()).toBe(201);
+    await expect(page.getByText(`PWC${candidateIndex}`, { exact: true })).toBeVisible();
+    await expect(page.getByText('Playwright favorite vehicle', { exact: true })).toBeVisible();
+  });
+
   test('creates a daily log after login', async ({ page }, testInfo) => {
     const email = `playwright-${testInfo.project.name}@example.test`;
     await page.goto('/auth/login');

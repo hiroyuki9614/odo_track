@@ -23,4 +23,13 @@
   vehicle.save!
 
   FavoriteVehicle.find_or_create_by!(user: user, vehicle: vehicle)
+
+  candidate = Vehicle.find_or_initialize_by(
+    vehicle_name: "PWC#{index + 1}",
+    number: "80#{index + 1}",
+    manufacture: 'Playwright'
+  )
+  candidate.current_drive_distance = 2000
+  candidate.save!
+  user.favorite_vehicles.where(vehicle: candidate).delete_all
 end
