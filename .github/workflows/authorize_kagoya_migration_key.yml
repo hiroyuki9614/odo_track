@@ -1,0 +1,28 @@
+name: Authorize KAGOYA migration key on old host
+
+on:
+  push:
+    branches:
+      - ops/recover-old-remote-20260907
+
+permissions:
+  contents: read
+
+jobs:
+  authorize:
+    runs-on: [self-hosted, Linux, X64, odo-track]
+    timeout-minutes: 5
+    steps:
+      - name: Add bounded temporary KAGOYA migration key
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(hostname)" = "x162-43-90-90"
+          test "$(id -un)" = "agent"
+          mkdir -p "$HOME/.ssh"
+          chmod 700 "$HOME/.ssh"
+          touch "$HOME/.ssh/authorized_keys"
+          chmod 600 "$HOME/.ssh/authorized_keys"
+          key='ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDOLW708dzGJ0F8sUVhGZoM9NH3uYGDAOsY9N8T3iRaH odo-kagoya-migration-20260907'
+          grep -Fqx "$key" "$HOME/.ssh/authorized_keys" || printf '%s\n' "$key" >> "$HOME/.ssh/authorized_keys"
+          grep -Fqc 'odo-kagoya-migration-20260907' "$HOME/.ssh/authorized_keys" | grep -qx '1'
