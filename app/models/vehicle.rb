@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
 class Vehicle < ApplicationRecord
+  VEHICLE_NAME_MAX_LENGTH = 20
+  MANUFACTURE_MAX_LENGTH = 20
+
   include Discard::Model
   has_many :favorite_vehicles
   has_many :daily_log
 
-  validates :vehicle_name, presence: true, length: { maximum: 20 }
+  validates :vehicle_name, presence: true, length: { maximum: VEHICLE_NAME_MAX_LENGTH }
   validates :number, presence: true, length: { maximum: 5 }, numericality: { only_integer: true }
-  validates :manufacture, presence: true, length: { maximum: 20 }
+  validates :manufacture, presence: true, length: { maximum: MANUFACTURE_MAX_LENGTH }
   validates :current_drive_distance, length: { maximum: 10 }, numericality: { only_integer: true }, allow_blank: true
   validates :discarded_at, presence: true, allow_blank: true
 
