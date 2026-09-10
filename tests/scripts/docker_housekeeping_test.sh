@@ -102,4 +102,33 @@ grep -Fq 'bash "$HOUSEKEEPING_SCRIPT" pre-build' "$DEPLOY_SCRIPT" \
 grep -Fq 'bash "$HOUSEKEEPING_SCRIPT" post-deploy' "$DEPLOY_SCRIPT" \
   || fail 'deploy script does not run post-deploy housekeeping'
 
+HEALTHCHECK_LIB="${ROOT_DIR}/scripts/http_health_check.sh"
+[[ -f "$HEALTHCHECK_LIB" ]] || fail 'HTTP health helper is missing'
+
+cat > "$TMP_DIR/bin/curl" <<'EOF'
+#!/usr/bin/env bash
+set -Eeuo pipefail
+printf '%s' "${FAKE_HTTP_STATUS:-200}"
+exit "${FAKE_CURL_EXIT:-0}"
+EOF
+chmod +x "$TMP_DIR/bin/curl"
+
+if ! FAKE_HTTP_STATUS=200 PATH="$TMP_DIR/bin:$PATH" bash -c 'source "$1"; http_health_200 "http://example.test/up" 5' _ "$HEALTHCHECK_LIB"; then
+  fail 'HTTP 200 must pass health check'
+fi
+if FAKE_HTTP_STATUS=301 PATH="$TMP_DIR/bin:$PATH" bash -c 'source "$1"; http_health_200 "http://example.test/up" 5' _ "$HEALTHCHECK_LIB"; then
+  fail 'HTTP 301 must not pass health check'
+fi
+if FAKE_HTTP_STATUS=503 PATH="$TMP_DIR/bin:$PATH" bash -c 'source "$1"; http_health_200 "http://example.test/up" 5' _ "$HEALTHCHECK_LIB"; then
+  fail 'HTTP 503 must not pass health check'
+fi
+if FAKE_HTTP_STATUS=000 FAKE_CURL_EXIT=7 PATH="$TMP_DIR/bin:$PATH" bash -c 'source "$1"; http_health_200 "http://example.test/up" 5' _ "$HEALTHCHECK_LIB"; then
+  fail 'curl transport failure must not pass health check'
+fi
+
+grep -Fq -- "-H 'X-Forwarded-Proto: https'" "$DEPLOY_SCRIPT" \
+  || fail 'local deploy health check must mark the direct Rails request as forwarded HTTPS'
+grep -Fq 'http_health_200 "$PUBLIC_HEALTH_URL" 15' "$DEPLOY_SCRIPT" \
+  || fail 'public deploy health check must require exact HTTP 200'
+
 printf 'PASS: docker housekeeping safety and pressure behavior\n'
