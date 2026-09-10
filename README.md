@@ -3,9 +3,9 @@ ODO TRACK
 
 ## Live Demo
 
-The current live URL is maintained separately from this repository while the VPS
-deployment is being finalized. See the deployment notes supplied with the
-portfolio for the active address and demo credentials.
+Production is available at `https://odt.hiroyuki9614.com/`.
+The application is served from the KAGOYA VPS production stack described below.
+Demo credentials are supplied separately and are not committed to this repository.
 
 ## 基本技術
  - 一般ユーザー&管理ユーザー
@@ -39,7 +39,7 @@ portfolio for the active address and demo credentials.
 
 ## Deployment architecture
 
-Production runs as a rootless Docker Compose stack on the VPS:
+Production runs as a rootless Docker Compose stack on the KAGOYA VPS:
 
 ```text
 Nginx (host, HTTPS) -> 127.0.0.1:3100 -> Rails/Puma container
@@ -47,7 +47,10 @@ Nginx (host, HTTPS) -> 127.0.0.1:3100 -> Rails/Puma container
 ```
 
 Secrets are supplied through the VPS-only `.env.production` file and are not
-committed to Git.
+committed to Git. Production deploy verification requires HTTP 200 from both
+the direct local Rails `/up` probe (with forwarded HTTPS context) and the public
+`https://odt.hiroyuki9614.com/up` endpoint; redirects and non-200 responses are
+not accepted as healthy deployments.
 
 ## Demo account usage
 
@@ -86,7 +89,7 @@ data.
 | reset_password_token     | パスワード再設定用トークン | string     |
 | reset_password_sent_at   | パスワード再設定要求時間   | datetime   |
 | remember_created_at      | remember_me                | datetime   |
-| confirmation_token       | ユーザー認証トークン       | string     |
+| confirmation_token      | ユーザー認証トークン       | string     |
 | confirmed_at             | ユーザー認証時間           | datetime   |
 | confirmation_sent_at     | ユーザー認証要求時間       | datetime   |
 | unconfirmation_email     | email未認証                | string     |
