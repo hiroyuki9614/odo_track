@@ -8,6 +8,7 @@ PUBLIC_HEALTH_URL="${ODO_PUBLIC_HEALTH_URL:-https://odt.hiroyuki9614.com/up}"
 LOCAL_HEALTH_URL="${ODO_LOCAL_HEALTH_URL:-http://127.0.0.1:3100/up}"
 EXPECTED_USER="${ODO_DEPLOY_USER:-agent}"
 HOUSEKEEPING_SCRIPT="${ODO_DOCKER_HOUSEKEEPING_SCRIPT:-${APP_DIR}/scripts/docker_housekeeping.sh}"
+HEALTHCHECK_LIB="${ODO_HEALTHCHECK_LIB:-${APP_DIR}/scripts/http_health_check.sh}"
 
 log() {
   printf '[odo-deploy] %s\n' "$*"
@@ -51,6 +52,9 @@ fi
 
 [[ -f "$COMPOSE_FILE" ]] || fail "compose file not found after main sync: ${COMPOSE_FILE}"
 [[ -f "$HOUSEKEEPING_SCRIPT" ]] || fail "Docker housekeeping script not found: ${HOUSEKEEPING_SCRIPT}"
+[[ -f "$HEALTHCHECK_LIB" ]] || fail "HTTP health helper not found: ${HEALTHCHECK_LIB}"
+# shellcheck source=/dev/null
+source "$HEALTHCHECK_LIB"
 
 compose=(
   docker compose
@@ -77,7 +81,7 @@ log "starting application and worker"
 log "waiting for local application health"
 healthy=0
 for _ in $(seq 1 45); do
-  if curl --fail --silent --show-error --max-time 5 "$LOCAL_HEALTH_URL" >/dev/null; then
+  if http_health_200 "$LOCAL_HEALTH_URL" 5 -H 'X-Forwarded-Proto: https'; then
     healthy=1
     break
   fi
@@ -90,7 +94,7 @@ worker_id="$("${compose[@]}" ps -q worker)"
 [[ "$(docker inspect -f '{{.State.Running}}' "$worker_id")" == "true" ]] || fail "worker container is not running"
 
 log "checking external HTTPS endpoint"
-curl --fail --silent --show-error --max-time 15 "$PUBLIC_HEALTH_URL" >/dev/null \
+http_health_200 "$PUBLIC_HEALTH_URL" 15 \
   || fail "external health check failed: ${PUBLIC_HEALTH_URL}"
 
 log "running Docker housekeeping after deployment"
