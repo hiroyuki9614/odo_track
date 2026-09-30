@@ -46,7 +46,8 @@ jobs:
 
       - name: Prepare test database
         run: |
-          bundle exec rails db:prepare
+          rm -f storage/test.sqlite3
+          bundle exec rails db:schema:load
           bundle exec rails runner script/prepare_playwright_e2e.rb
 
       - name: Run macOS and iOS E2E

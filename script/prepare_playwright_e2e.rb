@@ -13,6 +13,7 @@
   user.password_confirmation = 'playwright-password'
   user.save!
   user.daily_logs.delete_all
+  user.favorite_vehicles.delete_all
 
   vehicle = Vehicle.find_or_initialize_by(
     vehicle_name: "PW#{index + 1}",
@@ -22,5 +23,13 @@
   vehicle.current_drive_distance = 1000
   vehicle.save!
 
-  FavoriteVehicle.find_or_create_by!(user: user, vehicle: vehicle)
+  FavoriteVehicle.create!(user: user, vehicle: vehicle)
+
+  registration_vehicle = Vehicle.find_or_initialize_by(
+    vehicle_name: "PW#{index + 1}-ADD",
+    number: "91#{index + 1}",
+    manufacture: 'Playwright'
+  )
+  registration_vehicle.current_drive_distance = 1000
+  registration_vehicle.save!
 end
