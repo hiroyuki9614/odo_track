@@ -42,6 +42,15 @@ jobs:
       - name: Reclaim Docker headroom before CI build
         run: bash scripts/docker_housekeeping.sh pre-build
 
+      - name: Report Docker capacity when build is blocked
+        if: failure()
+        shell: bash
+        run: |
+          df -h /home/agent/.local/share/docker || true
+          docker system df || true
+          echo "OdoTrack image references (read-only):"
+          docker image ls --format '{{.Repository}}:{{.Tag}} {{.ID}} {{.Size}}' | grep -E '^(odo[_-]track|<none>)' | head -40 || true
+
       - name: Build CI image
         run: docker build -f Dockerfile.ci -t "odo-track-ci:${GITHUB_SHA}" .
 
