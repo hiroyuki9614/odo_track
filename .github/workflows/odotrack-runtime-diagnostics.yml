@@ -75,6 +75,36 @@ jobs:
           print("redis_log_error_flags="+json.dumps({k:bool(re.search(v,raw)) for k,v in flags.items()},sort_keys=True))
           print("redis_log_line_count="+str(len(raw.splitlines())))
           '
+          python3 - <<'PY'
+          import json, subprocess, re
+          ins=subprocess.run(["docker","inspect","odo_track-redis-1"],capture_output=True,text=True,check=True)
+          mount=next((m for m in json.loads(ins.stdout)[0].get("Mounts",[]) if m.get("Destination")=="/data"),None)
+          if not mount or mount.get("Type")!="volume":
+              raise SystemExit("redis_data_volume_not_found")
+          volume=mount["Name"]
+          print("redis_volume_type=managed_named_volume")
+          result=subprocess.run([
+              "docker","run","--rm","--network","none","-v",f"{volume}:/data:ro",
+              "--entrypoint","sh","redis:7-alpine","-c",
+              'find /data -maxdepth 2 -type f -exec stat -c "%n %s" {} \\;'
+          ],capture_output=True,text=True,timeout=35)
+          print("redis_volume_metadata_rc=",result.returncode)
+          for line in result.stdout.splitlines():
+              if line.startswith("/data/"):
+                  print("redis_file="+line[:220])
+          filelines=result.stdout.lower()
+          manifest="/data/appendonlydir/appendonly.aof.manifest" if "appendonly.aof.manifest" in filelines else "/data/appendonly.aof"
+          chk=subprocess.run([
+              "docker","run","--rm","--network","none","-v",f"{volume}:/data:ro",
+              "--entrypoint","redis-check-aof","redis:7-alpine",manifest
+          ],capture_output=True,text=True,timeout=45)
+          print("redis_aof_check_rc=",chk.returncode)
+          out=chk.stdout+"\\n"+chk.stderr
+          for line in out.splitlines():
+              if re.search(r"aof analyzed|ok_up_to|file size|valid|corrupt|error|diff|truncat|not exist|not found",line,re.I):
+                  clean=re.sub(r"(/[^\s,]+)", "<path>",line)
+                  print("redis_aof_check_summary="+clean[:280])
+          PY
           for url in http://127.0.0.1:3100/up https://odt.hiroyuki9614.com/up; do
             printf 'health_http='
             curl --silent --output /dev/null --write-out '%{http_code}\n' --max-time 7 -H 'X-Forwarded-Proto: https' "$url" || true
