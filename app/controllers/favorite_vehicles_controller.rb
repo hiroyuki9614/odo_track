@@ -1,4 +1,6 @@
 class FavoriteVehiclesController < ApplicationController
+  before_action :authenticate_user!
+  before_action :authorize_public_demo_vehicle, only: :create
   def new
     @favorite_vehicle = current_user.favorite_vehicles.build
   end
@@ -20,7 +22,7 @@ class FavoriteVehiclesController < ApplicationController
   end
 
   def destroy
-    @favorite_vehicle = FavoriteVehicle.find(params[:id])
+    @favorite_vehicle = public_demo_account? ? current_user.favorite_vehicles.find(params[:id]) : FavoriteVehicle.find(params[:id])
     @favorite_vehicle.destroy
     redirect_to root_path, status: :see_other
   end
@@ -28,6 +30,14 @@ class FavoriteVehiclesController < ApplicationController
   private
 
   def favorite_vehicle_params
-    params.require(:favorite_vehicle).permit(:vehicle_id, :user_id, :favorite_vehicle_note)
+    permitted = params.require(:favorite_vehicle).permit(:vehicle_id, :user_id, :favorite_vehicle_note)
+    permitted[:user_id] = current_user.id if public_demo_account?
+    permitted
+  end
+
+  def authorize_public_demo_vehicle
+    return unless public_demo_account?
+
+    head :forbidden unless public_demo_vehicles.exists?(id: params.dig(:favorite_vehicle, :vehicle_id))
   end
 end
