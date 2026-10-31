@@ -7,6 +7,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_sign_up_params, only: [:create]
   before_action :configure_account_update_params, only: [:update]
   before_action :admin_user, only: %i[edit destroy update]
+  before_action :limit_public_demo_admin_user_lookup, only: :edit
   # protect_from_forgery
 
   # GET /resource/sign_up
@@ -99,6 +100,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   protected
+
+  def limit_public_demo_admin_user_lookup
+    return unless public_demo_admin? && params[:id].present?
+
+    head :not_found unless public_demo_users.exists?(id: params[:id])
+  end
 
   def by_admin_user?(_params)
     user_signed_in? && current_user.admin?
