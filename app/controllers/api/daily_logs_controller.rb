@@ -27,7 +27,7 @@ module Api
                      current_user.daily_logs.build(
                        departure_datetime: Time.zone.today,
                        arrival_datetime: Time.now.strftime('%Y-%m-%d %H:%M'),
-                       departure_location: DailyLog.kept.last.arrival_location
+                       departure_location: current_user.daily_logs.kept.last.arrival_location
                      )
                    else
                      current_user.daily_logs.build(
