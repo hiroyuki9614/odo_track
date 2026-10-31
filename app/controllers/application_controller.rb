@@ -37,8 +37,9 @@ class ApplicationController < ActionController::Base
   def protect_public_demo_mutations
     return unless public_demo_account?
 
-    is_logout = devise_controller? && controller_name == 'sessions' && action_name == 'destroy'
-    if public_demo_admin? && !request.get? && !request.head? && !is_logout
+    is_session_auth_action = devise_controller? && controller_name == 'sessions' &&
+                             %w[create destroy].include?(action_name)
+    if public_demo_admin? && !request.get? && !request.head? && !is_session_auth_action
       head :forbidden
     elsif devise_controller? && controller_name == 'registrations' &&
           %w[update destroy].include?(action_name)
