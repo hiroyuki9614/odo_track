@@ -1,0 +1,23 @@
+name: Analyze Redis AOF salvage offline
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/odotrack-aof-salvage-analysis.yml'
+      - 'scripts/analyze_aof_salvage.py'
+
+jobs:
+  analyze:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/odotrack-redis-aof-staging-20261031'
+    runs-on: [self-hosted, Linux, X64, odo-track]
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse archived AOF frames without reading user payloads into logs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(id -un)" = agent
+          archive_dir="/home/agent/.local/share/odotrack-redis-recovery/41203796895"
+          (cd "$archive_dir" && sha256sum -c redis-volume.before.tar.sha256)
+          python3 scripts/analyze_aof_salvage.py
