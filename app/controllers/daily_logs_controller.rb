@@ -65,7 +65,7 @@ class DailyLogsController < ApplicationController
   end
 
   def edit
-    @daily_log = DailyLog.find(params[:id])
+    @daily_log = public_demo_account? ? current_user.daily_logs.find(params[:id]) : DailyLog.find(params[:id])
 
     return unless @daily_log.user_id != current_user.id
 
