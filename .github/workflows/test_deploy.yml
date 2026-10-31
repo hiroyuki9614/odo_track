@@ -59,6 +59,20 @@ jobs:
             docker image rm "$image" || echo "preserving image that cannot be safely removed: $image"
           done
 
+      - name: Reclaim old unreferenced Docker images under disk pressure
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker_root="$(docker info --format '{{.DockerRootDir}}')"
+          disk_usage="$(df -P "$docker_root" | awk 'NR == 2 { gsub(/%/, "", $5); print $5 }')"
+          [[ "$disk_usage" =~ ^[0-9]+$ ]] || exit 1
+          if (( disk_usage >= 95 )); then
+            echo "Docker storage is at ${disk_usage}%; removing only unused images older than 24h"
+            # Docker preserves every image referenced by a container, including stopped containers.
+            # Do not prune containers or volumes and never force-remove referenced images.
+            docker image prune --all --force --filter 'until=24h'
+          fi
+
       - name: Reclaim Docker headroom before CI build
         run: bash scripts/docker_housekeeping.sh pre-build
 
