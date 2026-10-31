@@ -6,7 +6,7 @@ module Api
 
     def index
       @favorite_vehicles = current_user.favorite_vehicles.order(created_at: :asc).page params[:page]
-      @vehicles = Vehicle.kept
+      @vehicles = public_demo_account? ? public_demo_vehicles.kept : Vehicle.kept
       render json: {
         favorite_vehicles: ActiveModelSerializers::SerializableResource.new(@favorite_vehicles,
                                                                             each_serializer: FavoriteVehicleSerializer),
