@@ -58,9 +58,13 @@ not accepted as healthy deployments.
 
 ## Demo account usage
 
-Demo accounts are provisioned with deployment-local credentials. Do not reuse
-them outside the portfolio environment or use the demo admin account for real
-data.
+Demo accounts are provisioned with deployment-local credentials. These
+credentials are intentionally public and must be unique to this demo. Do not
+reuse them outside the portfolio environment or use the demo admin account for
+real data. The shared demo environment must contain only disposable sample
+data. The public demo admin is read-only and can view only demo users, logs and
+vehicles; unrelated PDF exports cannot be downloaded. The regular demo user
+can try daily-log features, but cannot change the shared account credentials.
 
  ## 改良予定
  - PDFの出力機能の強化（フォルダの作成・指定のgoogle driveアップロードなど)
