@@ -99,7 +99,24 @@ jobs:
               "--entrypoint","redis-check-aof","redis:7-alpine",manifest
           ],capture_output=True,text=True,timeout=45)
           print("redis_aof_check_rc=",chk.returncode)
+          print("redis_aof_stdout_chars=",len(chk.stdout))
+          print("redis_aof_stderr_chars=",len(chk.stderr))
           out=chk.stdout+"\\n"+chk.stderr
+          reason_flags={
+            "oci_runtime_error":r"oci runtime create failed|runc create failed",
+            "docker_daemon_error":r"error response from daemon",
+            "executable_missing":r"executable file not found|not found in \\$path|no such file",
+            "unsupported_args":r"usage:|unrecognized|unknown option",
+            "invalid_aof":r"not valid|bad file format|corrupt|invalid",
+            "cannot_open_manifest":r"cannot open|can't open|failed opening",
+            "redis_version_mismatch":r"unknown rdb encoding|unknown rdb format",
+          }
+          print("redis_aof_checker_reason_flags="+json.dumps({k:bool(re.search(v,out,re.I)) for k,v in reason_flags.items()},sort_keys=True))
+          for line in out.splitlines()[:8]:
+            if re.search(r"usage|error|not found|daemon|runc|manifest|aof|invalid|corrupt|fix|version|fatal|file",line,re.I):
+              line=re.sub(r"/[a-zA-Z0-9/_.-]+","<path>",line)
+              line=re.sub(r"(?:[0-9a-fA-F]{24,}|[^\\s]+@[^\\s]+)","<redacted>",line)
+              print("redis_aof_checker_message="+line[:180])
           for line in out.splitlines():
               if re.search(r"aof analyzed|ok_up_to|file size|valid|corrupt|error|diff|truncat|not exist|not found",line,re.I):
                   clean=re.sub(r"(/[^\s,]+)", "<path>",line)
