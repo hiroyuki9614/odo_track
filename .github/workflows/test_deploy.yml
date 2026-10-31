@@ -39,6 +39,26 @@ jobs:
           bash -n scripts/deploy_production.sh scripts/docker_housekeeping.sh tests/scripts/docker_housekeeping_test.sh
           bash tests/scripts/docker_housekeeping_test.sh
 
+      - name: Remove unused legacy OdoTrack test images only
+        shell: bash
+        run: |
+          set -euo pipefail
+          for image in \
+            odo-track-ci:main-repro-28c2 \
+            odo-track-ci:healthcheck-local \
+            odo-track-ios-form-fix:test \
+            odo-track-preflight:a4aa63f
+          do
+            if ! docker image inspect "$image" >/dev/null 2>&1; then
+              continue
+            fi
+            if [[ -n "$(docker ps --all --quiet --filter "ancestor=$image")" ]]; then
+              echo "preserving image referenced by a container: $image"
+              continue
+            fi
+            docker image rm "$image" || echo "preserving image that cannot be safely removed: $image"
+          done
+
       - name: Reclaim Docker headroom before CI build
         run: bash scripts/docker_housekeeping.sh pre-build
 
