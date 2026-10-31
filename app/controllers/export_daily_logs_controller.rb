@@ -5,7 +5,8 @@ class ExportDailyLogsController < ApplicationController
   before_action :admin_user
 
   def index
-    @users = User.kept.order(created_at: :desc).page params[:page]
+    users = public_demo_admin? ? public_demo_users : User.all
+    @users = users.kept.order(created_at: :desc).page params[:page]
   end
 
   def export_pdf
@@ -31,7 +32,8 @@ class ExportDailyLogsController < ApplicationController
     @first_day = Date.current.beginning_of_month
     @last_day = @first_day.end_of_month
 
-    @user = User.find(params[:id])
+    users = public_demo_admin? ? public_demo_users : User.all
+    @user = users.find(params[:id])
     @daily_logs = @user.daily_logs.kept.where(created_at: @first_day.beginning_of_day..@last_day.end_of_day)
   end
 
