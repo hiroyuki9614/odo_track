@@ -53,6 +53,9 @@ fi
 [[ -f "$COMPOSE_FILE" ]] || fail "compose file not found after main sync: ${COMPOSE_FILE}"
 [[ -f "$HOUSEKEEPING_SCRIPT" ]] || fail "Docker housekeeping script not found: ${HOUSEKEEPING_SCRIPT}"
 [[ -f "$HEALTHCHECK_LIB" ]] || fail "HTTP health helper not found: ${HEALTHCHECK_LIB}"
+[[ -f "$APP_DIR/scripts/ensure_demo_credentials.py" ]] || fail "Demo credential bootstrap script missing"
+log "ensuring portfolio-only demo credentials are provisioned locally"
+python3 "$APP_DIR/scripts/ensure_demo_credentials.py" "$ENV_FILE"
 # shellcheck source=/dev/null
 source "$HEALTHCHECK_LIB"
 
