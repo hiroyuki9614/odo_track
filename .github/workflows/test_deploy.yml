@@ -38,6 +38,7 @@ jobs:
         run: |
           bash -n scripts/deploy_production.sh scripts/docker_housekeeping.sh tests/scripts/docker_housekeeping_test.sh
           bash tests/scripts/docker_housekeeping_test.sh
+          python3 -m unittest discover -s tests/scripts -p 'test_ensure_demo_credentials.py'
 
       - name: Remove unused legacy OdoTrack test images only
         shell: bash

@@ -9,7 +9,8 @@ Public, portfolio-only demo credentials are rendered on the top page from the
 KAGOYA deployment's `DEMO_ADMIN_PASSWORD` and `DEMO_USER_PASSWORD` environment
 variables. Password values must not be committed to this repository. The
 production deploy re-provisions the dedicated demo accounts from those values
-before the new version is started; missing values fail the deploy.
+before the new version is started. Missing deployment-local demo-only values are
+generated once with cryptographic randomness and never printed or committed.
 
 ## 基本技術
  - 一般ユーザー&管理ユーザー
