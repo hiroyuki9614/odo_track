@@ -6,8 +6,9 @@ module Api
     before_action :admin_user
 
     def index
-      @users = User.where(discarded_at: nil).order(created_at: :asc).page params[:page]
-      @discarded_users = User.where.not(discarded_at: nil).order(created_at: :asc).page params[:page]
+      users = public_demo_admin? ? public_demo_users : User.all
+      @users = users.where(discarded_at: nil).order(created_at: :asc).page params[:page]
+      @discarded_users = users.where.not(discarded_at: nil).order(created_at: :asc).page params[:page]
       render json: {
         users: ActiveModelSerializers::SerializableResource.new(@users, each_serializer: UserSerializer),
         discarded_users: ActiveModelSerializers::SerializableResource.new(@discarded_users,

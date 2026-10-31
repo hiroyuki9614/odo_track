@@ -8,10 +8,11 @@ module Api
     before_action :admin_user, except: %i[index]
 
     def index
-      @q = Vehicle.where(discarded_at: nil).ransack(params[:q])
+      vehicles = public_demo_account? ? public_demo_vehicles : Vehicle.all
+      @q = vehicles.where(discarded_at: nil).ransack(params[:q])
       @vehicles = @q.result(distinct: true).page params[:page]
       @q.sorts = 'created_at desc' if @q.sorts.empty?
-      @discarded_vehicles = Vehicle.where.not(discarded_at: nil).order(created_at: :asc).page params[:page]
+      @discarded_vehicles = vehicles.where.not(discarded_at: nil).order(created_at: :asc).page params[:page]
       render json: {
         vehicles: ActiveModelSerializers::SerializableResource.new(@vehicles, each_serializer: VehicleSerializer),
         discarded_vehicles: ActiveModelSerializers::SerializableResource.new(@discarded_vehicles,

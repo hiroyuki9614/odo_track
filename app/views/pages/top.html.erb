@@ -6,10 +6,52 @@
     <%= message %>
   </div>
 <% end %>
+<% unless user_signed_in? %>
+  <% demo_admin_password = ENV['DEMO_ADMIN_PASSWORD'].presence %>
+  <% demo_user_password = ENV['DEMO_USER_PASSWORD'].presence %>
+  <section class="container my-4" aria-labelledby="demo-login-heading">
+    <div class="card shadow-sm border-primary">
+      <div class="card-body">
+        <h2 id="demo-login-heading" class="h5 mb-3">採用ご担当者様向け デモログイン</h2>
+        <p class="mb-3">管理者・一般ユーザーの画面をそれぞれお試しいただけます。</p>
+        <% if demo_admin_password && demo_user_password %>
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-md-6">
+              <div class="border rounded p-3 h-100">
+                <h3 class="h6 fw-bold">管理者デモ（閲覧専用）</h3>
+                <dl class="mb-0">
+                  <dt>ID（メールアドレス）</dt>
+                  <dd><code class="user-select-all">portfolio-demo-admin@example.com</code></dd>
+                  <dt>パスワード</dt>
+                  <dd><code class="user-select-all"><%= demo_admin_password %></code></dd>
+                </dl>
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="border rounded p-3 h-100">
+                <h3 class="h6 fw-bold">一般ユーザーデモ</h3>
+                <dl class="mb-0">
+                  <dt>ID（メールアドレス）</dt>
+                  <dd><code class="user-select-all">portfolio-demo-user@example.com</code></dd>
+                  <dt>パスワード</dt>
+                  <dd><code class="user-select-all"><%= demo_user_password %></code></dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+          <p class="small text-muted">公開ポートフォリオ用の共有デモアカウントです。実際の個人情報や業務データは入力しないでください。</p>
+          <%= link_to 'デモにログインする', new_user_session_path, class: 'btn btn-primary text-white' %>
+        <% else %>
+          <p class="text-muted mb-0">デモログイン情報は現在準備中です。</p>
+        <% end %>
+      </div>
+    </div>
+  </section>
+<% end %>
+
 <h5 class="mx-2 mt-4">このアプリについて</h5><br>
 <p class="m-3">業務で使用する運転日報を記録・管理するアプリです。</p>
 <p class="m-3">走行距離や運転した車両を記録し、日報として管理できます。</p><br>
-<p class="m-2">ポートフォリオ閲覧用のデモアカウントを用意しています。ログイン情報は公開用の案内をご確認ください。</p><br>
 <p class="m-2">制作の背景</p>
 <p class="m-3">以前の職場では、運転日報を手書きで記入しており、管理の煩雑さや入力の手間が課題になっていました。</p>
 <p class="m-3">そのような日常業務の非効率を少しでも改善できる仕組みを作りたいと考え、このアプリを制作しました。</p><br>

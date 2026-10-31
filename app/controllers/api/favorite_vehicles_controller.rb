@@ -2,11 +2,14 @@ module Api
   class FavoriteVehiclesController < ApplicationController
     before_action :authenticate_user!
     # before_action :admin_user, except: %i[show index]
+    before_action :authorize_public_demo_vehicle, only: :create
     protect_from_forgery except: %i[create destroy]
 
     def index
-      @favorite_vehicles = current_user.favorite_vehicles.order(created_at: :asc).page params[:page]
-      @vehicles = Vehicle.kept
+      favorites = current_user.favorite_vehicles
+      favorites = favorites.where(vehicle_id: public_demo_vehicles.select(:id)) if public_demo_account?
+      @favorite_vehicles = favorites.order(created_at: :asc).page params[:page]
+      @vehicles = public_demo_account? ? public_demo_vehicles.kept : Vehicle.kept
       render json: {
         favorite_vehicles: ActiveModelSerializers::SerializableResource.new(@favorite_vehicles,
                                                                             each_serializer: FavoriteVehicleSerializer),
@@ -37,7 +40,15 @@ module Api
     private
 
     def favorite_vehicle_params
-      params.require(:favorite_vehicle).permit(:vehicle_id, :user_id, :favorite_vehicle_note)
+      permitted = params.require(:favorite_vehicle).permit(:vehicle_id, :user_id, :favorite_vehicle_note)
+      permitted[:user_id] = current_user.id if public_demo_account?
+      permitted
+    end
+
+    def authorize_public_demo_vehicle
+      return unless public_demo_account?
+
+      head :forbidden unless public_demo_vehicles.exists?(id: params.dig(:favorite_vehicle, :vehicle_id))
     end
   end
 end

@@ -1,0 +1,19 @@
+name: Portable Rails Regression
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  rspec:
+    name: Rails and asset regression (GitHub-hosted)
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build isolated test image
+        run: docker build -f Dockerfile.ci -t odo-track-regression:${{ github.sha }} .
+      - name: Run assets and RSpec
+        run: docker run --rm odo-track-regression:${{ github.sha }}

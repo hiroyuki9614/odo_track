@@ -2,7 +2,7 @@ class DailyLogsForAdminController < ApplicationController
   before_action :authenticate_user!
   before_action :admin_user
   def index
-    @daily_logs_for_admin = DailyLog.all
+    @daily_logs_for_admin = public_demo_admin? ? public_demo_logs : DailyLog.all
   end
 
   private

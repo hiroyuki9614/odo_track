@@ -3,6 +3,7 @@
 module Api
   class DailyLogsController < ApplicationController
     before_action :authenticate_user!
+    before_action :authorize_public_demo_vehicle, only: %i[create update]
     # protect_from_forgery except: %i[]
 
     def index
@@ -12,7 +13,9 @@ module Api
       @q.sorts = 'created_at desc' if @q.sorts.empty?
       @daily_logs = @q.result(distinct: true).includes(:vehicle).page(page)
       @total_pages = @daily_logs.total_pages
-      favorite_vehicles_data = current_user.favorite_vehicles.includes(:vehicle).map do |fv|
+      favorites = current_user.favorite_vehicles.includes(:vehicle)
+      favorites = favorites.where(vehicle_id: public_demo_vehicles.select(:id)) if public_demo_account?
+      favorite_vehicles_data = favorites.map do |fv|
         { vehicle_name: "#{fv.vehicle.vehicle_name} - #{fv.vehicle.number}", vehicle_id: fv.vehicle.id,
           vehicle_current_drive_distance: fv.vehicle.current_drive_distance }
       end
@@ -27,7 +30,7 @@ module Api
                      current_user.daily_logs.build(
                        departure_datetime: Time.zone.today,
                        arrival_datetime: Time.now.strftime('%Y-%m-%d %H:%M'),
-                       departure_location: DailyLog.kept.last.arrival_location
+                       departure_location: current_user.daily_logs.kept.last.arrival_location
                      )
                    else
                      current_user.daily_logs.build(
@@ -71,7 +74,7 @@ module Api
     private
 
     def daily_log_params
-      params.require(:daily_log).permit(:id,
+      permitted = params.require(:daily_log).permit(:id,
                                         :departure_datetime,
                                         :arrival_datetime,
                                         :departure_distance,
@@ -82,6 +85,15 @@ module Api
                                         :is_alcohol_check,
                                         :user_id,
                                         :vehicle_id)
+      permitted[:user_id] = current_user.id if public_demo_account?
+      permitted
+    end
+
+    def authorize_public_demo_vehicle
+      return unless public_demo_account?
+
+      vehicle_id = params.dig(:daily_log, :vehicle_id)
+      head :forbidden unless public_demo_vehicles.exists?(id: vehicle_id)
     end
 
     # def correct_user

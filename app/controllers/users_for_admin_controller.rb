@@ -5,11 +5,13 @@ class UsersForAdminController < ApplicationController
   before_action :admin_user
 
   def print_index
-    @users = User.where(discarded_at: nil).order(created_at: :asc).page params[:page]
+    users = public_demo_admin? ? public_demo_users : User.all
+    @users = users.where(discarded_at: nil).order(created_at: :asc).page params[:page]
   end
 
   def print
-    @user = User.find(params[:id])
+    users = public_demo_admin? ? public_demo_users : User.all
+    @user = users.find(params[:id])
     @daily_log = @user.daily_logs.kept
   end
 

@@ -5,7 +5,11 @@ ODO TRACK
 
 Production is available at `https://odt.hiroyuki9614.com/`.
 The application is served from the KAGOYA VPS production stack described below.
-Demo credentials are supplied separately and are not committed to this repository.
+Public, portfolio-only demo credentials are rendered on the top page from the
+KAGOYA deployment's `DEMO_ADMIN_PASSWORD` and `DEMO_USER_PASSWORD` environment
+variables. Password values must not be committed to this repository. The
+production deploy re-provisions the dedicated demo accounts from those values
+before the new version is started; missing values fail the deploy.
 
 ## 基本技術
  - 一般ユーザー&管理ユーザー
@@ -54,9 +58,13 @@ not accepted as healthy deployments.
 
 ## Demo account usage
 
-Demo accounts are provisioned with deployment-local credentials. Do not reuse
-them outside the portfolio environment or use the demo admin account for real
-data.
+Demo accounts are provisioned with deployment-local credentials. These
+credentials are intentionally public and must be unique to this demo. Do not
+reuse them outside the portfolio environment or use the demo admin account for
+real data. The shared demo environment must contain only disposable sample
+data. The public demo admin is read-only and can view only demo users, logs and
+vehicles; unrelated PDF exports cannot be downloaded. The regular demo user
+can try daily-log features, but cannot change the shared account credentials.
 
  ## 改良予定
  - PDFの出力機能の強化（フォルダの作成・指定のgoogle driveアップロードなど)

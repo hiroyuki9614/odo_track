@@ -75,6 +75,11 @@ log "ensuring database and redis are running"
 log "preparing database"
 "${compose[@]}" run --rm app bundle exec rails db:prepare
 
+log "provisioning dedicated public demo accounts"
+# The runner reads credentials only from the deployment-local env_file; never log them.
+# Fail before replacing the running application when either value is absent.
+"${compose[@]}" run --rm app bundle exec rails runner deploy/create_demo_data.rb
+
 log "starting application and worker"
 "${compose[@]}" up -d --no-build app worker
 
@@ -96,6 +101,16 @@ worker_id="$("${compose[@]}" ps -q worker)"
 log "checking external HTTPS endpoint"
 http_health_200 "$PUBLIC_HEALTH_URL" 15 \
   || fail "external health check failed: ${PUBLIC_HEALTH_URL}"
+
+log "checking the publicly rendered demo access panel"
+PUBLIC_HOME_URL="${ODO_PUBLIC_HOME_URL:-https://odt.hiroyuki9614.com/}"
+homepage="$(curl --fail --silent --show-error --max-time 15 "$PUBLIC_HOME_URL")" \
+  || fail "public home page could not be fetched"
+[[ "$homepage" == *"portfolio-demo-admin@example.com"* &&
+   "$homepage" == *"portfolio-demo-user@example.com"* &&
+   "$homepage" == *"採用ご担当者様向け デモログイン"* ]] \
+  || fail "public demo access panel missing from the top page"
+unset homepage
 
 log "running Docker housekeeping after deployment"
 bash "$HOUSEKEEPING_SCRIPT" post-deploy
