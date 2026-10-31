@@ -74,7 +74,7 @@ class DailyLogsController < ApplicationController
   end
 
   def update
-    @daily_log = DailyLog.find(params[:id])
+    @daily_log = public_demo_account? ? current_user.daily_logs.find(params[:id]) : DailyLog.find(params[:id])
     if @daily_log.update(daily_log_params)
       redirect_to daily_logs_path, notice: '運転日報を更新しました。'
     else
@@ -83,7 +83,7 @@ class DailyLogsController < ApplicationController
   end
 
   def destroy
-    @daily_log = DailyLog.find(params[:id])
+    @daily_log = public_demo_account? ? current_user.daily_logs.find(params[:id]) : DailyLog.find(params[:id])
     @daily_log.discard
     flash[:success] = '運転日報を削除しました。'
     redirect_to daily_logs_path, status: :see_other
