@@ -53,6 +53,28 @@ jobs:
                   res = subprocess.run(["docker","exec",name,"redis-cli","ping"],capture_output=True,text=True)
                   print(f"redis_ping_rc={res.returncode}; pong={res.stdout.strip()=='PONG'}")
           PY
+          # Read Redis startup logs only. Produce normalized failure hints, no raw data,
+          # paths, credentials, Redis payloads or unbounded log content.
+          docker logs --tail 160 odo_track-redis-1 2>&1 | python3 -c '
+          import re,sys,json
+          raw=sys.stdin.read().lower()
+          flags={
+            "permission_denied": r"permission denied|operation not permitted",
+            "aof_corruption": r"bad file format|append only file is not valid|unexpected end of file|aof.*corrupt|corrupt.*aof",
+            "aof_loading_failure": r"fatal error.*aof|reading the append only file|short read.*aof",
+            "rdb_loading_failure": r"fatal error.*rdb|short read.*rdb|rdb.*corrupt|rdb.*format",
+            "disk_full": r"no space left on device|disk full",
+            "oom": r"cannot allocate memory|out of memory|oom",
+            "read_only": r"read-only file system",
+            "config_failure": r"fatal config file error|bad directive",
+            "fatal_signal": r"signal 11|segmentation fault|sigsegv",
+            "background_save": r"background saving error|failed saving",
+            "redis_usable": r"ready to accept connections",
+            "raw_fatal": r"fatal|error|fail",
+          }
+          print("redis_log_error_flags="+json.dumps({k:bool(re.search(v,raw)) for k,v in flags.items()},sort_keys=True))
+          print("redis_log_line_count="+str(len(raw.splitlines())))
+          '
           for url in http://127.0.0.1:3100/up https://odt.hiroyuki9614.com/up; do
             printf 'health_http='
             curl --silent --output /dev/null --write-out '%{http_code}\n' --max-time 7 -H 'X-Forwarded-Proto: https' "$url" || true
