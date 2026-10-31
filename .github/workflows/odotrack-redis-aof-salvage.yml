@@ -1,0 +1,22 @@
+name: Recover OdoTrack Redis AOF using verified bounded salvage
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/odotrack-redis-aof-salvage.yml'
+      - 'scripts/rebuild_redis_aof.py'
+      - 'scripts/apply_redis_aof_salvage.sh'
+
+jobs:
+  salvage:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/odotrack-redis-aof-salvage-20261031'
+    runs-on: [self-hosted, Linux, X64, odo-track]
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore validated Redis AOF with full backup and rollback
+        shell: bash
+        run: |
+          bash -n scripts/apply_redis_aof_salvage.sh
+          python3 -m py_compile scripts/rebuild_redis_aof.py
+          bash scripts/apply_redis_aof_salvage.sh
