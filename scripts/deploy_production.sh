@@ -70,7 +70,21 @@ log "building application images"
 "${compose[@]}" build app worker
 
 log "ensuring database and redis are running"
-"${compose[@]}" up -d db redis
+if ! "${compose[@]}" up -d db redis; then
+  log "database or redis start failed; checking which services remain stopped"
+  for service in db redis; do
+    running_id="$("${compose[@]}" ps --status running -q "$service")"
+    if [[ -n "$running_id" ]]; then
+      log "preserving running ${service} container"
+      continue
+    fi
+
+    log "recreating stopped ${service} service container (named volumes are preserved)"
+    "${compose[@]}" up -d --no-deps --force-recreate "$service" \
+      || fail "could not recover stopped ${service} container"
+  done
+  "${compose[@]}" up -d db redis || fail "database/redis recovery health gate failed"
+fi
 
 log "preparing database"
 "${compose[@]}" run --rm app bundle exec rails db:prepare
