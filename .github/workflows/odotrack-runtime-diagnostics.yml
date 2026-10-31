@@ -1,0 +1,59 @@
+name: OdoTrack runtime read-only diagnostics
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/odotrack-runtime-diagnostics.yml'
+
+jobs:
+  diagnose:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, Linux, X64, odo-track]
+    timeout-minutes: 8
+    steps:
+      - name: Inspect existing production service state without changing containers
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(id -un)" = agent
+          uid="$(id -u)"
+          export XDG_RUNTIME_DIR="/run/user/${uid}"
+          export DOCKER_HOST="unix:///run/user/${uid}/docker.sock"
+          docker info >/dev/null
+          python3 - <<'PY'
+          import json
+          import subprocess
+          for service in ("db", "redis", "app", "worker"):
+              name = f"odo_track-{service}-1"
+              proc = subprocess.run(["docker", "inspect", name], capture_output=True, text=True)
+              if proc.returncode:
+                  print(f"{service}: missing, inspect_rc={proc.returncode}")
+                  continue
+              obj = json.loads(proc.stdout)[0]
+              state = obj.get("State") or {}
+              health = state.get("Health") or {}
+              print(json.dumps({
+                  "service": service,
+                  "name": name,
+                  "status": state.get("Status"),
+                  "running": state.get("Running"),
+                  "restart_count": obj.get("RestartCount"),
+                  "exit_code": state.get("ExitCode"),
+                  "state_error_type": (state.get("Error") or "").split(":")[0][:80],
+                  "health": health.get("Status", "none"),
+                  "health_exit_codes": [entry.get("ExitCode") for entry in health.get("Log", [])],
+                  "health_observations": len(health.get("Log", [])),
+                  "started_at": state.get("StartedAt"),
+              }, ensure_ascii=False))
+              if service == "db" and state.get("Running"):
+                  res = subprocess.run(["docker","exec",name,"sh","-c",
+                      'pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB" >/dev/null 2>&1'])
+                  print(f"db_pg_isready_rc={res.returncode}")
+              if service == "redis" and state.get("Running"):
+                  res = subprocess.run(["docker","exec",name,"redis-cli","ping"],capture_output=True,text=True)
+                  print(f"redis_ping_rc={res.returncode}; pong={res.stdout.strip()=='PONG'}")
+          PY
+          for url in http://127.0.0.1:3100/up https://odt.hiroyuki9614.com/up; do
+            printf 'health_http='
+            curl --silent --output /dev/null --write-out '%{http_code}\n' --max-time 7 -H 'X-Forwarded-Proto: https' "$url" || true
+          done
