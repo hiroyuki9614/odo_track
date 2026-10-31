@@ -115,8 +115,8 @@ def main() -> int:
         cursor = idx + 2
         candidate_count += 1
         try:
-            probe_end, probe_count, _, probe_open = walk(data, cursor, max_commands=80)
-            if probe_count < 80 or probe_end < cursor + 1024 or probe_open is not None:
+            probe_end, probe_count, _, _ = walk(data, cursor, max_commands=80)
+            if probe_count < 80 or probe_end < cursor + 1024:
                 continue
             suffix_end, suffix_count, recent_suffix, suffix_open = walk(data, cursor)
             if suffix_end == len(data) and suffix_open is None:
