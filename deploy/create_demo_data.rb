@@ -35,6 +35,7 @@ ApplicationRecord.transaction do
   )
 
   [demo_user, demo_admin].each do |user|
+    user.favorite_vehicles.find_or_create_by!(vehicle:)
     next if user.daily_logs.exists?
 
     user.daily_logs.create!(
