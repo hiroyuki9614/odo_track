@@ -1,6 +1,7 @@
 class DownloadsController < ApplicationController
   before_action :authenticate_user!
   before_action :admin_user
+  before_action :deny_public_demo_downloads
 
   def index
     @pdf_exports = PdfExport.recent_first.page(params[:page]).per(20)
@@ -41,6 +42,10 @@ class DownloadsController < ApplicationController
   end
 
   private
+
+  def deny_public_demo_downloads
+    head :forbidden if public_demo_account?
+  end
 
   def safe_file_path(root, requested_filename, extension)
     requested_filename = requested_filename.to_s
