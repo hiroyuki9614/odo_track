@@ -4,7 +4,7 @@
 # このコントローラーでは、運転日報の作成、編集、表示、削除等のアクションを定義しています。
 class DailyLogsController < ApplicationController
   before_action :authenticate_user!
-  before_action :authorize_public_demo_vehicle, only: %i[confirm create update]
+  before_action :authorize_public_demo_vehicle, only: %i[create update]
   # before_action :correct_user, only: %i[index]
 
   def index
@@ -111,7 +111,8 @@ class DailyLogsController < ApplicationController
   def authorize_public_demo_vehicle
     return unless public_demo_account?
 
-    vehicle_id = params.dig(:daily_log, :vehicle_id)
+    vehicle_id = params.dig(:daily_log, :vehicle_id).presence
+    vehicle_id ||= current_user.daily_logs.find_by(id: params[:id])&.vehicle_id if action_name == 'update'
     head :forbidden unless public_demo_vehicles.exists?(id: vehicle_id)
   end
 
