@@ -5,7 +5,11 @@ ODO TRACK
 
 Production is available at `https://odt.hiroyuki9614.com/`.
 The application is served from the KAGOYA VPS production stack described below.
-Demo credentials are supplied separately and are not committed to this repository.
+Public, portfolio-only demo credentials are rendered on the top page from the
+KAGOYA deployment's `DEMO_ADMIN_PASSWORD` and `DEMO_USER_PASSWORD` environment
+variables. Password values must not be committed to this repository. The
+production deploy re-provisions the dedicated demo accounts from those values
+before the new version is started; missing values fail the deploy.
 
 ## 基本技術
  - 一般ユーザー&管理ユーザー
