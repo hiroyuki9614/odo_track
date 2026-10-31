@@ -75,6 +75,11 @@ log "ensuring database and redis are running"
 log "preparing database"
 "${compose[@]}" run --rm app bundle exec rails db:prepare
 
+log "provisioning dedicated public demo accounts"
+# The runner reads credentials only from the deployment-local env_file; never log them.
+# Fail before replacing the running application when either value is absent.
+"${compose[@]}" run --rm app bundle exec rails runner deploy/create_demo_data.rb
+
 log "starting application and worker"
 "${compose[@]}" up -d --no-build app worker
 
