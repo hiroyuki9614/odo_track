@@ -6,10 +6,12 @@ module Api
     before_action :admin_user
 
     def index
-      @daily_logs = DailyLog.where(discarded_at: nil).order(created_at: :asc).includes(:vehicle).page params[:page]
-      @discarded_daily_logs = DailyLog.where.not(discarded_at: nil).order(created_at: :asc).page params[:page]
-      @vehicles = Vehicle.where(discarded_at: nil).order(created_at: :asc).page params[:page]
-      vehicles_data = Vehicle.where(discarded_at: nil).map do |v|
+      logs = public_demo_admin? ? public_demo_logs : DailyLog.all
+      vehicles = public_demo_admin? ? public_demo_vehicles : Vehicle.all
+      @daily_logs = logs.where(discarded_at: nil).order(created_at: :asc).includes(:vehicle).page params[:page]
+      @discarded_daily_logs = logs.where.not(discarded_at: nil).order(created_at: :asc).page params[:page]
+      @vehicles = vehicles.where(discarded_at: nil).order(created_at: :asc).page params[:page]
+      vehicles_data = vehicles.where(discarded_at: nil).map do |v|
         { vehicle_name: "#{v.vehicle_name} - #{v.number}", vehicle_id: v.id,
           vehicle_current_drive_distance: v.current_drive_distance }
       end
