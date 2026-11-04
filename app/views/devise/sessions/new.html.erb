@@ -32,6 +32,12 @@
                     if (!source) throw new Error('demo credentials card missing');
 
                     const card = source.cloneNode(true);
+                    const demoHeading = card.querySelector('#demo-login-heading');
+                    if (demoHeading) {
+                      demoHeading.id = 'demo-login-credentials-heading';
+                      demoHeading.textContent = '採用ご担当者様向け デモアカウント';
+                    }
+
                     const selfLink = card.querySelector('a[href="<%= new_user_session_path %>"]');
                     if (selfLink) selfLink.remove();
 
