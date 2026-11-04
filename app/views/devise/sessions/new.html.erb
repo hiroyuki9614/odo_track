@@ -10,6 +10,41 @@
         <div class="card shadow-2-strong " style="border-radius: 1rem;">
           <div class="card-body pt-4 px-4">
             <h3 class="mb-3 fw-bold text-center">ログイン</h3>
+            <section id="login-demo-credentials" class="mb-4" aria-live="polite">
+              <p class="small text-muted mb-0">デモログイン情報を読み込んでいます…</p>
+            </section>
+            <noscript>
+              <p class="small mb-4"><%= link_to 'トップページでデモログイン情報を確認', root_path %></p>
+            </noscript>
+            <script>
+              (() => {
+                const target = document.getElementById('login-demo-credentials');
+                if (!target) return;
+
+                fetch('<%= root_path %>', { credentials: 'same-origin' })
+                  .then((response) => {
+                    if (!response.ok) throw new Error('demo credentials unavailable');
+                    return response.text();
+                  })
+                  .then((html) => {
+                    const doc = new DOMParser().parseFromString(html, 'text/html');
+                    const source = doc.querySelector('[aria-labelledby="demo-login-heading"] .card');
+                    if (!source) throw new Error('demo credentials card missing');
+
+                    const card = source.cloneNode(true);
+                    const selfLink = card.querySelector('a[href="<%= new_user_session_path %>"]');
+                    if (selfLink) selfLink.remove();
+
+                    target.replaceChildren(card);
+                  })
+                  .catch(() => {
+                    const link = document.createElement('a');
+                    link.href = '<%= root_path %>';
+                    link.textContent = 'トップページでデモログイン情報を確認';
+                    target.replaceChildren(link);
+                  });
+              })();
+            </script>
             <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
               <div class="form-outline mb-4">
                 <%= f.label :email, 'メールアドレス', class: "form-label" %><br />
