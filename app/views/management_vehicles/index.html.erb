@@ -1,2 +1,6 @@
-<%= content_tag(:div, "", id: "header") %>
+<% if current_user.admin %>
+	<%= content_tag(:div, "", id: "admin_header") %>
+<% else %>
+	<%= content_tag(:div, "", id: "header") %>
+<% end %>
 <%= content_tag(:div, "", id: "management_vehicles") %>

@@ -48,4 +48,12 @@ const router = createRouter({
 	routes: routes,
 });
 
+router.beforeEach((to) => {
+	const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
+	if (pathname === '/daily_logs' && to.path === '/management_vehicles') {
+		window.location.replace('/management_vehicles');
+		return false;
+	}
+});
+
 export default router;
